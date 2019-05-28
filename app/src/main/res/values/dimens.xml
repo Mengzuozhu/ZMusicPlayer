@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="rounded_corner_radius_15">15dp</dimen>
+    <dimen name="switch_track_height_25">25dp</dimen>
+    <dimen name="list_item_height_40">40dp</dimen>
+    <dimen name="list_item_width_25">25dp</dimen>
+    <dimen name="list_item_margin_5">5dp</dimen>
+    <dimen name="list_item_margin_top_2">2dp</dimen>
+    <dimen name="font_20">20sp</dimen>
+    <dimen name="font_25">25sp</dimen>
+    <dimen name="font_45">45sp</dimen>
+    <dimen name="font_18">18sp</dimen>
+    <dimen name="fab_margin_10">10dp</dimen>
+    <dimen name="song_margin_top_50">50dp</dimen>
+    <dimen name="switch_height_25">25dp</dimen>
+    <dimen name="image_view_size">96dp</dimen>
+    <dimen name="grav_view_size">300dp</dimen>
+    <dimen name="fab_margin_20">20dp</dimen>
+    <dimen name="image_margin_2">2dp</dimen>
+    <dimen name="image_margin_4">4dp</dimen>
+    <dimen name="image_height">100dp</dimen>
+</resources>
