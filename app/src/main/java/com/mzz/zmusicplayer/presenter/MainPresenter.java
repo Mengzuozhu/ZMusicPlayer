@@ -3,15 +3,15 @@ package com.mzz.zmusicplayer.presenter;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.adapter.SongInfoAdapter;
 import com.mzz.zmusicplayer.contract.MainContract;
 import com.mzz.zmusicplayer.model.SongModel;
+import com.mzz.zmusicplayer.setting.AppSetting;
+import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.List;
@@ -23,10 +23,11 @@ import java.util.List;
  */
 public class MainPresenter implements MainContract.Presenter {
 
+    private PlayList playList;
+    private SongInfoAdapter baseAdapter;
     private int selectColor;
     private MainContract.View mView;
     private FragmentActivity context;
-    private List <SongInfo> songFiles;
     private int itemSongNameId = R.id.tv_item_song_name;
     private int itemSongArtistId = R.id.tv_item_song_artist;
     private int[] textViewIds = new int[]{itemSongNameId, itemSongArtistId};
@@ -37,48 +38,32 @@ public class MainPresenter implements MainContract.Presenter {
         context = mView.getActivity();
         selectColor = context.getColor(R.color.colorGreen);
         initSongInfos();
-        SongInfo songInfo = new SongInfo();
-        if (songFiles.size() > 0) {
-            songInfo = songFiles.get(0);
-        }
-        mView.setControlFragment(songInfo);
+        mView.setControlFragment(playList);
         intiAdapter();
     }
 
     private void initSongInfos() {
-        songFiles = SongModel.getSortedSongInfos();
-//        RxPermissions rxPermissions = new RxPermissions(context);
-//        rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE).subscribe(granted -> {
-//            if (granted) {
-//                songFiles = FileManager.getInstance(context).getSongInfos();
-//            } else {
-//                songFiles = new ArrayList <>();
-//                ViewerHelper.showToast(context, "无权限访问");
-//            }
-//        });
+        List <SongInfo> songInfos = SongModel.getSortedSongInfos();
+        AppSetting appSetting = AppSetting.readSetting(context);
+        playList = new PlayList(songInfos, appSetting.getLastPlaySongIndex(),
+                AppSetting.getLastPlayMode(context));
     }
 
     private void intiAdapter() {
-        BaseQuickAdapter baseQuickAdapter =
-                new BaseQuickAdapter <SongInfo, BaseViewHolder>(R.layout.item_song_list,
-                        songFiles) {
-                    @Override
-                    protected void convert(BaseViewHolder helper, SongInfo songInfo) {
-                        helper.setText(itemSongNameId, songInfo.getName());
-                        helper.setText(itemSongArtistId, songInfo.getArtist());
-                    }
-                };
-        baseQuickAdapter.setOnItemClickListener((adapter, view, position) -> {
-            SongInfo songInfo = (SongInfo) adapter.getItem(position);
-            if (songInfo != null) {
-                mView.setControlFragment(songInfo);
-                setSongBackgroundColor(view);
-            }
-        });
-        RecyclerView recyclerView = mView.getRecyclerView();
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(baseQuickAdapter);
+        baseAdapter = new SongInfoAdapter(playList.getSongInfos(), mView.getRecyclerView(),
+                context);
+//        baseAdapter.setQueryTextListener(svSongFile);
 
+        baseAdapter.setOnItemClickListener((adapter, view, position) -> {
+            playList.setPlayingIndex(position);
+            mView.setControlFragment(playList);
+            setSongBackgroundColor(view);
+//            SongInfo songInfo = (SongInfo) adapter.getItem(position);
+//            if (songInfo != null) {
+//                mView.setControlFragment(playList);
+//                setSongBackgroundColor(view);
+//            }
+        });
     }
 
     private void setSongBackgroundColor(View view) {
@@ -107,4 +92,23 @@ public class MainPresenter implements MainContract.Presenter {
         }
     }
 
+    @Override
+    public LinearLayoutManager getLayoutManager() {
+        return baseAdapter.getLayoutManager();
+    }
+
+    @Override
+    public void addSongs(List <SongInfo> newSongInfos) {
+        List <SongInfo> songInfos = playList.getSongInfos();
+        songInfos.addAll(newSongInfos);
+        baseAdapter.setNewData(songInfos);
+        SongModel.insertOrReplaceInTx(newSongInfos);
+    }
+
+    @Override
+    public void scrollToFirst() {
+        if (baseAdapter.getItemCount() > 0) {
+            mView.getRecyclerView().scrollToPosition(0);
+        }
+    }
 }

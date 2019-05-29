@@ -15,14 +15,20 @@ import org.greenrobot.greendao.database.Database;
  */
 public class MyApplication extends Application {
     private static DaoSession daoSession;
+    private static MyApplication sInstance;
 
     public static DaoSession getDaoSession() {
         return daoSession;
     }
 
+    public static MyApplication getInstance() {
+        return sInstance;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        sInstance = this;
         UpgradeDbHelper helper = new UpgradeDbHelper(this,
                 this.getString(R.string.song_db_name));
         Database db = helper.getWritableDb();

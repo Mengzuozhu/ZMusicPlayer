@@ -20,6 +20,9 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".song.SongPickerActivity"
+            android:label="添加歌曲" />
     </application>
 
 </manifest>

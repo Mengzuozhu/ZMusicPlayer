@@ -35,7 +35,7 @@ public class SongPickerActivity extends BaseActivity {
     @BindView(R.id.fab_song_file_scroll_first)
     FloatingActionButton fabSongScrollFirst;
     SongInfoAdapter adapter;
-    List <SongInfo> songFiles;
+    List <SongInfo> songInfos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +85,8 @@ public class SongPickerActivity extends BaseActivity {
     }
 
     public void initAlarmSong() {
-        songFiles = FileManager.getInstance(SongPickerActivity.this).getSongInfos();
-        adapter = new SongInfoAdapter(songFiles, rvSongFile, this);
+        songInfos = FileManager.getInstance(SongPickerActivity.this).getSongInfos();
+        adapter = new SongInfoAdapter(songInfos, rvSongFile, this);
         adapter.setQueryTextListener(svSongFile);
         ViewerHelper.showOrHideScrollFirst(rvSongFile, adapter.getLayoutManager(),
                 fabSongScrollFirst);
@@ -100,7 +100,7 @@ public class SongPickerActivity extends BaseActivity {
 
     private ArrayList <SongInfo> getCheckedSongInfos() {
         ArrayList <SongInfo> checkedSongs = new ArrayList <>();
-        for (SongInfo songFile : songFiles) {
+        for (SongInfo songFile : songInfos) {
             if (songFile.getIsChecked()) {
                 checkedSongs.add(songFile);
             }

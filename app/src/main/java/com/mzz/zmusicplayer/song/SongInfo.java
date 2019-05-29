@@ -25,6 +25,7 @@ import java.util.ArrayList;
  */
 @Entity
 public class SongInfo implements Parcelable, ICheckable, QueryInfo {
+
     public static final Creator <SongInfo> CREATOR = new Creator <SongInfo>() {
         @Override
         public SongInfo createFromParcel(Parcel source) {
@@ -36,7 +37,6 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo {
             return new SongInfo[size];
         }
     };
-
     @Id(autoincrement = true)
     private Long id;
     private String name;
@@ -44,12 +44,6 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo {
     private String artist;
     private int duration;
     private boolean isChecked = true;
-
-    private SongInfo(Parcel in) {
-        this.name = in.readString();
-        this.path = in.readString();
-        this.isChecked = in.readByte() != 0;
-    }
 
     @Generated(hash = 218269514)
     public SongInfo(Long id, String name, String path, String artist, int duration,
@@ -66,24 +60,21 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo {
     public SongInfo() {
     }
 
+    protected SongInfo(Parcel in) {
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.name = in.readString();
+        this.path = in.readString();
+        this.artist = in.readString();
+        this.duration = in.readInt();
+        this.isChecked = in.readByte() != 0;
+    }
+
     public Bitmap getPicture() {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         mediaMetadataRetriever.setDataSource(path);
         byte[] picture = mediaMetadataRetriever.getEmbeddedPicture();
         Bitmap bitmap = BitmapFactory.decodeByteArray(picture, 0, picture.length);
         return bitmap;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.name);
-        dest.writeString(this.path);
-        dest.writeByte(this.isChecked ? (byte) 1 : (byte) 0);
     }
 
     @Override
@@ -137,6 +128,21 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.name);
+        dest.writeString(this.path);
+        dest.writeString(this.artist);
+        dest.writeInt(this.duration);
+        dest.writeByte(this.isChecked ? (byte) 1 : (byte) 0);
     }
 
     public static class SongInfoListConverter implements PropertyConverter <ArrayList <SongInfo>,

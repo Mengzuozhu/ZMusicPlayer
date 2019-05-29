@@ -12,6 +12,10 @@ import android.widget.TextView;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.mzz.zmusicplayer.common.TimeHelper;
+import com.mzz.zmusicplayer.setting.PlayedMode;
+import com.mzz.zmusicplayer.song.IPlayer;
+import com.mzz.zmusicplayer.song.PlayList;
+import com.mzz.zmusicplayer.song.PlayObserver;
 import com.mzz.zmusicplayer.song.Player;
 import com.mzz.zmusicplayer.song.SongInfo;
 
@@ -23,10 +27,9 @@ import butterknife.Unbinder;
 /**
  * The type Control fragment.
  */
-public class ControlFragment extends Fragment {
+public class ControlFragment extends Fragment implements PlayObserver {
     private static final String SONG_INFO = "SONG_INFO";
     private static final long UPDATE_PROGRESS_INTERVAL = 1000;
-    SongInfo songInfo;
     @BindView(R.id.tv_song_name)
     TextView tvSongName;
     @BindView(R.id.tv_artist)
@@ -40,7 +43,8 @@ public class ControlFragment extends Fragment {
     @BindView(R.id.iv_play_pause)
     ImageView ivPlayOrPause;
     Unbinder unbinder;
-    Player mPlayer;
+    IPlayer mPlayer;
+    PlayList mPlayList;
     private Handler mHandler = new Handler();
 
     private Runnable mProgressCallback = new Runnable() {
@@ -49,10 +53,11 @@ public class ControlFragment extends Fragment {
             if (isDetached()) return;
 
             if (mPlayer.isPlaying()) {
+                updateProgressTextWithDuration(mPlayer.getCurrentPosition());
                 float progressMax = seekBarProgress.getProgressMax();
-                float percent = (float) mPlayer.getProgress() / mPlayer.getCurrentSongDuration();
-                float progress = progressMax * percent;
-                updateProgressTextWithDuration(mPlayer.getProgress());
+                float percent =
+                        (float) mPlayer.getCurrentPosition() / mPlayer.getCurrentSongDuration();
+                int progress = (int) (progressMax * percent);
                 if (progress >= 0 && progress <= progressMax) {
                     seekBarProgress.setProgress(progress);
                     //每隔1s触发一次更新事件
@@ -68,10 +73,10 @@ public class ControlFragment extends Fragment {
      *
      * @return A new instance of fragment ControlFragment.
      */
-    public static ControlFragment newInstance(SongInfo songInfo) {
+    public static ControlFragment newInstance(PlayList playList) {
         ControlFragment fragment = new ControlFragment();
         Bundle args = new Bundle();
-        args.putParcelable(SONG_INFO, songInfo);
+        args.putParcelable(SONG_INFO, playList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -81,30 +86,34 @@ public class ControlFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            songInfo = bundle.getParcelable(SONG_INFO);
+            mPlayList = bundle.getParcelable(SONG_INFO);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_control, container, false);
         unbinder = ButterKnife.bind(this, view);
-        initView();
+
         mPlayer = Player.getInstance();
-//        mPlayer.play(songInfo);
-//        updatePlayState();
-//        tvDuration.setText(TimeHelper.formatDuration(mPlayer.getCurrentSongDuration()));
+        mPlayer.registerCallback(this);
+        mPlayer.setPlayList(mPlayList);
+        onSongUpdated(mPlayer.getCurrentSong());
         return view;
     }
 
-    private void initView() {
-        if (songInfo == null) {
-            return;
+    public void setPlayList(PlayList playList) {
+        if (playList == null) {
+            playList = new PlayList();
         }
-        tvSongName.setText(songInfo.getName());
-        tvArtist.setText(songInfo.getArtist());
+        mPlayList = playList;
+        mPlayer.play(mPlayList);
+        onSongUpdated(mPlayer.getCurrentSong());
+    }
+
+    public void setPlayMode(PlayedMode playMode) {
+        mPlayList.setPlayMode(playMode);
     }
 
     @Override
@@ -128,7 +137,21 @@ public class ControlFragment extends Fragment {
         } else {
             mPlayer.play();
         }
-        updatePlayState();
+        onPlayStatusChanged(mPlayer.isPlaying());
+    }
+
+    @OnClick(R.id.iv_play_pre)
+    public void onPlayPreviousAction() {
+        if (mPlayer == null) return;
+
+        mPlayer.playPrevious();
+    }
+
+    @OnClick(R.id.iv_play_next)
+    public void onPlayNextAction() {
+        if (mPlayer == null) return;
+
+        mPlayer.playNext();
     }
 
     private void updateProgressTextWithDuration(int duration) {
@@ -136,17 +159,34 @@ public class ControlFragment extends Fragment {
     }
 
     public void onSongUpdated(@Nullable SongInfo song) {
+        if (song == null) {
+            return;
+        }
+        tvSongName.setText(song.getName());
+        tvArtist.setText(song.getArtist());
+        tvDuration.setText(TimeHelper.formatDuration(mPlayer.getCurrentSongDuration()));
+        updateProgressTextWithDuration(0);
     }
 
-    public void updatePlayState() {
-        boolean isPlay = mPlayer.isPlaying();
-        if (isPlay) {
+    @Override
+    public void onSwitchPrevious(@Nullable SongInfo previous) {
+        onSongUpdated(previous);
+    }
+
+    @Override
+    public void onSwitchNext(@Nullable SongInfo next) {
+        onSongUpdated(next);
+    }
+
+    @Override
+    public void onPlayStatusChanged(boolean isPlaying) {
+        if (isPlaying) {
             mHandler.removeCallbacks(mProgressCallback);
             mHandler.post(mProgressCallback);
         } else {
             mHandler.removeCallbacks(mProgressCallback);
         }
-        ivPlayOrPause.setImageResource(isPlay ? R.drawable.pause : R.drawable.play);
+        ivPlayOrPause.setImageResource(isPlaying ? R.drawable.pause : R.drawable.play);
     }
 
 }

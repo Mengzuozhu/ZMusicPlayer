@@ -8,7 +8,6 @@ import android.widget.SearchView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.mzz.zandroidcommon.adapter.CheckableAndDraggableAdapter;
-import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.TextQueryHandler;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -34,24 +33,27 @@ public class SongInfoAdapter extends CheckableAndDraggableAdapter <SongInfo> {
     private Map <String, Spannable> nameAndQuerySpans = new HashMap <>();
 
     public SongInfoAdapter(List <SongInfo> songInfos, RecyclerView recyclerView, Context context) {
-        super(R.layout.item_song, songInfos, recyclerView);
+        super(R.layout.item_song_list, songInfos, recyclerView);
         this.songInfos = songInfos;
-        chbSongSelectId = R.id.chb_song_select;
-        ViewerHelper.setOnItemClickWithCheckBox(this, R.id.chb_song_select);
+        chbSongSelectId = R.id.chb_item_song_select;
+//        ViewerHelper.setOnItemClickWithCheckBox(this, chbSongSelectId);
         layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(this);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, SongInfo item) {
-        String name = item.getName();
+    protected void convert(BaseViewHolder helper, SongInfo songInfo) {
+        String name = songInfo.getName();
+        int itemSongNameId = R.id.tv_item_song_name;
         if (nameAndQuerySpans.containsKey(name)) {
-            helper.setText(R.id.tv_song_name, nameAndQuerySpans.get(name));
+            helper.setText(itemSongNameId, nameAndQuerySpans.get(name));
         } else {
-            helper.setText(R.id.tv_song_name, name);
+            helper.setText(itemSongNameId, name);
         }
-        helper.setChecked(chbSongSelectId, item.getIsChecked()).addOnClickListener(chbSongSelectId);
+        int itemSongArtistId = R.id.tv_item_song_artist;
+        helper.setText(itemSongArtistId, songInfo.getArtist());
+        helper.setChecked(chbSongSelectId, songInfo.getIsChecked()).addOnClickListener(chbSongSelectId);
     }
 
     public void setQueryTextListener(SearchView svAlarmSong) {

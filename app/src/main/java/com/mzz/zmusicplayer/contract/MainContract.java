@@ -1,9 +1,13 @@
 package com.mzz.zmusicplayer.contract;
 
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
+
+import java.util.List;
 
 /**
  * author : Mzz
@@ -15,12 +19,18 @@ public interface MainContract {
     interface View {
         FragmentActivity getActivity();
 
-        void setControlFragment(SongInfo songInfo);
+        void setControlFragment(PlayList playList);
 
         RecyclerView getRecyclerView();
 
     }
 
     interface Presenter {
+
+        LinearLayoutManager getLayoutManager();
+
+        void addSongs(List<SongInfo> songInfos);
+
+        void scrollToFirst();
     }
 }

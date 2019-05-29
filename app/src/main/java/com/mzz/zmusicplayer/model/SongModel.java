@@ -39,6 +39,13 @@ public class SongModel {
         songInfoDao.insertOrReplace(songInfo);
     }
 
+    public static void insertOrReplaceInTx(Iterable<SongInfo> songInfos) {
+        if (songInfos == null) {
+            return;
+        }
+        songInfoDao.insertOrReplaceInTx(songInfos);
+    }
+
     public static List <Long> integerToLongList(List <Integer> deleteNum) {
         ArrayList <Long> ids = new ArrayList <>();
         for (Integer i : deleteNum) {
