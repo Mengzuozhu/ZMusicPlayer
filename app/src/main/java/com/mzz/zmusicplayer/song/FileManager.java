@@ -23,7 +23,7 @@ public class FileManager {
             MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.IS_MUSIC,
-            MediaStore.Audio.Media.ALBUM};
+            MediaStore.Audio.Media._ID};
     private static FileManager mInstance = new FileManager();
     private static ContentResolver mContentResolver;
 
@@ -57,7 +57,12 @@ public class FileManager {
                 String artist = c.getString(3);
                 int duration = c.getInt(4);
                 name = extractName(name);
-                SongInfo song = new SongInfo(name, path, artist, duration, false);
+                SongInfo song = new SongInfo();
+                song.setName(name);
+                song.setPath(path);
+                song.setArtist(artist);
+                song.setDuration(duration);
+                song.setIsChecked(true);
                 songs.add(song);
             }
 

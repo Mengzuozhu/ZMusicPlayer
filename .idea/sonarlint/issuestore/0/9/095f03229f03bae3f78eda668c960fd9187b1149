@@ -1,8 +1,3 @@
 
- squid:S1186Œ"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(œ¦8€‹Îó¯-
-nsquid:CommentedOutCodeLine4"<This block of commented-out lines of code should be removed.(ÃéÊùÿÿÿÿ8òÒÍò¯-
-Ssquid:S1068+"5Remove this unused "mProgressCallback" private field.(‰ä×˜8ÙìÉò¯-
-Fsquid:S1604+"(Make this anonymous inner class a lambda(‰ä×˜8ÖêÍò¯-
-nsquid:CommentedOutCodeLine{"<This block of commented-out lines of code should be removed.(Šó·ìÿÿÿÿÿ8ôÑô¯-
-isquid:CommentedOutCodeLine8"<This block of commented-out lines of code should be removed.(¬§êŒ8ÖêÍò¯-
-nsquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(ˆéÎêşÿÿÿÿ8ôÑô¯-
+bsquid:S3398†">Move this method into the anonymous class declared at line 46.(¢üğ™úÿÿÿÿ8ûæêô¯-
+ squid:S1186Š"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(œ¦8€‹Îó¯-

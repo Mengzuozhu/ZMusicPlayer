@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants">
+
+    <TextView
+        android:id="@+id/tv_song_name"
+        style="@style/StyleListTextView"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_toStartOf="@+id/chb_song_select"
+        android:text="@string/undefined"
+        android:textSize="@dimen/font_18" />
+
+    <CheckBox
+        android:id="@+id/chb_song_select"
+        style="@style/StyleListRightItem"
+        android:text="@string/empty" />
+
+    <include layout="@layout/list_divider" />
+
+</RelativeLayout>

@@ -93,9 +93,9 @@ public class ControlFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         initView();
         mPlayer = Player.getInstance();
-        mPlayer.play(songInfo);
-        updatePlayState();
-        tvDuration.setText(TimeHelper.formatDuration(mPlayer.getCurrentSongDuration()));
+//        mPlayer.play(songInfo);
+//        updatePlayState();
+//        tvDuration.setText(TimeHelper.formatDuration(mPlayer.getCurrentSongDuration()));
         return view;
     }
 

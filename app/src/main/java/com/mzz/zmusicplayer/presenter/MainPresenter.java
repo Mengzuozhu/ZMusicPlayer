@@ -1,6 +1,5 @@
 package com.mzz.zmusicplayer.presenter;
 
-import android.Manifest;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,14 +9,11 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.contract.MainContract;
-import com.mzz.zmusicplayer.song.FileManager;
+import com.mzz.zmusicplayer.model.SongModel;
 import com.mzz.zmusicplayer.song.SongInfo;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +29,7 @@ public class MainPresenter implements MainContract.Presenter {
     private List <SongInfo> songFiles;
     private int itemSongNameId = R.id.tv_item_song_name;
     private int itemSongArtistId = R.id.tv_item_song_artist;
-    private int[] TextViewIds = new int[]{itemSongNameId, itemSongArtistId};
+    private int[] textViewIds = new int[]{itemSongNameId, itemSongArtistId};
     private View lastView;
 
     public MainPresenter(MainContract.View mView) {
@@ -41,23 +37,25 @@ public class MainPresenter implements MainContract.Presenter {
         context = mView.getActivity();
         selectColor = context.getColor(R.color.colorGreen);
         initSongInfos();
-        SongInfo songInfo = songFiles.get(0);
-        if (songInfo != null) {
-            mView.setControlFragment(songInfo);
+        SongInfo songInfo = new SongInfo();
+        if (songFiles.size() > 0) {
+            songInfo = songFiles.get(0);
         }
+        mView.setControlFragment(songInfo);
         intiAdapter();
     }
 
     private void initSongInfos() {
-        RxPermissions rxPermissions = new RxPermissions(context);
-        rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE).subscribe(granted -> {
-            if (granted) {
-                songFiles = FileManager.getInstance(context).getSongInfos();
-            } else {
-                songFiles = new ArrayList <>();
-                ViewerHelper.showToast(context, "无权限访问");
-            }
-        });
+        songFiles = SongModel.getSortedSongInfos();
+//        RxPermissions rxPermissions = new RxPermissions(context);
+//        rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE).subscribe(granted -> {
+//            if (granted) {
+//                songFiles = FileManager.getInstance(context).getSongInfos();
+//            } else {
+//                songFiles = new ArrayList <>();
+//                ViewerHelper.showToast(context, "无权限访问");
+//            }
+//        });
     }
 
     private void intiAdapter() {
@@ -94,7 +92,7 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     private void setTextViewBackground(View view, int color) {
-        for (int songId : TextViewIds) {
+        for (int songId : textViewIds) {
             TextView textView = view.findViewById(songId);
             if (textView != null) {
                 textView.setTextColor(color);

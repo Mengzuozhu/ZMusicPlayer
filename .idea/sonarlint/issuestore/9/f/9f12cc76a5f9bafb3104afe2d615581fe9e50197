@@ -1,4 +1,2 @@
 
-qsquid:MaximumInheritanceDepth"<This class has 6 parents which is greater than 5 authorized.(ç¡÷Ëüÿÿÿÿ8©ùµí¯-
-[squid:UselessImportCheck"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8Ê‡ï¯-
-^squid:UselessImportCheck".Remove this unused import 'android.view.View'.(Ø½­äþÿÿÿÿ8Ê‡ï¯-
+qsquid:MaximumInheritanceDepth"<This class has 6 parents which is greater than 5 authorized.(ç¡÷Ëüÿÿÿÿ8©ùµí¯-

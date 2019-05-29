@@ -10,12 +10,12 @@ import com.mzz.zandroidcommon.adapter.ICheckable;
 import com.mzz.zandroidcommon.common.JsonConverter;
 import com.mzz.zandroidcommon.view.QueryInfo;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.converter.PropertyConverter;
 
 import java.util.ArrayList;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 /**
  * 歌曲信息
@@ -23,8 +23,7 @@ import lombok.Data;
  * date : 2019 2019/5/7 19:22
  * description :
  */
-@Data
-@AllArgsConstructor
+@Entity
 public class SongInfo implements Parcelable, ICheckable, QueryInfo {
     public static final Creator <SongInfo> CREATOR = new Creator <SongInfo>() {
         @Override
@@ -38,16 +37,33 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo {
         }
     };
 
+    @Id(autoincrement = true)
+    private Long id;
     private String name;
     private String path;
     private String artist;
     private int duration;
-    private boolean isChecked;
+    private boolean isChecked = true;
 
     private SongInfo(Parcel in) {
         this.name = in.readString();
         this.path = in.readString();
         this.isChecked = in.readByte() != 0;
+    }
+
+    @Generated(hash = 218269514)
+    public SongInfo(Long id, String name, String path, String artist, int duration,
+                    boolean isChecked) {
+        this.id = id;
+        this.name = name;
+        this.path = path;
+        this.artist = artist;
+        this.duration = duration;
+        this.isChecked = isChecked;
+    }
+
+    @Generated(hash = 1061935912)
+    public SongInfo() {
     }
 
     public Bitmap getPicture() {
@@ -73,6 +89,54 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo {
     @Override
     public String getInfo() {
         return name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPath() {
+        return this.path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getArtist() {
+        return this.artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public int getDuration() {
+        return this.duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public boolean getIsChecked() {
+        return this.isChecked;
+    }
+
+    public void setIsChecked(boolean isChecked) {
+        this.isChecked = isChecked;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public static class SongInfoListConverter implements PropertyConverter <ArrayList <SongInfo>,

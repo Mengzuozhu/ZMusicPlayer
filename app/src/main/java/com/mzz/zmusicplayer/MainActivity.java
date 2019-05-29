@@ -31,6 +31,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     @Override
     public void setControlFragment(SongInfo songInfo) {
+        if (songInfo == null) {
+            songInfo = new SongInfo();
+        }
         ControlFragment controlFragment = ControlFragment.newInstance(songInfo);
         getSupportFragmentManager().beginTransaction().replace(R.id.layout_control,
                 controlFragment).commit();

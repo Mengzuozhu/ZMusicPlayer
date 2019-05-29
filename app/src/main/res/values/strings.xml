@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">ZMusicPlayer</string>
-
+    <string name="song_db_name">T_SONG_LIST</string>
     <string name="undefined">未知</string>
+    <string name="complete">完成</string>
+    <string name="ascend">升序</string>
+    <string name="descend">降序</string>
+    <string name="empty" />
+    <string name="select_all">全选</string>
+
 </resources>
