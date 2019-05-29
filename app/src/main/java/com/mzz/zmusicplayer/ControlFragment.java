@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.mzz.zmusicplayer.common.TimeHelper;
+import com.mzz.zmusicplayer.contract.MainContract;
+import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.IPlayer;
 import com.mzz.zmusicplayer.song.PlayList;
@@ -42,30 +44,29 @@ public class ControlFragment extends Fragment implements PlayObserver {
     TextView tvDuration;
     @BindView(R.id.iv_play_pause)
     ImageView ivPlayOrPause;
-    Unbinder unbinder;
-    IPlayer mPlayer;
-    PlayList mPlayList;
+    private Unbinder unbinder;
+    private IPlayer mPlayer;
     private Handler mHandler = new Handler();
-
     private Runnable mProgressCallback = new Runnable() {
         @Override
         public void run() {
             if (isDetached()) return;
 
-            if (mPlayer.isPlaying()) {
-                updateProgressTextWithDuration(mPlayer.getCurrentPosition());
-                float progressMax = seekBarProgress.getProgressMax();
-                float percent =
-                        (float) mPlayer.getCurrentPosition() / mPlayer.getCurrentSongDuration();
-                int progress = (int) (progressMax * percent);
-                if (progress >= 0 && progress <= progressMax) {
-                    seekBarProgress.setProgress(progress);
-                    //每隔1s触发一次更新事件
+            updateProgressTextWithDuration(mPlayer.getCurrentPosition());
+            float progressMax = seekBarProgress.getProgressMax();
+            float percent =
+                    (float) mPlayer.getCurrentPosition() / mPlayer.getCurrentSongDuration();
+            int progress = (int) (progressMax * percent);
+            if (progress >= 0 && progress <= progressMax) {
+                seekBarProgress.setProgress(progress);
+                if (mPlayer.isPlaying()) {
+                    //在播放中，则每隔1s触发一次更新事件
                     mHandler.postDelayed(this, UPDATE_PROGRESS_INTERVAL);
                 }
             }
         }
     };
+    private MainContract.Presenter mainPresenter;
 
     /**
      * Use this factory method to create a new instance of
@@ -82,20 +83,16 @@ public class ControlFragment extends Fragment implements PlayObserver {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            mPlayList = bundle.getParcelable(SONG_INFO);
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_control, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        Bundle bundle = getArguments();
+        PlayList mPlayList = new PlayList();
+        if (bundle != null) {
+            mPlayList = bundle.getParcelable(SONG_INFO);
+        }
         mPlayer = Player.getInstance();
         mPlayer.registerCallback(this);
         mPlayer.setPlayList(mPlayList);
@@ -103,29 +100,37 @@ public class ControlFragment extends Fragment implements PlayObserver {
         return view;
     }
 
-    public void setPlayList(PlayList playList) {
-        if (playList == null) {
-            playList = new PlayList();
-        }
-        mPlayList = playList;
-        mPlayer.play(mPlayList);
-        onSongUpdated(mPlayer.getCurrentSong());
-    }
-
-    public void setPlayMode(PlayedMode playMode) {
-        mPlayList.setPlayMode(playMode);
-    }
-
     @Override
-    public void onStop() {
-        super.onStop();
-        mHandler.removeCallbacks(mProgressCallback);
+    public void onStart() {
+        super.onStart();
+        if (mPlayer != null) {
+            onPlayStatusChanged(mPlayer.isPlaying());
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mHandler.removeCallbacks(mProgressCallback);
+        mPlayer.unregisterCallback(this);
+        AppSetting.setLastPlaySongIndex(getContext(), mPlayer.getPlayingIndex());
         unbinder.unbind();
+    }
+
+    public void setMainPresenter(MainContract.Presenter mainPresenter) {
+        this.mainPresenter = mainPresenter;
+    }
+
+    public void setPlayList(PlayList playList) {
+        if (playList == null) {
+            playList = new PlayList();
+        }
+        mPlayer.play(playList);
+        onSongUpdated(mPlayer.getCurrentSong());
+    }
+
+    public void setPlayMode(PlayedMode playMode) {
+        mPlayer.setPlayMode(playMode);
     }
 
     @OnClick(R.id.iv_play_pause)
@@ -162,6 +167,9 @@ public class ControlFragment extends Fragment implements PlayObserver {
         if (song == null) {
             return;
         }
+        if (mainPresenter != null) {
+            mainPresenter.setPlaySongBackgroundColor(song.getAdapterPosition());
+        }
         tvSongName.setText(song.getName());
         tvArtist.setText(song.getArtist());
         tvDuration.setText(TimeHelper.formatDuration(mPlayer.getCurrentSongDuration()));
@@ -181,12 +189,16 @@ public class ControlFragment extends Fragment implements PlayObserver {
     @Override
     public void onPlayStatusChanged(boolean isPlaying) {
         if (isPlaying) {
-            mHandler.removeCallbacks(mProgressCallback);
-            mHandler.post(mProgressCallback);
+            updateProgressBar();
         } else {
             mHandler.removeCallbacks(mProgressCallback);
         }
         ivPlayOrPause.setImageResource(isPlaying ? R.drawable.pause : R.drawable.play);
+    }
+
+    private void updateProgressBar() {
+        mHandler.removeCallbacks(mProgressCallback);
+        mHandler.post(mProgressCallback);
     }
 
 }

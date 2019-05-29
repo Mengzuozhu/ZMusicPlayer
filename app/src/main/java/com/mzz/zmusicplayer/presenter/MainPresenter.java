@@ -3,6 +3,7 @@ package com.mzz.zmusicplayer.presenter;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ import java.util.List;
  */
 public class MainPresenter implements MainContract.Presenter {
 
+    private RecyclerView recyclerView;
     private PlayList playList;
     private SongInfoAdapter baseAdapter;
     private int selectColor;
@@ -31,62 +33,58 @@ public class MainPresenter implements MainContract.Presenter {
     private int itemSongNameId = R.id.tv_item_song_name;
     private int itemSongArtistId = R.id.tv_item_song_artist;
     private int[] textViewIds = new int[]{itemSongNameId, itemSongArtistId};
-    private View lastView;
+    private int lastViewPosition = -1;
 
     public MainPresenter(MainContract.View mView) {
         this.mView = mView;
         context = mView.getActivity();
+        recyclerView = mView.getRecyclerView();
         selectColor = context.getColor(R.color.colorGreen);
         initSongInfos();
-        mView.setControlFragment(playList);
         intiAdapter();
+        mView.updateControlFragment(playList);
     }
 
     private void initSongInfos() {
         List <SongInfo> songInfos = SongModel.getSortedSongInfos();
-        AppSetting appSetting = AppSetting.readSetting(context);
-        playList = new PlayList(songInfos, appSetting.getLastPlaySongIndex(),
+        playList = new PlayList(songInfos, AppSetting.getLastPlaySongIndex(context),
                 AppSetting.getLastPlayMode(context));
     }
 
     private void intiAdapter() {
-        baseAdapter = new SongInfoAdapter(playList.getSongInfos(), mView.getRecyclerView(),
+        baseAdapter = new SongInfoAdapter(playList.getSongInfos(), recyclerView,
                 context);
 //        baseAdapter.setQueryTextListener(svSongFile);
 
         baseAdapter.setOnItemClickListener((adapter, view, position) -> {
             playList.setPlayingIndex(position);
-            mView.setControlFragment(playList);
-            setSongBackgroundColor(view);
-//            SongInfo songInfo = (SongInfo) adapter.getItem(position);
-//            if (songInfo != null) {
-//                mView.setControlFragment(playList);
-//                setSongBackgroundColor(view);
-//            }
+            mView.updateControlFragment(playList);
+            setPlaySongBackgroundColor(position);
         });
     }
 
-    private void setSongBackgroundColor(View view) {
-        if (lastView != null) {
-            setTextViewBackground(lastView, Color.WHITE);
-            setDivider(lastView, Color.TRANSPARENT);
+    public void setPlaySongBackgroundColor(int position) {
+        if (lastViewPosition != -1) {
+            setTextViewBackground(lastViewPosition, Color.WHITE);
+            setDivider(lastViewPosition, Color.TRANSPARENT);
         }
-        setTextViewBackground(view, selectColor);
-        setDivider(view, selectColor);
-        lastView = view;
+        setTextViewBackground(position, selectColor);
+        setDivider(position, selectColor);
+        lastViewPosition = position;
     }
 
-    private void setTextViewBackground(View view, int color) {
-        for (int songId : textViewIds) {
-            TextView textView = view.findViewById(songId);
+    private void setTextViewBackground(int position, int color) {
+        for (int viewId : textViewIds) {
+            TextView textView = (TextView) baseAdapter.getViewByPosition(recyclerView, position,
+                    viewId);
             if (textView != null) {
                 textView.setTextColor(color);
             }
         }
     }
 
-    private void setDivider(View view, int color) {
-        View subView = view.findViewById(R.id.divider_item);
+    private void setDivider(int position, int color) {
+        View subView = baseAdapter.getViewByPosition(recyclerView, position, R.id.divider_item);
         if (subView != null) {
             subView.setBackgroundColor(color);
         }

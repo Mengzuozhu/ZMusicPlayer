@@ -13,9 +13,13 @@ import com.mzz.zandroidcommon.view.QueryInfo;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.converter.PropertyConverter;
 
 import java.util.ArrayList;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 歌曲信息
@@ -37,6 +41,10 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo {
             return new SongInfo[size];
         }
     };
+    @Transient
+    @Setter
+    @Getter
+    int adapterPosition; //在适配器中的位置，即列表中的位置
     @Id(autoincrement = true)
     private Long id;
     private String name;

@@ -10,6 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,6 +57,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         }
 
         mainPresenter = new MainPresenter(this);
+        controlFragment.setMainPresenter(mainPresenter);
         ViewerHelper.showOrHideScrollFirst(rvSong, mainPresenter.getLayoutManager(),
                 fabSongScrollFirst);
         playedMode = AppSetting.getLastPlayMode(this);
@@ -88,6 +90,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     @Override
+    public void onBackPressed() {
+        //返回键，不退出程序
+        moveTaskToBack(true);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             if (layoutDrawer.isDrawerOpen(GravityCompat.START)) {
@@ -101,7 +109,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     @Override
-    public void setControlFragment(PlayList playList) {
+    public void updateControlFragment(PlayList playList) {
         if (playList == null) {
             playList = new PlayList();
         }

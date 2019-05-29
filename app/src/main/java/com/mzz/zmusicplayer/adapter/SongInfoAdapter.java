@@ -44,6 +44,7 @@ public class SongInfoAdapter extends CheckableAndDraggableAdapter <SongInfo> {
 
     @Override
     protected void convert(BaseViewHolder helper, SongInfo songInfo) {
+        songInfo.setAdapterPosition(helper.getAdapterPosition());
         String name = songInfo.getName();
         int itemSongNameId = R.id.tv_item_song_name;
         if (nameAndQuerySpans.containsKey(name)) {

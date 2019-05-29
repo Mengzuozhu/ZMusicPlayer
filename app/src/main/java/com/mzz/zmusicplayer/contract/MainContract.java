@@ -19,7 +19,7 @@ public interface MainContract {
     interface View {
         FragmentActivity getActivity();
 
-        void setControlFragment(PlayList playList);
+        void updateControlFragment(PlayList playList);
 
         RecyclerView getRecyclerView();
 
@@ -27,9 +27,11 @@ public interface MainContract {
 
     interface Presenter {
 
+        void setPlaySongBackgroundColor(int position);
+
         LinearLayoutManager getLayoutManager();
 
-        void addSongs(List<SongInfo> songInfos);
+        void addSongs(List <SongInfo> songInfos);
 
         void scrollToFirst();
     }

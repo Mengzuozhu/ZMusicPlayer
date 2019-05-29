@@ -3,6 +3,8 @@ package com.mzz.zmusicplayer.song;
 import android.media.MediaPlayer;
 import android.util.Log;
 
+import com.mzz.zmusicplayer.setting.PlayedMode;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +71,11 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     @Override
+    public void setPlayMode(PlayedMode playMode) {
+        mPlayList.setPlayMode(playMode);
+    }
+
+    @Override
     public boolean play(PlayList list) {
         if (list == null) return false;
 
@@ -115,6 +122,10 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
             position = 1;
         }
         return position;
+    }
+
+    public int getPlayingIndex() {
+        return mPlayList.getPlayingIndex();
     }
 
     @Override
