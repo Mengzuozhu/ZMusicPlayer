@@ -47,7 +47,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
             notifyPlayStatusChanged(true);
             return true;
         }
-        SongInfo currentSong = getCurrentSong();
+        SongInfo currentSong = getPlayingSong();
         if (currentSong != null) {
             try {
                 mPlayer.reset();
@@ -66,8 +66,8 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     @Override
-    public SongInfo getCurrentSong() {
-        return mPlayList.getCurrentSong();
+    public SongInfo getPlayingSong() {
+        return mPlayList.getPlayingSong();
     }
 
     @Override
@@ -89,6 +89,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         if (mPlayer.isPlaying()) {
             mPlayer.pause();
             isPaused = true;
+            notifyPlayStatusChanged(false);
             return true;
         }
         return false;
@@ -132,7 +133,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     public boolean seekTo(int progress) {
         if (mPlayList.isEmpty()) return false;
 
-        SongInfo currentSong = mPlayList.getCurrentSong();
+        SongInfo currentSong = mPlayList.getPlayingSong();
         if (currentSong != null) {
             if (progress >= currentSong.getDuration()) {
                 onCompletion(mPlayer);
@@ -152,7 +153,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     @Override
     public int getCurrentSongDuration() {
         int duration;
-        SongInfo currentSong = getCurrentSong();
+        SongInfo currentSong = getPlayingSong();
         if (currentSong != null) {
             duration = currentSong.getDuration();
         } else {

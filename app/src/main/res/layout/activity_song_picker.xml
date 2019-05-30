@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/universe"
-    tools:context=".song.SongPickerActivity">
+    tools:context=".ui.SongPickerActivity">
 
     <include layout="@layout/content_song_picker" />
 

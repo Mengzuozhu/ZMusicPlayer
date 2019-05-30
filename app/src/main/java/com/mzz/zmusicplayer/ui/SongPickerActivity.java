@@ -1,4 +1,4 @@
-package com.mzz.zmusicplayer.song;
+package com.mzz.zmusicplayer.ui;
 
 import android.Manifest;
 import android.content.Intent;
@@ -14,6 +14,8 @@ import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongInfoAdapter;
+import com.mzz.zmusicplayer.song.FileManager;
+import com.mzz.zmusicplayer.song.SongInfo;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;

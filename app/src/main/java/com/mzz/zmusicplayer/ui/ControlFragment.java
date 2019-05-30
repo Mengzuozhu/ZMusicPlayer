@@ -1,4 +1,4 @@
-package com.mzz.zmusicplayer;
+package com.mzz.zmusicplayer.ui;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,9 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
+import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.TimeHelper;
 import com.mzz.zmusicplayer.contract.MainContract;
 import com.mzz.zmusicplayer.setting.AppSetting;
@@ -18,6 +21,7 @@ import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.IPlayer;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.PlayObserver;
+import com.mzz.zmusicplayer.song.PlaybackService;
 import com.mzz.zmusicplayer.song.Player;
 import com.mzz.zmusicplayer.song.SongInfo;
 
@@ -29,7 +33,7 @@ import butterknife.Unbinder;
 /**
  * The type Control fragment.
  */
-public class ControlFragment extends Fragment implements PlayObserver {
+public class ControlFragment extends Fragment implements MusicPlayerContract.View, PlayObserver {
     private static final String SONG_INFO = "SONG_INFO";
     private static final long UPDATE_PROGRESS_INTERVAL = 1000;
     @BindView(R.id.tv_song_name)
@@ -67,6 +71,7 @@ public class ControlFragment extends Fragment implements PlayObserver {
         }
     };
     private MainContract.Presenter mainPresenter;
+    private MusicPlayerContract.Presenter mPresenter;
 
     /**
      * Use this factory method to create a new instance of
@@ -96,8 +101,16 @@ public class ControlFragment extends Fragment implements PlayObserver {
         mPlayer = Player.getInstance();
         mPlayer.registerCallback(this);
         mPlayer.setPlayList(mPlayList);
-        onSongUpdated(mPlayer.getCurrentSong());
+//        onSongUpdated(mPlayer.getPlayingSong());
         return view;
+    }
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+//        ButterKnife.bind(this, view);
+
+        mPresenter = new MusicPlayerPresenter(getActivity(), this);
+        mPresenter.subscribe();
     }
 
     @Override
@@ -126,7 +139,7 @@ public class ControlFragment extends Fragment implements PlayObserver {
             playList = new PlayList();
         }
         mPlayer.play(playList);
-        onSongUpdated(mPlayer.getCurrentSong());
+        onSongUpdated(mPlayer.getPlayingSong());
     }
 
     public void setPlayMode(PlayedMode playMode) {
@@ -163,6 +176,7 @@ public class ControlFragment extends Fragment implements PlayObserver {
         tvProgress.setText(TimeHelper.formatDuration(duration));
     }
 
+    @Override
     public void onSongUpdated(@Nullable SongInfo song) {
         if (song == null) {
             return;
@@ -193,12 +207,34 @@ public class ControlFragment extends Fragment implements PlayObserver {
         } else {
             mHandler.removeCallbacks(mProgressCallback);
         }
-        ivPlayOrPause.setImageResource(isPlaying ? R.drawable.pause : R.drawable.play);
+        updatePlayToggle(isPlaying);
     }
 
     private void updateProgressBar() {
         mHandler.removeCallbacks(mProgressCallback);
         mHandler.post(mProgressCallback);
+    }
+
+    @Override
+    public void updatePlayToggle(boolean isPlaying) {
+        ivPlayOrPause.setImageResource(isPlaying ? R.drawable.pause : R.drawable.play);
+    }
+
+    @Override
+    public void handleError(Throwable error) {
+        Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPlaybackServiceBound(PlaybackService service) {
+//        mPlayer = service;
+        mPlayer.registerCallback(service);
+    }
+
+    @Override
+    public void onPlaybackServiceUnbound() {
+        mPlayer.unregisterCallback(this);
+        mPlayer = null;
     }
 
 }

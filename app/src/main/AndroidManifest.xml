@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".MyApplication"
@@ -21,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".song.SongPickerActivity"
+            android:name=".ui.SongPickerActivity"
             android:label="添加歌曲" />
 
         <service android:name=".song.PlaybackService">

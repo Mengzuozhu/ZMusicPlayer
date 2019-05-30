@@ -1,2 +1,3 @@
 
-qsquid:MaximumInheritanceDepth"<This class has 6 parents which is greater than 5 authorized.(ç¡÷Ëüÿÿÿÿ8©ùµí¯-
+]squid:UselessImportCheck"-Remove this unused import 'android.util.Log'.(Ô¦Ø²øÿÿÿÿ8ûùÏ°-
+qsquid:MaximumInheritanceDepth""<This class has 6 parents which is greater than 5 authorized.(ç¡÷Ëüÿÿÿÿ8¯»Îš°-

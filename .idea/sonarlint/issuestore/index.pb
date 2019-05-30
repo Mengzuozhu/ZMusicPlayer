@@ -98,3 +98,11 @@ i
 9app/src/main/java/com/mzz/zmusicplayer/song/PlayList.java,5\e\5e59a752707a16955582368319d37530e3a755a9
 n
 >app/src/main/java/com/mzz/zmusicplayer/setting/AppSetting.java,1\e\1e581fd59b60872ab794c2361c5975f9fb0c3ff4
+S
+#app/src/main/res/menu/menu_main.xml,c\3\c3a80566aac3130f1ff9cc134a0739807a4ee7fa
+m
+=app/src/main/java/com/mzz/zmusicplayer/song/PlayObserver.java,8\2\8216fe76eba387e6c92ad0724f65b157bb9973f1
+h
+8app/src/main/java/com/mzz/zmusicplayer/song/IPlayer.java,7\a\7a11f469ad531d023167d7c9400c17de68a125da
+p
+@app/src/main/java/com/mzz/zmusicplayer/song/PlaybackService.java,6\5\65e466353ce09d51e1eeea96eb89486aa6040505
