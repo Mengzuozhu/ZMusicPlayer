@@ -7,8 +7,6 @@ h
 build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
 P
  app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
-k
-;app/src/main/java/com/mzz/zmusicplayer/ControlFragment.java,0\9\095f03229f03bae3f78eda668c960fd9187b1149
 i
 9app/src/main/java/com/mzz/zmusicplayer/song/SongInfo.java,5\7\575b76af88e0653f6ecafe3f7980c33517eaa43e
 l
@@ -87,8 +85,6 @@ U
 _
 /app/src/main/res/layout/content_song_picker.xml,2\3\2310c7cf52e1b556f0b2b9362d9aeec6f1ff7e92
 s
-Capp/src/main/java/com/mzz/zmusicplayer/song/SongPickerActivity.java,5\e\5e453094be5073c6e4c4b1aba322311371d68d42
-s
 Capp/src/main/java/com/mzz/zmusicplayer/adapter/SongInfoAdapter.java,0\3\037e797bbdb6909a3ffe359d0931e6caebdf72ca
 k
 ;app/src/main/java/com/mzz/zmusicplayer/model/SongModel.java,6\e\6e970de833dec6afa2b46c5ca2cfcbd17b13261e
@@ -106,3 +102,11 @@ h
 8app/src/main/java/com/mzz/zmusicplayer/song/IPlayer.java,7\a\7a11f469ad531d023167d7c9400c17de68a125da
 p
 @app/src/main/java/com/mzz/zmusicplayer/song/PlaybackService.java,6\5\65e466353ce09d51e1eeea96eb89486aa6040505
+r
+Bapp/src/main/java/com/mzz/zmusicplayer/ui/MusicPlayerContract.java,a\4\a42503059cd17d00c571745cacb7d7a69de77cd9
+s
+Capp/src/main/java/com/mzz/zmusicplayer/ui/MusicPlayerPresenter.java,9\5\953414472f7fbe7fd6ba835fba8c26dd91bdd579
+q
+Aapp/src/main/java/com/mzz/zmusicplayer/ui/SongPickerActivity.java,a\b\abadb3cd30731bf463d38947124c0631d2dd571d
+n
+>app/src/main/java/com/mzz/zmusicplayer/ui/ControlFragment.java,a\a\aaa51b3c6bb2c0aff5c35a3b2e33410ebe977872

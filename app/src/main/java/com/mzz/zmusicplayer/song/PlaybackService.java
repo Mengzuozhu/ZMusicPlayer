@@ -1,8 +1,6 @@
 package com.mzz.zmusicplayer.song;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -10,13 +8,11 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.mzz.zmusicplayer.MainActivity;
 import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.common.NotificationHandler;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 
 /**
@@ -28,24 +24,21 @@ import com.mzz.zmusicplayer.setting.PlayedMode;
  */
 public class PlaybackService extends Service implements IPlayer, PlayObserver {
 
-    public static final String channelID = "channel_1";
-    public static final String channelName = "channel_name_1";
-    private static final String ACTION_PLAY_TOGGLE = "io.github.ryanhoo.music.ACTION.PLAY_TOGGLE";
-    private static final String ACTION_PLAY_LAST = "io.github.ryanhoo.music.ACTION.PLAY_LAST";
-    private static final String ACTION_PLAY_NEXT = "io.github.ryanhoo.music.ACTION.PLAY_NEXT";
-    private static final String ACTION_STOP_SERVICE = "io.github.ryanhoo.music.ACTION.STOP_SERVICE";
+    private static final String ACTION_PLAY_TOGGLE = "com.mzz.zmusicplayer.ACTION.PLAY_TOGGLE";
+    private static final String ACTION_PLAY_LAST = "com.mzz.zmusicplayer.ACTION.PLAY_LAST";
+    private static final String ACTION_PLAY_NEXT = "com.mzz.zmusicplayer.ACTION.PLAY_NEXT";
+    private static final String ACTION_STOP_SERVICE = "com.mzz.zmusicplayer.ACTION.STOP_SERVICE";
     private static final int NOTIFICATION_ID = 1;
     private final Binder mBinder = new LocalBinder();
-    private RemoteViews mContentViewBig, mContentViewSmall;
+    private NotificationHandler notificationHandler;
+    private RemoteViews mContentViewSmall;
     private Player mPlayer;
-    private NotificationManager manager;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mPlayer = Player.getInstance();
         mPlayer.registerCallback(this);
-        Log.d("PlaybackService", "onCreate");
     }
 
     @Override
@@ -89,7 +82,6 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
     @Override
     public void onDestroy() {
         releasePlayer();
-        stopForeground(true);
         super.onDestroy();
     }
 
@@ -184,17 +176,10 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
         showNotification();
     }
 
-    // Playback Callbacks
-
     @Override
     public void onSwitchNext(@Nullable SongInfo next) {
         showNotification();
     }
-
-//    @Override
-//    public void onComplete(@Nullable SongInfo next) {
-//        showNotification();
-//    }
 
     @Override
     public void onPlayStatusChanged(boolean isPlaying) {
@@ -205,65 +190,25 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
      * Show a notification while this service is running.
      */
     private void showNotification() {
-
-        // The PendingIntent to launch our activity if the user selects this notification
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this,
-                MainActivity.class), 0);
         Notification notification;
+        if (notificationHandler == null) {
+            notificationHandler = new NotificationHandler(this);
+        }
         if (Build.VERSION.SDK_INT >= 26) {
-            createNotificationChannel();
-            Notification.Builder builder = getChannelNotification();
+            Notification.Builder builder = notificationHandler.getChannelNotificationBuilder();
+            builder.setCustomBigContentView(getSmallContentView())
+                    .setSmallIcon(R.drawable.music)
+                    .setOngoing(true);
             notification = builder.build();
         } else {
-            notification = getNotification25(contentIntent);
+            NotificationCompat.Builder builder = notificationHandler.getNotification25Builder();
+            builder.setCustomBigContentView(getSmallContentView())
+                    .setSmallIcon(R.drawable.music)
+                    .setOngoing(true);
+            notification = builder.build();
         }
-//        getManager().notify(NOTIFICATION_ID, notification);
-        // Send the notification.
         startForeground(NOTIFICATION_ID, notification);
     }
-
-    private Notification getNotification25(PendingIntent contentIntent) {
-        // Set the info for the views that show in the notification panel.
-        return new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)  // the status icon
-                .setWhen(System.currentTimeMillis())  // the time stamp
-//                .setContentIntent(contentIntent)  // The intent to send when the entry is clicked
-                .setCustomContentView(getSmallContentView())
-//                .setCustomBigContentView(getBigContentView())
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setOngoing(true)
-                .build();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public Notification.Builder getChannelNotification() {
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this,
-                MainActivity.class), 0);
-        createNotificationChannel();
-        return new Notification.Builder(getApplicationContext(), channelID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)  // the status icon
-                .setWhen(System.currentTimeMillis())  // the time stamp
-//                .setContentIntent(contentIntent)  // The intent to send when the entry is clicked
-                .setCustomContentView(getSmallContentView())
-//                .setCustomBigContentView(getBigContentView())
-//                .setPriority(Notification.ma)
-                .setOngoing(true);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void createNotificationChannel() {
-        NotificationChannel channel = new NotificationChannel(channelID, channelName,
-                NotificationManager.IMPORTANCE_DEFAULT);
-        getManager().createNotificationChannel(channel);
-    }
-
-    private NotificationManager getManager() {
-        if (manager == null) {
-            manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        }
-        return manager;
-    }
-    // Notification
 
     private RemoteViews getSmallContentView() {
         if (mContentViewSmall == null) {
@@ -274,26 +219,14 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
         return mContentViewSmall;
     }
 
-//    private RemoteViews getBigContentView() {
-//        if (mContentViewBig == null) {
-//            mContentViewBig = new RemoteViews(getPackageName(), R.layout
-//            .remote_view_music_player);
-//            setUpRemoteView(mContentViewBig);
-//        }
-//        updateRemoteViews(mContentViewBig);
-//        return mContentViewBig;
-//    }
-
     private void setUpRemoteView(RemoteViews remoteView) {
-//        remoteView.setImageViewResource(R.id.image_view_close, R.drawable.ic_remote_view_close);
-        remoteView.setImageViewResource(R.id.iv_notify_play_pre,
-                R.drawable.previous);
-        remoteView.setImageViewResource(R.id.iv_notify_play_pause,
-                R.drawable.play);
-        remoteView.setImageViewResource(R.id.iv_notify_play_next,
-                R.drawable.next);
+        remoteView.setImageViewResource(R.id.iv_notify_close,
+                android.R.drawable.ic_menu_close_clear_cancel);
+        remoteView.setImageViewResource(R.id.iv_notify_play_pre, R.drawable.previous);
+        remoteView.setImageViewResource(R.id.iv_notify_play_pause, R.drawable.play);
+        remoteView.setImageViewResource(R.id.iv_notify_play_next, R.drawable.next);
 
-//        remoteView.setOnClickPendingIntent(R.id.button_close,
+//        remoteView.setOnClickPendingIntent(R.id.iv_notify_close,
 //                getPendingIntent(ACTION_STOP_SERVICE));
         remoteView.setOnClickPendingIntent(R.id.iv_notify_play_pre,
                 getPendingIntent(ACTION_PLAY_LAST));
@@ -309,16 +242,13 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
             remoteView.setTextViewText(R.id.tv_notify_song_name, currentSong.getName());
             remoteView.setTextViewText(R.id.tv_notify_artist, currentSong.getArtist());
         }
-        boolean playing = isPlaying();
-        remoteView.setImageViewResource(R.id.iv_notify_play_pause, playing
+        remoteView.setImageViewResource(R.id.iv_notify_play_pause, isPlaying()
                 ? R.drawable.pause : R.drawable.play);
     }
 
     private PendingIntent getPendingIntent(String action) {
         return PendingIntent.getService(this, 0, new Intent(action), 0);
     }
-
-    // PendingIntent
 
     public class LocalBinder extends Binder {
         public PlaybackService getService() {

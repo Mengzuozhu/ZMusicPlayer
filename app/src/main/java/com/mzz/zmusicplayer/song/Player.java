@@ -28,6 +28,11 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         mPlayer.setOnCompletionListener(this);
     }
 
+    /**
+     * Gets single instance.单例
+     *
+     * @return the single instance
+     */
     public static Player getInstance() {
         return sInstance;
     }

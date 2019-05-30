@@ -19,11 +19,11 @@ public class FileManager {
     private static final String[] projection = {
             MediaStore.Audio.Media.DATA,
             MediaStore.Audio.Media.DISPLAY_NAME,
-            MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.IS_MUSIC,
             MediaStore.Audio.Media._ID};
+    private static final String MINUS = "-";
     private static FileManager mInstance = new FileManager();
     private static ContentResolver mContentResolver;
 
@@ -47,16 +47,22 @@ public class FileManager {
             while (c.moveToNext()) {
                 // 路径
                 String path = c.getString(0);
-                int isMusic = c.getInt(5);
+                int isMusic = c.getInt(4);
                 if (isMusic == 0 || !new File(path).exists()) {
                     continue;
                 }
 
                 String name = c.getString(1); // DISPLAY_NAME
-                String title = c.getString(2); // 歌曲名
-                String artist = c.getString(3);
-                int duration = c.getInt(4);
+                String artist = c.getString(2);
+                int duration = c.getInt(3);
                 name = extractName(name);
+                if (name.contains(MINUS)) {
+                    String[] strings = name.split(MINUS);
+                    if (strings.length > 1) {
+                        artist = strings[0];
+                        name = strings[1];
+                    }
+                }
                 SongInfo song = new SongInfo();
                 song.setName(name);
                 song.setPath(path);
@@ -81,14 +87,6 @@ public class FileManager {
         int bracketIndex = name.indexOf('[');
         if (bracketIndex > 0) {
             name = name.substring(0, bracketIndex);
-        }
-
-        String s = "-";
-        if (name.contains(s)) {
-            String[] strings = name.split(s);
-            if (strings.length > 1) {
-                name = strings[1];
-            }
         }
         return name;
     }

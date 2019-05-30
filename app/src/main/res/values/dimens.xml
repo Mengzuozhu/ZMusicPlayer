@@ -19,4 +19,5 @@
     <dimen name="image_margin_2">2dp</dimen>
     <dimen name="image_margin_4">4dp</dimen>
     <dimen name="image_height">100dp</dimen>
+    <dimen name="image_size_32">32dp</dimen>
 </resources>

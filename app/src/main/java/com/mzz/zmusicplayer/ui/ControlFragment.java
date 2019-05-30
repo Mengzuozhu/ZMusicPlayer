@@ -2,13 +2,13 @@ package com.mzz.zmusicplayer.ui;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,14 +21,12 @@ import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.IPlayer;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.PlayObserver;
-import com.mzz.zmusicplayer.song.PlaybackService;
 import com.mzz.zmusicplayer.song.Player;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 /**
  * The type Control fragment.
@@ -48,7 +46,7 @@ public class ControlFragment extends Fragment implements MusicPlayerContract.Vie
     TextView tvDuration;
     @BindView(R.id.iv_play_pause)
     ImageView ivPlayOrPause;
-    private Unbinder unbinder;
+    //与后台服务共用同一个播放器
     private IPlayer mPlayer;
     private Handler mHandler = new Handler();
     private Runnable mProgressCallback = new Runnable() {
@@ -88,10 +86,15 @@ public class ControlFragment extends Fragment implements MusicPlayerContract.Vie
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_control, container, false);
-        unbinder = ButterKnife.bind(this, view);
+        return inflater.inflate(R.layout.fragment_control, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
 
         Bundle bundle = getArguments();
         PlayList mPlayList = new PlayList();
@@ -101,24 +104,8 @@ public class ControlFragment extends Fragment implements MusicPlayerContract.Vie
         mPlayer = Player.getInstance();
         mPlayer.registerCallback(this);
         mPlayer.setPlayList(mPlayList);
-//        onSongUpdated(mPlayer.getPlayingSong());
-        return view;
-    }
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-//        ButterKnife.bind(this, view);
-
         mPresenter = new MusicPlayerPresenter(getActivity(), this);
         mPresenter.subscribe();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (mPlayer != null) {
-            onPlayStatusChanged(mPlayer.isPlaying());
-        }
     }
 
     @Override
@@ -127,7 +114,7 @@ public class ControlFragment extends Fragment implements MusicPlayerContract.Vie
         mHandler.removeCallbacks(mProgressCallback);
         mPlayer.unregisterCallback(this);
         AppSetting.setLastPlaySongIndex(getContext(), mPlayer.getPlayingIndex());
-        unbinder.unbind();
+        mPresenter.unsubscribe();
     }
 
     public void setMainPresenter(MainContract.Presenter mainPresenter) {
@@ -184,6 +171,8 @@ public class ControlFragment extends Fragment implements MusicPlayerContract.Vie
         if (mainPresenter != null) {
             mainPresenter.setPlaySongBackgroundColor(song.getAdapterPosition());
         }
+        //记录播放歌曲位置
+        AppSetting.setLastPlaySongIndex(getContext(), mPlayer.getPlayingIndex());
         tvSongName.setText(song.getName());
         tvArtist.setText(song.getArtist());
         tvDuration.setText(TimeHelper.formatDuration(mPlayer.getCurrentSongDuration()));
@@ -223,18 +212,6 @@ public class ControlFragment extends Fragment implements MusicPlayerContract.Vie
     @Override
     public void handleError(Throwable error) {
         Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onPlaybackServiceBound(PlaybackService service) {
-//        mPlayer = service;
-        mPlayer.registerCallback(service);
-    }
-
-    @Override
-    public void onPlaybackServiceUnbound() {
-        mPlayer.unregisterCallback(this);
-        mPlayer = null;
     }
 
 }

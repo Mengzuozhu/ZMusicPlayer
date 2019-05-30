@@ -2,13 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="110dp"
+    android:layout_height="90dp"
     android:background="@color/colorDark">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_toEndOf="@+id/layout_progress">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/tv_notify_song_name"
@@ -16,22 +15,22 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
-            android:text="@string/undefined" />
+            android:text="@string/undefined"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/tv_notify_artist"
             style="@style/StyleTextView"
             android:layout_below="@+id/tv_notify_song_name"
-            android:layout_alignParentBottom="false"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="2dp"
             android:text="@string/undefined"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
         <ImageView
             android:id="@+id/iv_notify_play_pre"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/image_size_32"
+            android:layout_height="@dimen/image_size_32"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="40dp"
             android:layout_marginBottom="10dp"
@@ -40,8 +39,8 @@
 
         <ImageView
             android:id="@+id/iv_notify_play_pause"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/image_size_32"
+            android:layout_height="@dimen/image_size_32"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
@@ -49,20 +48,24 @@
 
         <ImageView
             android:id="@+id/iv_notify_play_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/image_size_32"
+            android:layout_height="@dimen/image_size_32"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="40dp"
             android:layout_marginBottom="10dp"
             android:layout_toEndOf="@+id/iv_notify_play_pause"
             android:src="@drawable/next" />
 
-    </RelativeLayout>
+        <ImageView
+            android:id="@+id/iv_notify_close"
+            android:layout_width="@dimen/image_size_32"
+            android:layout_height="@dimen/image_size_32"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="5dp"
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
-    <RelativeLayout
-        android:id="@+id/layout_progress"
-        android:layout_width="100dp"
-        android:layout_height="match_parent">
     </RelativeLayout>
 
 </RelativeLayout>
