@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         controlFragment.setMainPresenter(mainPresenter);
         ViewerHelper.showOrHideScrollFirst(rvSong, mainPresenter.getLayoutManager(),
                 fabSongScrollFirst);
-        playedMode = AppSetting.getLastPlayMode(this);
+        playedMode = AppSetting.getPlayMode();
         initMenu();
         initNavigationView();
     }
@@ -84,7 +84,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     private void setPlayMode(MenuItem item) {
         playedMode = playedMode.getNextMode();
         item.setTitle(playedMode.getDesc());
-        AppSetting.setPlayMode(this, playedMode);
+        AppSetting.setPlayMode(playedMode);
         controlFragment.setPlayMode(playedMode);
     }
 

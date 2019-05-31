@@ -78,8 +78,6 @@ S
 #app/src/main/res/menu/menu_sort.xml,f\1\f192d77d77ef4803b89bec5d6e73d1db7cb10a0e
 S
 #app/src/main/res/menu/menu_save.xml,a\f\af512a814b21f62504ae3d0f0e1071edf5469758
-U
-%app/src/main/res/layout/item_song.xml,0\7\0773f61b8da31680a578dd204a883a7271085dd6
 `
 0app/src/main/res/layout/activity_song_picker.xml,8\1\81c0e1d69bd9369ff359698f28bc971f4b5efece
 _

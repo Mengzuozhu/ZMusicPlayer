@@ -7,5 +7,8 @@
     <string name="descend">降序</string>
     <string name="empty" />
     <string name="select_all">全选</string>
+    <string name="sort_ascend_by_name">按歌名升序</string>
+    <string name="sort_descend_by_name">按歌名降序</string>
+    <string name="sort_by_add_time">按添加时间排序</string>
 
 </resources>

@@ -118,4 +118,9 @@ public class SongInfoAdapter extends CheckableAndDraggableAdapter <SongInfo> {
         }
         notifyDataSetChanged();
     }
+
+    public void sortByAddTime() {
+        getData().sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
+        notifyDataSetChanged();
+    }
 }

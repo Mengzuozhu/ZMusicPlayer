@@ -15,6 +15,7 @@ import com.mzz.zmusicplayer.adapter.SongInfoAdapter;
 import com.mzz.zmusicplayer.contract.MainContract;
 import com.mzz.zmusicplayer.model.SongModel;
 import com.mzz.zmusicplayer.setting.AppSetting;
+import com.mzz.zmusicplayer.setting.SongOrderMode;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.SearchActivity;
@@ -37,7 +38,7 @@ public class MainPresenter implements MainContract.Presenter {
     private FragmentActivity context;
     private int[] textViewIds = new int[]{R.id.tv_item_song_name, R.id.tv_item_song_artist,
             R.id.tv_item_song_num};
-    private int lastViewPosition = -1;
+    private SongInfo currentColorSong;
 
     public MainPresenter(MainContract.View mView) {
         this.mView = mView;
@@ -52,9 +53,9 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     private void initSongInfos() {
-        List <SongInfo> songInfos = SongModel.getSortedSongInfos();
-        playList = new PlayList(songInfos, AppSetting.getLastPlaySongIndex(context),
-                AppSetting.getLastPlayMode(context));
+        List <SongInfo> songInfos = SongModel.getOrderSongInfos();
+        playList = new PlayList(songInfos, AppSetting.getLastPlaySongIndex(),
+                AppSetting.getPlayMode());
     }
 
     private void intiAdapter() {
@@ -71,13 +72,9 @@ public class MainPresenter implements MainContract.Presenter {
         View header = LayoutInflater.from(context).inflate(R.layout.content_song_header,
                 recyclerView, false);
         ImageView searchView = header.findViewById(R.id.iv_header_search);
-        searchView.setOnClickListener(v -> {
-            showSearchActivity();
-        });
+        searchView.setOnClickListener(v -> showSearchActivity());
         ImageView sortView = header.findViewById(R.id.iv_header_sort);
-        sortView.setOnClickListener(v -> {
-            showPopupMenu(sortView);
-        });
+        sortView.setOnClickListener(v -> showSongOrderPopupMenu(sortView));
         baseAdapter.setHeaderView(header);
         //隐藏头部
 //        scrollToPosition(1);
@@ -87,31 +84,42 @@ public class MainPresenter implements MainContract.Presenter {
         SearchActivity.startForResult(context, (ArrayList <SongInfo>) playList.getSongInfos());
     }
 
-    private void showPopupMenu(View view) {
+    private void showSongOrderPopupMenu(View view) {
         PopupMenu popupMenu = new PopupMenu(context, view);
         popupMenu.inflate(R.menu.menu_song_sort);
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             switch (menuItem.getItemId()) {
-                case R.id.action_name_sort_ascend:
+                case R.id.action_sort_ascend_by_name:
                     baseAdapter.sortByName(true);
+                    AppSetting.setSongOrderMode(SongOrderMode.ORDER_ASCEND_BY_NAME);
                     return true;
-                case R.id.action_name_sort_descend:
+                case R.id.action_sort_descend_by_name:
                     baseAdapter.sortByName(false);
+                    AppSetting.setSongOrderMode(SongOrderMode.ORDER_DESCEND_BY_NAME);
                     return true;
+                case R.id.action_sort_by_add_time:
+                    baseAdapter.sortByAddTime();
+                    AppSetting.setSongOrderMode(SongOrderMode.ORDER_ASCEND_BY_ADD_TIME);
+                    return true;
+                default:
+                    break;
             }
             return false;
         });
         popupMenu.show();
     }
 
-    public void setPlaySongBackgroundColor(int position) {
-        if (lastViewPosition != -1) {
-            setTextViewBackground(lastViewPosition, Color.WHITE);
-            setDivider(lastViewPosition, Color.TRANSPARENT);
+    @Override
+    public void setPlaySongBackgroundColor(SongInfo song) {
+        if (currentColorSong != null) {
+            int lastPosition = currentColorSong.getAdapterPosition();
+            setTextViewBackground(lastPosition, Color.WHITE);
+            setDivider(lastPosition, Color.TRANSPARENT);
         }
+        int position = song.getAdapterPosition();
         setTextViewBackground(position, selectColor);
         setDivider(position, selectColor);
-        lastViewPosition = position;
+        currentColorSong = song;
     }
 
     private void setTextViewBackground(int position, int color) {

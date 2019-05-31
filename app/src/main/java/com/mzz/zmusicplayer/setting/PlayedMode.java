@@ -1,7 +1,5 @@
 package com.mzz.zmusicplayer.setting;
 
-import org.greenrobot.greendao.converter.PropertyConverter;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -26,7 +24,7 @@ public enum PlayedMode {
      *
      * @return the next mode
      */
-    public  PlayedMode getNextMode() {
+    public PlayedMode getNextMode() {
         int nextId = id;
         nextId++;
         int length = values().length;
@@ -36,20 +34,4 @@ public enum PlayedMode {
         return values()[nextId];
     }
 
-    public static class SongPlayedModeConverter implements PropertyConverter <PlayedMode,
-            Integer> {
-
-        @Override
-        public PlayedMode convertToEntityProperty(Integer databaseValue) {
-            if (databaseValue == null) {
-                return PlayedMode.RANDOM;
-            }
-            return PlayedMode.values()[databaseValue];
-        }
-
-        @Override
-        public Integer convertToDatabaseValue(PlayedMode entityProperty) {
-            return entityProperty == null ? 0 : entityProperty.getId();
-        }
-    }
 }

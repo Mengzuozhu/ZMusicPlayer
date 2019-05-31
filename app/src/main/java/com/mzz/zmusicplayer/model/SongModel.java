@@ -3,6 +3,8 @@ package com.mzz.zmusicplayer.model;
 import com.mzz.zmusicplayer.MyApplication;
 import com.mzz.zmusicplayer.greendao.db.DaoSession;
 import com.mzz.zmusicplayer.greendao.db.SongInfoDao;
+import com.mzz.zmusicplayer.setting.AppSetting;
+import com.mzz.zmusicplayer.setting.SongOrderMode;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.ArrayList;
@@ -22,24 +24,26 @@ public class SongModel {
         songInfoDao = daoSession.getSongInfoDao();
     }
 
-    public static List <SongInfo> getSortedSongInfos() {
-        List <SongInfo> data = daoSession.loadAll(SongInfo.class);
-        data.sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
-        return data;
+    public static List <SongInfo> getOrderSongInfos() {
+        switch (AppSetting.getSongSortMode()) {
+            case ORDER_ASCEND_BY_NAME:
+                return songInfoDao.queryBuilder().orderAsc(SongInfoDao.Properties.Name).list();
+            case ORDER_DESCEND_BY_NAME:
+                return songInfoDao.queryBuilder().orderDesc(SongInfoDao.Properties.Name).list();
+            default:
+                return songInfoDao.queryBuilder().orderAsc(SongInfoDao.Properties.Id).list();
+        }
+    }
+
+    private static List <SongInfo> loadAll() {
+        return daoSession.loadAll(SongInfo.class);
     }
 
     public static void deleteByKey(Iterable <Long> keys) {
         songInfoDao.deleteByKeyInTx(keys);
     }
 
-    public static void insertOrReplace(SongInfo songInfo) {
-        if (songInfo == null) {
-            return;
-        }
-        songInfoDao.insertOrReplace(songInfo);
-    }
-
-    public static void insertOrReplaceInTx(Iterable<SongInfo> songInfos) {
+    public static void insertOrReplaceInTx(Iterable <SongInfo> songInfos) {
         if (songInfos == null) {
             return;
         }

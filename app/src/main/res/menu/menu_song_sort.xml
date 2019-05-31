@@ -3,13 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_name_sort_ascend"
+        android:id="@+id/action_sort_ascend_by_name"
         android:orderInCategory="2"
-        android:title="按歌名升序"
+        android:title="@string/sort_ascend_by_name"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_name_sort_descend"
+        android:id="@+id/action_sort_descend_by_name"
         android:orderInCategory="3"
-        android:title="按歌名降序"
+        android:title="@string/sort_descend_by_name"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_sort_by_add_time"
+        android:orderInCategory="4"
+        android:title="@string/sort_by_add_time"
         app:showAsAction="never" />
 </menu>

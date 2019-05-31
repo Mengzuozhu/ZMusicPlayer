@@ -17,6 +17,7 @@ import java.util.List;
 public interface MainContract {
 
     interface View {
+        
         FragmentActivity getActivity();
 
         void updateControlFragment(PlayList playList);
@@ -27,7 +28,7 @@ public interface MainContract {
 
     interface Presenter {
 
-        void setPlaySongBackgroundColor(int position);
+        void setPlaySongBackgroundColor(SongInfo song);
 
         LinearLayoutManager getLayoutManager();
 

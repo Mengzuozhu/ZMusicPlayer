@@ -113,7 +113,7 @@ public class ControlFragment extends Fragment implements MusicPlayerContract.Vie
         super.onDestroyView();
         mHandler.removeCallbacks(mProgressCallback);
         mPlayer.unregisterCallback(this);
-        AppSetting.setLastPlaySongIndex(getContext(), mPlayer.getPlayingIndex());
+        AppSetting.setLastPlaySongIndex(mPlayer.getPlayingIndex());
         mPresenter.unsubscribe();
     }
 
@@ -169,10 +169,10 @@ public class ControlFragment extends Fragment implements MusicPlayerContract.Vie
             return;
         }
         if (mainPresenter != null) {
-            mainPresenter.setPlaySongBackgroundColor(song.getAdapterPosition());
+            mainPresenter.setPlaySongBackgroundColor(song);
         }
         //记录播放歌曲位置
-        AppSetting.setLastPlaySongIndex(getContext(), mPlayer.getPlayingIndex());
+        AppSetting.setLastPlaySongIndex(mPlayer.getPlayingIndex());
         tvSongName.setText(song.getName());
         tvArtist.setText(song.getArtist());
         tvDuration.setText(TimeHelper.formatDuration(mPlayer.getCurrentSongDuration()));
