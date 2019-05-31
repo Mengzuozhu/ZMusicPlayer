@@ -110,3 +110,7 @@ q
 Aapp/src/main/java/com/mzz/zmusicplayer/ui/SongPickerActivity.java,a\b\abadb3cd30731bf463d38947124c0631d2dd571d
 n
 >app/src/main/java/com/mzz/zmusicplayer/ui/ControlFragment.java,a\a\aaa51b3c6bb2c0aff5c35a3b2e33410ebe977872
+v
+Fapp/src/main/java/com/mzz/zmusicplayer/common/NotificationHandler.java,8\9\89040e0fecaebe4f0d9cb0276bf5954a0bb4a0fd
+n
+>app/src/main/java/com/mzz/zmusicplayer/common/AlbumHelper.java,b\0\b0350db47f36262ebc976c5e57858361ddbd9322

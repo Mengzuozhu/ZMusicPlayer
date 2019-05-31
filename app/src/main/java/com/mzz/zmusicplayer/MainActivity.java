@@ -10,6 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -74,19 +75,32 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 openActivityForResult(SongPickerActivity.class, SongPickerActivity.ADD_SONG_CODE);
                 layoutDrawer.closeDrawers();
             } else if (itemId == R.id.nav_play_mode) {
-                playedMode = playedMode.getNextMode();
-                item.setTitle(playedMode.getDesc());
-                AppSetting.setPlayMode(this, playedMode);
-                controlFragment.setPlayMode(playedMode);
+                setPlayMode(item);
             }
             return true;
         });
+    }
+
+    private void setPlayMode(MenuItem item) {
+        playedMode = playedMode.getNextMode();
+        item.setTitle(playedMode.getDesc());
+        AppSetting.setPlayMode(this, playedMode);
+        controlFragment.setPlayMode(playedMode);
     }
 
     private void initMenu() {
         Menu menu = navView.getMenu();
         MenuItem menuItem = menu.findItem(R.id.nav_play_mode);
         menuItem.setTitle(playedMode.getDesc());
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            moveTaskToBack(true);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

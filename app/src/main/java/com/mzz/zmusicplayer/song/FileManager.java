@@ -63,6 +63,8 @@ public class FileManager {
                         name = strings[1];
                     }
                 }
+                name = name.trim();
+                artist = artist.trim();
                 SongInfo song = new SongInfo();
                 song.setName(name);
                 song.setPath(path);

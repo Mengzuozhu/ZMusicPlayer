@@ -75,10 +75,10 @@ public class SongPickerActivity extends BaseActivity {
                 this.finish();
                 return true;
             case R.id.action_sort_ascend:
-                adapter.sort(true);
+                adapter.sortByName(true);
                 break;
             case R.id.action_sort_descend:
-                adapter.sort(false);
+                adapter.sortByName(false);
                 break;
             default:
                 break;
@@ -88,8 +88,8 @@ public class SongPickerActivity extends BaseActivity {
 
     public void initAlarmSong() {
         songInfos = FileManager.getInstance(SongPickerActivity.this).getSongInfos();
-        adapter = new SongInfoAdapter(songInfos, rvSongFile, this);
-        adapter.setQueryTextListener(svSongFile);
+        adapter = new SongInfoAdapter(songInfos, rvSongFile, this, true);
+        adapter.setQueryTextListener(svSongFile, this.getColor(R.color.colorGreen));
         ViewerHelper.showOrHideScrollFirst(rvSongFile, adapter.getLayoutManager(),
                 fabSongScrollFirst);
     }
@@ -111,9 +111,7 @@ public class SongPickerActivity extends BaseActivity {
     }
 
     @OnClick(R.id.fab_song_file_scroll_first)
-    public void scrollToFirstSong_onClick(View view) {
-        if (adapter.getItemCount() > 0) {
-            rvSongFile.scrollToPosition(0);
-        }
+    public void scrollToFirstSongOnClick(View view) {
+        adapter.scrollToPosition(0);
     }
 }

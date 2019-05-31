@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/universe"
+    android:background="@color/colorGrey"
     tools:context=".ui.SongPickerActivity">
 
     <include layout="@layout/content_song_picker" />
@@ -13,5 +13,6 @@
         android:id="@+id/fab_song_file_scroll_first"
         style="@style/StyleFab"
         android:src="@drawable/up_arrow"
-        app:backgroundTint="@color/colorGray" />
+        app:backgroundTint="@color/colorGray"
+        app:fabSize="mini" />
 </android.support.design.widget.CoordinatorLayout>

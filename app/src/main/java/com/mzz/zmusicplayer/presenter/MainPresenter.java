@@ -4,7 +4,10 @@ import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.mzz.zmusicplayer.R;
@@ -14,7 +17,9 @@ import com.mzz.zmusicplayer.model.SongModel;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
+import com.mzz.zmusicplayer.ui.SearchActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,9 +35,8 @@ public class MainPresenter implements MainContract.Presenter {
     private int selectColor;
     private MainContract.View mView;
     private FragmentActivity context;
-    private int itemSongNameId = R.id.tv_item_song_name;
-    private int itemSongArtistId = R.id.tv_item_song_artist;
-    private int[] textViewIds = new int[]{itemSongNameId, itemSongArtistId};
+    private int[] textViewIds = new int[]{R.id.tv_item_song_name, R.id.tv_item_song_artist,
+            R.id.tv_item_song_num};
     private int lastViewPosition = -1;
 
     public MainPresenter(MainContract.View mView) {
@@ -43,6 +47,8 @@ public class MainPresenter implements MainContract.Presenter {
         initSongInfos();
         intiAdapter();
         mView.updateControlFragment(playList);
+        //设置缓存大小，避免多个item出现选中颜色
+        recyclerView.setItemViewCacheSize(playList.getSongInfos().size());
     }
 
     private void initSongInfos() {
@@ -53,14 +59,49 @@ public class MainPresenter implements MainContract.Presenter {
 
     private void intiAdapter() {
         baseAdapter = new SongInfoAdapter(playList.getSongInfos(), recyclerView,
-                context);
-//        baseAdapter.setQueryTextListener(svSongFile);
-
+                context, false);
         baseAdapter.setOnItemClickListener((adapter, view, position) -> {
             playList.setPlayingIndex(position);
             mView.updateControlFragment(playList);
-            setPlaySongBackgroundColor(position);
         });
+        setHeader();
+    }
+
+    private void setHeader() {
+        View header = LayoutInflater.from(context).inflate(R.layout.content_song_header,
+                recyclerView, false);
+        ImageView searchView = header.findViewById(R.id.iv_header_search);
+        searchView.setOnClickListener(v -> {
+            showSearchActivity();
+        });
+        ImageView sortView = header.findViewById(R.id.iv_header_sort);
+        sortView.setOnClickListener(v -> {
+            showPopupMenu(sortView);
+        });
+        baseAdapter.setHeaderView(header);
+        //隐藏头部
+//        scrollToPosition(1);
+    }
+
+    private void showSearchActivity() {
+        SearchActivity.startForResult(context, (ArrayList <SongInfo>) playList.getSongInfos());
+    }
+
+    private void showPopupMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(context, view);
+        popupMenu.inflate(R.menu.menu_song_sort);
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.action_name_sort_ascend:
+                    baseAdapter.sortByName(true);
+                    return true;
+                case R.id.action_name_sort_descend:
+                    baseAdapter.sortByName(false);
+                    return true;
+            }
+            return false;
+        });
+        popupMenu.show();
     }
 
     public void setPlaySongBackgroundColor(int position) {
@@ -105,8 +146,6 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void scrollToFirst() {
-        if (baseAdapter.getItemCount() > 0) {
-            mView.getRecyclerView().scrollToPosition(0);
-        }
+        baseAdapter.scrollToPosition(0);
     }
 }

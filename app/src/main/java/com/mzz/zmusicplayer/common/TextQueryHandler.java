@@ -1,5 +1,6 @@
 package com.mzz.zmusicplayer.common;
 
+import android.support.annotation.ColorInt;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.widget.SearchView;
@@ -34,12 +35,12 @@ public class TextQueryHandler {
     /**
      * Sets query text listener.
      */
-    public void setQueryTextListener() {
+    public void setQueryTextListener(@ColorInt int color) {
         svAlarmSong.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 List <SongInfo> queryResult = TextQueryHelper.getQueryResult(songInfos, query,
-                        nameAndQuerySpans);
+                        nameAndQuerySpans, color);
                 adapter.setNewData(queryResult);
                 return false;
             }

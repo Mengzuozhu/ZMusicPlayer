@@ -1,0 +1,62 @@
+package com.mzz.zmusicplayer.ui;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.View;
+import android.widget.SearchView;
+
+import com.mzz.zandroidcommon.view.BaseActivity;
+import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.adapter.SongInfoAdapter;
+import com.mzz.zmusicplayer.song.SongInfo;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class SearchActivity extends BaseActivity {
+
+    public static final String SEARCH_DATA = "SEARCH_DATA";
+    SearchView mSearchView;
+    @BindView(R.id.rv_search)
+    RecyclerView rvSearch;
+    SongInfoAdapter baseAdapter;
+    private List <SongInfo> songInfos;
+
+    public static void startForResult(FragmentActivity activity,
+                                      ArrayList <? extends Parcelable> value) {
+        Intent intent =
+                new Intent(activity, SearchActivity.class).putParcelableArrayListExtra(SEARCH_DATA,
+                        value);
+        activity.startActivity(intent);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
+        ButterKnife.bind(this);
+
+        songInfos = getIntent().getParcelableArrayListExtra(SEARCH_DATA);
+        baseAdapter = new SongInfoAdapter(songInfos, rvSearch,
+                this, false);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+        //通过MenuItem得到SearchView
+        mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        mSearchView.onActionViewExpanded();
+        mSearchView.setQueryHint("搜索");
+        baseAdapter.setQueryTextListener(mSearchView, this.getColor(R.color.colorGreen));
+        return super.onCreateOptionsMenu(menu);
+    }
+}
