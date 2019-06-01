@@ -6,34 +6,33 @@
     android:background="@color/colorGrey">
 
     <TextView
-        android:id="@+id/tv_song_count_mode"
+        android:id="@+id/tv_picker_header_count"
         style="@style/StyleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/undefined"
-        android:textSize="@dimen/sp_14"
+        android:textSize="@dimen/sp_16"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/iv_header_search"
+        android:id="@+id/iv_picker_header_sort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/iv_header_sort"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_search" />
-
-    <ImageView
-        android:id="@+id/iv_header_sort"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/chb_picker_select_all"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/sort_white" />
+
+    <CheckBox
+        android:id="@+id/chb_picker_select_all"
+        style="@style/StyleListRightItem"
+        android:checked="true"
+        android:text="@string/empty"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

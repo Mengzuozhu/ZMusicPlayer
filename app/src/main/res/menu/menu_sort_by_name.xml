@@ -12,10 +12,4 @@
         android:orderInCategory="3"
         android:title="@string/sort_descend_by_name"
         app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_sort_by_add_time"
-        android:orderInCategory="4"
-        android:title="@string/sort_by_add_time"
-        app:showAsAction="never" />
 </menu>

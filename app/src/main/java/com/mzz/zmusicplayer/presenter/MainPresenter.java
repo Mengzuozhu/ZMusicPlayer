@@ -95,7 +95,8 @@ public class MainPresenter implements MainContract.Presenter {
 
     private void showSongOrderPopupMenu(View view) {
         PopupMenu popupMenu = new PopupMenu(context, view);
-        popupMenu.inflate(R.menu.menu_song_sort);
+        popupMenu.inflate(R.menu.menu_song_sort_by_time);
+        popupMenu.inflate(R.menu.menu_sort_by_name);
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             int itemId = menuItem.getItemId();
             //点击的菜单与配置中的一样，则不需要排序
@@ -139,6 +140,7 @@ public class MainPresenter implements MainContract.Presenter {
         songInfos.addAll(newSongInfos);
         baseAdapter.setNewData(songInfos);
         SongModel.insertOrReplaceInTx(newSongInfos);
+        updateSongCountAndMode();
     }
 
     @Override

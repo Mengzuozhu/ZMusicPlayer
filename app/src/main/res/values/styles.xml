@@ -52,6 +52,7 @@
         <item name="android:layout_height">@dimen/list_item_height_40</item>
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:layout_marginTop">@dimen/list_item_margin_top_2</item>
-        <item name="android:layout_marginRight">@dimen/list_item_margin_5</item>
+        <item name="android:layout_marginEnd">@dimen/list_item_margin_8</item>
+        <item name="android:buttonTint">@color/colorGreen</item>
     </style>
 </resources>

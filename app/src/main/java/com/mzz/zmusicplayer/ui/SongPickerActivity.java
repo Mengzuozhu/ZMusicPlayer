@@ -5,11 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.SearchView;
+import android.widget.TextView;
 
+import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
@@ -58,30 +64,16 @@ public class SongPickerActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_save, menu);
-        getMenuInflater().inflate(R.menu.menu_select_all, menu);
-        getMenuInflater().inflate(R.menu.menu_sort, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        switch (itemId) {
-            case R.id.action_select_all:
-                queryAdapter.selectAll();
-                break;
-            case R.id.action_save:
-                save();
-                this.finish();
-                return true;
-            case R.id.action_sort_ascend:
-                queryAdapter.sortByName(true);
-                break;
-            case R.id.action_sort_descend:
-                queryAdapter.sortByName(false);
-                break;
-            default:
-                break;
+        if (itemId == R.id.action_save) {
+            save();
+            this.finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -92,6 +84,41 @@ public class SongPickerActivity extends BaseActivity {
         queryAdapter.setQueryTextListener(svSongFile, this.getColor(R.color.colorGreen));
         ViewerHelper.showOrHideScrollFirst(rvSongFile, queryAdapter.getLayoutManager(),
                 fabSongScrollFirst);
+        initHeader();
+    }
+
+    private void initHeader() {
+        View header = LayoutInflater.from(this).inflate(R.layout.content_song_picker_header,
+                rvSongFile, false);
+        TextView tvCount = header.findViewById(R.id.tv_picker_header_count);
+        tvCount.setText(StringHelper.getLocalFormat("%d首", songInfos.size()));
+
+        CheckBox chbSelectAll = header.findViewById(R.id.chb_picker_select_all);
+        chbSelectAll.setOnCheckedChangeListener((buttonView, isChecked) -> queryAdapter.selectAll(isChecked));
+
+        ImageView sortView = header.findViewById(R.id.iv_picker_header_sort);
+        sortView.setOnClickListener(v -> showSongOrderPopupMenu(sortView));
+        queryAdapter.setHeaderView(header);
+    }
+
+    private void showSongOrderPopupMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(this, view);
+        popupMenu.inflate(R.menu.menu_sort_by_name);
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            int itemId = menuItem.getItemId();
+            switch (itemId) {
+                case R.id.action_sort_ascend_by_name:
+                    queryAdapter.sortByName(true);
+                    return true;
+                case R.id.action_sort_descend_by_name:
+                    queryAdapter.sortByName(false);
+                    return true;
+                default:
+                    break;
+            }
+            return false;
+        });
+        popupMenu.show();
     }
 
     private void save() {

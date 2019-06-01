@@ -5,6 +5,7 @@
     <dimen name="list_item_height_40">40dp</dimen>
     <dimen name="list_item_width_25">25dp</dimen>
     <dimen name="list_item_margin_5">5dp</dimen>
+    <dimen name="list_item_margin_8">8dp</dimen>
     <dimen name="list_item_margin_top_2">2dp</dimen>
     <dimen name="font_20">20sp</dimen>
     <dimen name="font_25">25sp</dimen>
