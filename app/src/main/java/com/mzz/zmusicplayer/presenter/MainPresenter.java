@@ -19,7 +19,7 @@ import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.setting.SongOrderMode;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
-import com.mzz.zmusicplayer.ui.SearchActivity;
+import com.mzz.zmusicplayer.ui.MusicSearchActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,6 @@ public class MainPresenter implements MainContract.Presenter {
     private MainSongAdapter baseAdapter;
     private MainContract.View mView;
     private FragmentActivity context;
-    private SongInfo currentColorSong;
 
     public MainPresenter(MainContract.View mView) {
         this.mView = mView;
@@ -58,11 +57,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     private void intiAdapter() {
         baseAdapter = new MainSongAdapter(playList, recyclerView, context, false);
-        baseAdapter.setOnItemClickListener((adapter, view, position) -> {
-            playList.setPlayingIndex(position);
-            //歌单的顺序可能变化了，所以更新歌曲列表
-            mView.updatePlayList(playList);
-        });
+        baseAdapter.setOnItemClickListener((adapter, view, position) -> mView.setPlayingIndex(position));
         initHeader();
     }
 
@@ -95,7 +90,7 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     private void showSearchActivity() {
-        SearchActivity.startForResult(context, (ArrayList <SongInfo>) playList.getSongInfos());
+        MusicSearchActivity.startForResult(context, (ArrayList <SongInfo>) playList.getSongInfos());
     }
 
     private void showSongOrderPopupMenu(View view) {
@@ -107,10 +102,6 @@ public class MainPresenter implements MainContract.Presenter {
             if (AppSetting.getSongSortMode().getMenuId() == itemId) {
                 return true;
             }
-//            SongInfo playingSong = playList.getPlayingSong();
-//            Log.d("MainPresenter", "Menu getId():" + playingSong.getId());
-//            Log.d("MainPresenter",
-//                    "Menu getAdapterPosition():" + playingSong.getAdapterPosition());
             switch (itemId) {
                 case R.id.action_sort_ascend_by_name:
                     baseAdapter.sortByName(true);
@@ -127,7 +118,6 @@ public class MainPresenter implements MainContract.Presenter {
                 default:
                     break;
             }
-
             return false;
         });
         popupMenu.show();
@@ -135,15 +125,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void updatePlaySongBackgroundColor(SongInfo song) {
-        //重置上一次选中的歌曲
-        if (currentColorSong != null) {
-            currentColorSong.setPlayListSelected(false);
-        }
-        if (song != null) {
-            song.setPlayListSelected(true);
-            baseAdapter.notifyDataSetChanged();
-            currentColorSong = song;
-        }
+        baseAdapter.updatePlaySongBackgroundColor(song);
     }
 
     @Override
@@ -169,8 +151,9 @@ public class MainPresenter implements MainContract.Presenter {
      */
     @Override
     public void locateToSelectedSong() {
-        if (currentColorSong != null) {
-            baseAdapter.scrollToPosition(currentColorSong.getAdapterPosition());
+        SongInfo playingSong = playList.getPlayingSong();
+        if (playingSong != null) {
+            baseAdapter.scrollToPosition(playingSong.getAdapterPosition());
         }
     }
 }

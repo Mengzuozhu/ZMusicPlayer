@@ -19,7 +19,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SearchActivity extends BaseActivity {
+public class MusicSearchActivity extends BaseActivity {
 
     public static final String SEARCH_DATA = "SEARCH_DATA";
     @BindView(R.id.rv_search)
@@ -30,7 +30,7 @@ public class SearchActivity extends BaseActivity {
     public static void startForResult(FragmentActivity activity,
                                       ArrayList <? extends Parcelable> value) {
         Intent intent =
-                new Intent(activity, SearchActivity.class).putParcelableArrayListExtra(SEARCH_DATA,
+                new Intent(activity, MusicSearchActivity.class).putParcelableArrayListExtra(SEARCH_DATA,
                         value);
         activity.startActivity(intent);
     }

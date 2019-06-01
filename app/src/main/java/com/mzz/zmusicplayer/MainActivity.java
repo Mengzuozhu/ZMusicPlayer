@@ -49,6 +49,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.setTitle("");
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         ActionBar actionBar = getSupportActionBar();
@@ -141,6 +142,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     public void setPlayingIndex(int playingIndex) {
         if (musicControlFragment != null) {
             musicControlFragment.setPlayingIndex(playingIndex);
+        } else {
+            updatePlayList(new PlayList());
         }
     }
 

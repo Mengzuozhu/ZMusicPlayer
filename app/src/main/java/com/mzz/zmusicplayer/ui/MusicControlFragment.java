@@ -52,6 +52,8 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     //与后台服务共用同一个播放器
     private IPlayer mPlayer;
     private Handler mHandler = new Handler();
+    private MainContract.Presenter mainPresenter;
+    private MusicPlayerContract.Presenter musicPresenter;
     private Runnable mProgressCallback = new Runnable() {
         @Override
         public void run() {
@@ -71,8 +73,6 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
             }
         }
     };
-    private MainContract.Presenter mainPresenter;
-    private MusicPlayerContract.Presenter mPresenter;
 
     /**
      * Use this factory method to create a new instance of
@@ -107,8 +107,8 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         mPlayer = Player.getInstance();
         mPlayer.registerCallback(this);
         mPlayer.setPlayList(mPlayList);
-        mPresenter = new MusicPlayerPresenter(getActivity(), this);
-        mPresenter.subscribe();
+        musicPresenter = new MusicPlayerPresenter(getActivity(), this);
+        musicPresenter.subscribe();
     }
 
     @Override
@@ -117,7 +117,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         mHandler.removeCallbacks(mProgressCallback);
         mPlayer.unregisterCallback(this);
         AppSetting.setLastPlaySongIndex(mPlayer.getPlayingIndex());
-        mPresenter.unsubscribe();
+        musicPresenter.unsubscribe();
     }
 
     public void setMainPresenter(MainContract.Presenter mainPresenter) {

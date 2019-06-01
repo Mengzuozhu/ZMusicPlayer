@@ -57,7 +57,7 @@ public class PlayList implements Parcelable {
         return songInfos.isEmpty();
     }
 
-    SongInfo getPlayingSong() {
+    public SongInfo getPlayingSong() {
         if (playingIndex < 0) {
             playingIndex = 0;
         }

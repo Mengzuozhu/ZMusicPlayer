@@ -22,6 +22,7 @@ public class MainSongAdapter extends SongInfoAdapter {
             R.id.tv_item_song_num};
     private int selectColor;
     private PlayList playList;
+    private SongInfo currentColorSong;
 
     /**
      * Instantiates a new Song info adapter.
@@ -52,6 +53,23 @@ public class MainSongAdapter extends SongInfoAdapter {
         }
 
         helper.setText(itemSongNameId, songInfo.getName());
+    }
+
+    /**
+     * Update play song background color.
+     *
+     * @param song the song
+     */
+    public void updatePlaySongBackgroundColor(SongInfo song) {
+        //重置上一次选中的歌曲
+        if (currentColorSong != null) {
+            currentColorSong.setPlayListSelected(false);
+        }
+        if (song != null) {
+            song.setPlayListSelected(true);
+            currentColorSong = song;
+            notifyDataSetChanged();
+        }
     }
 
     private void resetPlaySongColor(BaseViewHolder helper) {
