@@ -66,6 +66,9 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
                 return false;
             }
             return true;
+        } else {
+            mPlayer.reset();
+            notifyResetAllState();
         }
         return false;
     }
@@ -203,6 +206,14 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         for (PlayObserver playObserver : mPlayObservers) {
             if (playObserver != null) {
                 playObserver.onSwitchNext(song);
+            }
+        }
+    }
+
+    private void notifyResetAllState() {
+        for (PlayObserver playObserver : mPlayObservers) {
+            if (playObserver != null) {
+                playObserver.resetAllState();
             }
         }
     }

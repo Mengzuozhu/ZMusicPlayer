@@ -61,4 +61,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
     implementation(name: 'ZAndroidCommon', ext: 'aar')
     implementation 'com.mikhaellopez:circularprogressbar:2.0.0'
+    implementation 'tyrantgit:explosionfield:1.0.1'
+
 }

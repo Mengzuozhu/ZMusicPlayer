@@ -187,6 +187,11 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
     }
 
     @Override
+    public void resetAllState() {
+        showNotification();
+    }
+
+    @Override
     public void onPlayStatusChanged(boolean isPlaying) {
         showNotification();
     }
@@ -246,6 +251,10 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
         if (currentSong != null) {
             remoteView.setTextViewText(R.id.tv_notify_song_name, currentSong.getName());
             remoteView.setTextViewText(R.id.tv_notify_artist, currentSong.getArtist());
+        } else {
+            String undefined = this.getString(R.string.undefined);
+            remoteView.setTextViewText(R.id.tv_notify_song_name, undefined);
+            remoteView.setTextViewText(R.id.tv_notify_artist, undefined);
         }
         remoteView.setImageViewResource(R.id.iv_notify_play_pause, isPlaying()
                 ? R.drawable.pause : R.drawable.play);

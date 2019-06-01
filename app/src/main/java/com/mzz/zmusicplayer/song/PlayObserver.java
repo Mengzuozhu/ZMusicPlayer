@@ -16,4 +16,5 @@ public interface PlayObserver {
 
     void onSwitchNext(@Nullable SongInfo next);
 
+    void resetAllState();
 }

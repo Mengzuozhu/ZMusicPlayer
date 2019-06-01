@@ -70,21 +70,25 @@ public class AppSetting {
      *
      * @return the last play song index
      */
-    public static int getLastPlaySongIndex() {
-        return getSharedPreferences().getInt(LAST_PLAY_SONG_INDEX, 0);
+    public static long getLastPlaySongId() {
+        return getSharedPreferences().getLong(LAST_PLAY_SONG_INDEX, 0);
     }
 
     /**
      * Sets last play song index.
      *
-     * @param playSongIndex the play song index
+     * @param playSongId the play song index
      */
-    public static void setLastPlaySongIndex(int playSongIndex) {
-        putInt(LAST_PLAY_SONG_INDEX, playSongIndex);
+    public static void setLastPlaySongId(long playSongId) {
+        getEdit().putLong(LAST_PLAY_SONG_INDEX, playSongId).apply();
     }
 
     private static void putInt(String key, int value) {
-        getSharedPreferences().edit().putInt(key, value).apply();
+        getEdit().putInt(key, value).apply();
+    }
+
+    private static SharedPreferences.Editor getEdit() {
+        return getSharedPreferences().edit();
     }
 
 }

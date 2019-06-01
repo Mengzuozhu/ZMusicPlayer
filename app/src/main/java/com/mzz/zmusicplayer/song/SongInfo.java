@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.mzz.zandroidcommon.adapter.ICheckable;
 import com.mzz.zandroidcommon.common.JsonConverter;
 import com.mzz.zandroidcommon.view.QueryInfo;
+import com.mzz.zmusicplayer.edit.IEditItem;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
@@ -25,7 +26,7 @@ import lombok.Setter;
  * description :
  */
 @Entity
-public class SongInfo implements Parcelable, ICheckable, QueryInfo {
+public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
 
     public static final Creator <SongInfo> CREATOR = new Creator <SongInfo>() {
         @Override

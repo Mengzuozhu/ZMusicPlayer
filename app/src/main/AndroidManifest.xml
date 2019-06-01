@@ -25,6 +25,7 @@
         <activity
             android:name=".ui.SongPickerActivity"
             android:label="添加歌曲" />
+        <activity android:name=".ui.SongEditActivity" />
 
         <service android:name=".song.PlaybackService">
             <intent-filter>

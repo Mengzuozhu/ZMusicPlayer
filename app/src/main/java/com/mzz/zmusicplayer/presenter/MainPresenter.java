@@ -20,6 +20,7 @@ import com.mzz.zmusicplayer.setting.SongOrderMode;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.MusicSearchActivity;
+import com.mzz.zmusicplayer.ui.SongEditActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,33 +37,49 @@ public class MainPresenter implements MainContract.Presenter {
     private PlayList playList;
     private MainSongAdapter baseAdapter;
     private MainContract.View mView;
-    private FragmentActivity context;
+    private FragmentActivity activity;
 
     public MainPresenter(MainContract.View mView) {
         this.mView = mView;
-        context = mView.getActivity();
+        activity = mView.getActivity();
         recyclerView = mView.getRecyclerView();
-        initSongInfos();
-        intiAdapter();
-        mView.updatePlayList(playList);
-        //设置缓存大小，避免多个item出现选中颜色
-        recyclerView.setItemViewCacheSize(playList.getSongInfos().size() + 1);
+        init();
     }
 
-    private void initSongInfos() {
+    private void init() {
         List <SongInfo> songInfos = SongModel.getOrderSongInfos();
-        playList = new PlayList(songInfos, AppSetting.getLastPlaySongIndex(),
-                AppSetting.getPlayMode());
+        int lastPlaySongIndex = getLastPlaySongIndexById(songInfos);
+        playList = new PlayList(songInfos, lastPlaySongIndex, AppSetting.getPlayMode());
+        intiAdapter();
+        mView.updatePlayList(playList);
+    }
+
+    private int getLastPlaySongIndexById(List <SongInfo> songInfos) {
+        long lastPlaySongId = AppSetting.getLastPlaySongId();
+        int lastPlaySongIndex = 0;
+        //根据ID获取上一次播放歌曲的位置
+        for (int i = 0; i < songInfos.size(); i++) {
+            SongInfo songInfo = songInfos.get(i);
+            if (songInfo.getId().equals(lastPlaySongId)) {
+                lastPlaySongIndex = i;
+                break;
+            }
+        }
+        return lastPlaySongIndex;
     }
 
     private void intiAdapter() {
-        baseAdapter = new MainSongAdapter(playList, recyclerView, context, false);
+        baseAdapter = new MainSongAdapter(playList, recyclerView, activity, false);
         baseAdapter.setOnItemClickListener((adapter, view, position) -> mView.setPlayingIndex(position));
+        baseAdapter.setOnItemLongClickListener((adapter, view, position) -> {
+            showSongEditActivity();
+            return false;
+        });
         initHeader();
     }
 
     private void initHeader() {
-        View header = LayoutInflater.from(context).inflate(R.layout.content_song_header,
+        View header = LayoutInflater.from(activity).inflate(R.layout.content_song_header,
                 recyclerView, false);
         tcSongCountAndMode = header.findViewById(R.id.tv_song_count_mode);
         updateSongCountAndMode();
@@ -89,12 +106,24 @@ public class MainPresenter implements MainContract.Presenter {
         tcSongCountAndMode.setText(songCountAndMode);
     }
 
+    @Override
+    public void deleteByKeyInTx(Iterable <Long> keys) {
+        SongModel.deleteByKeyInTx(keys);
+        init();
+    }
+
+    private void showSongEditActivity() {
+        SongEditActivity.startForResult(activity,
+                (ArrayList <SongInfo>) playList.getSongInfos());
+    }
+
     private void showSearchActivity() {
-        MusicSearchActivity.startForResult(context, (ArrayList <SongInfo>) playList.getSongInfos());
+        MusicSearchActivity.startForResult(activity,
+                (ArrayList <SongInfo>) playList.getSongInfos());
     }
 
     private void showSongOrderPopupMenu(View view) {
-        PopupMenu popupMenu = new PopupMenu(context, view);
+        PopupMenu popupMenu = new PopupMenu(activity, view);
         popupMenu.inflate(R.menu.menu_song_sort_by_time);
         popupMenu.inflate(R.menu.menu_sort_by_name);
         popupMenu.setOnMenuItemClickListener(menuItem -> {

@@ -115,9 +115,13 @@ public class PlayList implements Parcelable {
     }
 
     private int getRandomPlayIndex() {
-        int randomIndex = new Random().nextInt(songInfos.size());
+        int size = songInfos.size();
+        if (size == 0) {
+            return -1;
+        }
+        int randomIndex = new Random().nextInt(size);
         // 非单曲循环模式下，确保不会连续播放同一首歌曲
-        if (playMode != PlayedMode.SINGLE && songInfos.size() > 1 && randomIndex == playingIndex) {
+        if (playMode != PlayedMode.SINGLE && size > 1 && randomIndex == playingIndex) {
             playingIndex = getNextIndex();
         }
         return randomIndex;

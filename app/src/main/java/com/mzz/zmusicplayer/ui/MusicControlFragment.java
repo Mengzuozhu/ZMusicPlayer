@@ -116,7 +116,8 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         super.onDestroyView();
         mHandler.removeCallbacks(mProgressCallback);
         mPlayer.unregisterCallback(this);
-        AppSetting.setLastPlaySongIndex(mPlayer.getPlayingIndex());
+        AppSetting.setLastPlaySongId(mPlayer.getPlayingSong().getId());
+        mPlayer.releasePlayer();
         musicPresenter.unsubscribe();
     }
 
@@ -172,6 +173,19 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     }
 
     @Override
+    public void resetAllState() {
+        //重置所有状态
+        String undefined = this.getString(R.string.undefined);
+        tvSongName.setText(undefined);
+        tvArtist.setText(undefined);
+        tvDuration.setText(undefined);
+        tvProgress.setText(undefined);
+        mHandler.removeCallbacks(mProgressCallback);
+        updatePlayToggle(false);
+        seekBarProgress.setProgress(0);
+    }
+
+    @Override
     public void onSongUpdated(@Nullable SongInfo song) {
         if (song == null) {
             return;
@@ -180,7 +194,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
             mainPresenter.updatePlaySongBackgroundColor(song);
         }
         //记录播放歌曲位置
-        AppSetting.setLastPlaySongIndex(mPlayer.getPlayingIndex());
+        AppSetting.setLastPlaySongId(mPlayer.getPlayingSong().getId());
         tvSongName.setText(song.getName());
         tvArtist.setText(song.getArtist());
         tvDuration.setText(TimeHelper.formatDuration(mPlayer.getCurrentSongDuration()));

@@ -41,5 +41,8 @@ public interface MainContract {
         void locateToSelectedSong();
 
         void updateSongCountAndMode();
+
+        void deleteByKeyInTx(Iterable <Long> key);
+
     }
 }

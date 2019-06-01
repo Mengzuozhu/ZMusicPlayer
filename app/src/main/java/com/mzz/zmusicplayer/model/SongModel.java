@@ -23,6 +23,11 @@ public class SongModel {
         songInfoDao = daoSession.getSongInfoDao();
     }
 
+    /**
+     * Gets order song infos.
+     *
+     * @return the order song infos
+     */
     public static List <SongInfo> getOrderSongInfos() {
         switch (AppSetting.getSongSortMode()) {
             case ORDER_ASCEND_BY_NAME:
@@ -38,7 +43,12 @@ public class SongModel {
         return daoSession.loadAll(SongInfo.class);
     }
 
-    public static void deleteByKey(Iterable <Long> keys) {
+    /**
+     * Delete by key in tx.
+     *
+     * @param keys the keys
+     */
+    public static void deleteByKeyInTx(Iterable <Long> keys) {
         songInfoDao.deleteByKeyInTx(keys);
     }
 

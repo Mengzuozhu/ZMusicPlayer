@@ -18,15 +18,18 @@ import android.view.View;
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.contract.MainContract;
+import com.mzz.zmusicplayer.edit.EditHandler;
 import com.mzz.zmusicplayer.presenter.MainPresenter;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.MusicControlFragment;
+import com.mzz.zmusicplayer.ui.SongEditActivity;
 import com.mzz.zmusicplayer.ui.SongPickerActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -167,7 +170,19 @@ public class MainActivity extends BaseActivity implements MainContract.View {
             ArrayList <SongInfo> newSongInfos =
                     data.getParcelableArrayListExtra(SongPickerActivity.ADD_SONG);
             mainPresenter.addSongs(newSongInfos);
+        } else if (resultCode == SongEditActivity.EDIT_SAVE) {
+            onSaveEditEvent(data);
         }
+    }
+
+    public void onSaveEditEvent(Intent data) {
+        ArrayList <Integer> deleteIds =
+                data.getIntegerArrayListExtra(SongEditActivity.DELETE_NUM);
+        if (deleteIds == null) {
+            return;
+        }
+        List <Long> ids = EditHandler.integerToLongList(deleteIds);
+        mainPresenter.deleteByKeyInTx(ids);
     }
 
     @OnClick(R.id.fab_song_scroll_first)
