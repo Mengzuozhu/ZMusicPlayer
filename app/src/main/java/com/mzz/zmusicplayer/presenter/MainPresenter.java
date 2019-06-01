@@ -1,6 +1,5 @@
 package com.mzz.zmusicplayer.presenter;
 
-import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongInfoAdapter;
@@ -33,23 +31,19 @@ public class MainPresenter implements MainContract.Presenter {
     private RecyclerView recyclerView;
     private PlayList playList;
     private SongInfoAdapter baseAdapter;
-    private int selectColor;
     private MainContract.View mView;
     private FragmentActivity context;
-    private int[] textViewIds = new int[]{R.id.tv_item_song_name, R.id.tv_item_song_artist,
-            R.id.tv_item_song_num};
     private SongInfo currentColorSong;
 
     public MainPresenter(MainContract.View mView) {
         this.mView = mView;
         context = mView.getActivity();
         recyclerView = mView.getRecyclerView();
-        selectColor = context.getColor(R.color.colorGreen);
         initSongInfos();
         intiAdapter();
         mView.updateControlFragment(playList);
         //设置缓存大小，避免多个item出现选中颜色
-        recyclerView.setItemViewCacheSize(playList.getSongInfos().size());
+        recyclerView.setItemViewCacheSize(playList.getSongInfos().size() + 1);
     }
 
     private void initSongInfos() {
@@ -88,7 +82,12 @@ public class MainPresenter implements MainContract.Presenter {
         PopupMenu popupMenu = new PopupMenu(context, view);
         popupMenu.inflate(R.menu.menu_song_sort);
         popupMenu.setOnMenuItemClickListener(menuItem -> {
-            switch (menuItem.getItemId()) {
+            int itemId = menuItem.getItemId();
+            //点击的菜单与配置中的一样，则不需要排序
+            if (AppSetting.getSongSortMode().getMenuId() == itemId) {
+                return true;
+            }
+            switch (itemId) {
                 case R.id.action_sort_ascend_by_name:
                     baseAdapter.sortByName(true);
                     AppSetting.setSongOrderMode(SongOrderMode.ORDER_ASCEND_BY_NAME);
@@ -104,38 +103,22 @@ public class MainPresenter implements MainContract.Presenter {
                 default:
                     break;
             }
+
             return false;
         });
         popupMenu.show();
     }
 
     @Override
-    public void setPlaySongBackgroundColor(SongInfo song) {
+    public void updatePlaySongBackgroundColor(SongInfo song) {
+        //重置上一次选中的歌曲
         if (currentColorSong != null) {
-            int lastPosition = currentColorSong.getAdapterPosition();
-            setTextViewBackground(lastPosition, Color.WHITE);
-            setDivider(lastPosition, Color.TRANSPARENT);
+            currentColorSong.setPlayListSelected(false);
         }
-        int position = song.getAdapterPosition();
-        setTextViewBackground(position, selectColor);
-        setDivider(position, selectColor);
-        currentColorSong = song;
-    }
-
-    private void setTextViewBackground(int position, int color) {
-        for (int viewId : textViewIds) {
-            TextView textView = (TextView) baseAdapter.getViewByPosition(recyclerView, position,
-                    viewId);
-            if (textView != null) {
-                textView.setTextColor(color);
-            }
-        }
-    }
-
-    private void setDivider(int position, int color) {
-        View subView = baseAdapter.getViewByPosition(recyclerView, position, R.id.divider_item);
-        if (subView != null) {
-            subView.setBackgroundColor(color);
+        if (song != null) {
+            song.setPlayListSelected(true);
+            baseAdapter.notifyDataSetChanged();
+            currentColorSong = song;
         }
     }
 

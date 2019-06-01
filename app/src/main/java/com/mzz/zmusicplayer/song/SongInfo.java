@@ -13,7 +13,6 @@ import com.mzz.zandroidcommon.view.QueryInfo;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.converter.PropertyConverter;
 
@@ -45,7 +44,7 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo {
     @Transient
     @Setter
     @Getter
-    int adapterPosition; //在适配器中的位置，即列表中的位置
+    private boolean isPlayListSelected; //当前歌曲是否被选中
     @Id(autoincrement = true)
     private Long id;
     private String name;

@@ -28,7 +28,7 @@ public interface MainContract {
 
     interface Presenter {
 
-        void setPlaySongBackgroundColor(SongInfo song);
+        void updatePlaySongBackgroundColor(SongInfo song);
 
         LinearLayoutManager getLayoutManager();
 

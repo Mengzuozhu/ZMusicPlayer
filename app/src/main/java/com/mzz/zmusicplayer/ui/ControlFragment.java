@@ -169,7 +169,7 @@ public class ControlFragment extends Fragment implements MusicPlayerContract.Vie
             return;
         }
         if (mainPresenter != null) {
-            mainPresenter.setPlaySongBackgroundColor(song);
+            mainPresenter.updatePlaySongBackgroundColor(song);
         }
         //记录播放歌曲位置
         AppSetting.setLastPlaySongIndex(mPlayer.getPlayingIndex());
