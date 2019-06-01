@@ -20,7 +20,9 @@ public interface MainContract {
 
         FragmentActivity getActivity();
 
-        void updateControlFragment(PlayList playList);
+        void updatePlayList(PlayList playList);
+
+        void setPlayingIndex(int playingIndex);
 
         RecyclerView getRecyclerView();
 

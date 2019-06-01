@@ -101,6 +101,11 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
     }
 
     @Override
+    public boolean play(int playingIndex) {
+        return mPlayer.play(playingIndex);
+    }
+
+    @Override
     public boolean playPrevious() {
         return mPlayer.playPrevious();
     }

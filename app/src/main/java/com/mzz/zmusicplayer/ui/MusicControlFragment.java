@@ -132,6 +132,11 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         onSongUpdated(mPlayer.getPlayingSong());
     }
 
+    public void setPlayingIndex(int playingIndex) {
+        mPlayer.play(playingIndex);
+        onSongUpdated(mPlayer.getPlayingSong());
+    }
+
     public void setPlayMode(PlayedMode playMode) {
         mPlayer.setPlayMode(playMode);
     }

@@ -22,9 +22,9 @@ import butterknife.ButterKnife;
 public class SearchActivity extends BaseActivity {
 
     public static final String SEARCH_DATA = "SEARCH_DATA";
-    SearchView mSearchView;
     @BindView(R.id.rv_search)
     RecyclerView rvSearch;
+    SearchView mSearchView;
     private SongQueryAdapter queryAdapter;
 
     public static void startForResult(FragmentActivity activity,

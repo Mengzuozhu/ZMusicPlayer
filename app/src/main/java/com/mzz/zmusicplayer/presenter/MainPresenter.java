@@ -45,7 +45,7 @@ public class MainPresenter implements MainContract.Presenter {
         recyclerView = mView.getRecyclerView();
         initSongInfos();
         intiAdapter();
-        mView.updateControlFragment(playList);
+        mView.updatePlayList(playList);
         //设置缓存大小，避免多个item出现选中颜色
         recyclerView.setItemViewCacheSize(playList.getSongInfos().size() + 1);
     }
@@ -57,16 +57,16 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     private void intiAdapter() {
-        baseAdapter = new MainSongAdapter(playList.getSongInfos(), recyclerView,
-                context, false);
+        baseAdapter = new MainSongAdapter(playList, recyclerView, context, false);
         baseAdapter.setOnItemClickListener((adapter, view, position) -> {
             playList.setPlayingIndex(position);
-            mView.updateControlFragment(playList);
+            //歌单的顺序可能变化了，所以更新歌曲列表
+            mView.updatePlayList(playList);
         });
-        setHeader();
+        initHeader();
     }
 
-    private void setHeader() {
+    private void initHeader() {
         View header = LayoutInflater.from(context).inflate(R.layout.content_song_header,
                 recyclerView, false);
         tcSongCountAndMode = header.findViewById(R.id.tv_song_count_mode);
@@ -107,6 +107,10 @@ public class MainPresenter implements MainContract.Presenter {
             if (AppSetting.getSongSortMode().getMenuId() == itemId) {
                 return true;
             }
+//            SongInfo playingSong = playList.getPlayingSong();
+//            Log.d("MainPresenter", "Menu getId():" + playingSong.getId());
+//            Log.d("MainPresenter",
+//                    "Menu getAdapterPosition():" + playingSong.getAdapterPosition());
             switch (itemId) {
                 case R.id.action_sort_ascend_by_name:
                     baseAdapter.sortByName(true);

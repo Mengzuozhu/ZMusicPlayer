@@ -53,14 +53,15 @@ public class PlayList implements Parcelable {
         this.playMode = tmpPlayMode == -1 ? null : PlayedMode.values()[tmpPlayMode];
     }
 
-    public boolean isEmpty() {
+    boolean isEmpty() {
         return songInfos.isEmpty();
     }
 
     SongInfo getPlayingSong() {
-        if (playingIndex == -1) {
+        if (playingIndex < 0) {
             playingIndex = 0;
         }
+
         if (playingIndex < songInfos.size()) {
             return songInfos.get(playingIndex);
         }
@@ -79,7 +80,7 @@ public class PlayList implements Parcelable {
                 playingIndex = getRandomPlayIndex();
                 break;
         }
-        return songInfos.get(playingIndex);
+        return getPlayingSong();
     }
 
     SongInfo next() {
@@ -94,7 +95,7 @@ public class PlayList implements Parcelable {
                 playingIndex = getRandomPlayIndex();
                 break;
         }
-        return songInfos.get(playingIndex);
+        return getPlayingSong();
     }
 
     private int getPreIndex() {

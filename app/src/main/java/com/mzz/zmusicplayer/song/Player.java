@@ -81,11 +81,18 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     @Override
-    public boolean play(PlayList list) {
-        if (list == null) return false;
+    public boolean play(PlayList playList) {
+        if (playList == null) return false;
 
         isPaused = false;
-        setPlayList(list);
+        setPlayList(playList);
+        return play();
+    }
+
+    @Override
+    public boolean play(int playingIndex) {
+        mPlayList.setPlayingIndex(playingIndex);
+        isPaused = false;
         return play();
     }
 
@@ -130,6 +137,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         return position;
     }
 
+    @Override
     public int getPlayingIndex() {
         return mPlayList.getPlayingIndex();
     }

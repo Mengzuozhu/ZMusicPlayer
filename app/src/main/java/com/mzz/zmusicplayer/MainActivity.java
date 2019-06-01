@@ -124,7 +124,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     @Override
-    public void updateControlFragment(PlayList playList) {
+    public void updatePlayList(PlayList playList) {
         if (playList == null) {
             playList = new PlayList();
         }
@@ -134,6 +134,13 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                     musicControlFragment).commit();
         } else {
             musicControlFragment.setPlayList(playList);
+        }
+    }
+
+    @Override
+    public void setPlayingIndex(int playingIndex) {
+        if (musicControlFragment != null) {
+            musicControlFragment.setPlayingIndex(playingIndex);
         }
     }
 

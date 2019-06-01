@@ -8,9 +8,8 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
-
-import java.util.List;
 
 /**
  * author : Mzz
@@ -22,18 +21,20 @@ public class MainSongAdapter extends SongInfoAdapter {
     private int[] textViewIds = new int[]{itemSongNameId, R.id.tv_item_song_artist,
             R.id.tv_item_song_num};
     private int selectColor;
+    private PlayList playList;
 
     /**
      * Instantiates a new Song info adapter.
      *
-     * @param songInfos      the song infos
+     * @param playList       the play list
      * @param recyclerView   the recycler view
      * @param context        the context
      * @param isShowCheckBox the is show check box
      */
-    public MainSongAdapter(List <SongInfo> songInfos, RecyclerView recyclerView, Context context,
+    public MainSongAdapter(PlayList playList, RecyclerView recyclerView, Context context,
                            boolean isShowCheckBox) {
-        super(songInfos, recyclerView, context, isShowCheckBox);
+        super(playList.getSongInfos(), recyclerView, context, isShowCheckBox);
+        this.playList = playList;
         selectColor = context.getColor(R.color.colorGreen);
     }
 
@@ -44,6 +45,8 @@ public class MainSongAdapter extends SongInfoAdapter {
         songInfo.setAdapterPosition(adapterPosition);
         if (songInfo.isPlayListSelected()) {
             changePlaySongColor(helper);
+            //排序后，播放位置可能变化，因此重新设置播放位置
+            playList.setPlayingIndex(adapterPosition - 1);
         } else {
             resetPlaySongColor(helper);
         }

@@ -15,6 +15,8 @@ public interface IPlayer {
 
     boolean play(PlayList list);
 
+    boolean play(int playingIndex);
+
     boolean pause();
 
     boolean playPrevious();
