@@ -1,8 +1,5 @@
 package com.mzz.zmusicplayer.song;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -41,10 +38,17 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo {
             return new SongInfo[size];
         }
     };
+
+    //当前歌曲在列表中的位置
     @Transient
     @Setter
     @Getter
-    private boolean isPlayListSelected; //当前歌曲是否被选中
+    private int adapterPosition;
+    //当前歌曲是否被选中
+    @Transient
+    @Setter
+    @Getter
+    private boolean isPlayListSelected;
     @Id(autoincrement = true)
     private Long id;
     private String name;
@@ -75,14 +79,6 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo {
         this.artist = in.readString();
         this.duration = in.readInt();
         this.isChecked = in.readByte() != 0;
-    }
-
-    public Bitmap getPicture() {
-        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-        mediaMetadataRetriever.setDataSource(path);
-        byte[] picture = mediaMetadataRetriever.getEmbeddedPicture();
-        Bitmap bitmap = BitmapFactory.decodeByteArray(picture, 0, picture.length);
-        return bitmap;
     }
 
     @Override

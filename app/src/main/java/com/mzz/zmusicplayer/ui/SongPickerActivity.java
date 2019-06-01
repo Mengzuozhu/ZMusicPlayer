@@ -13,7 +13,7 @@ import android.widget.SearchView;
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.adapter.SongInfoAdapter;
+import com.mzz.zmusicplayer.adapter.SongQueryAdapter;
 import com.mzz.zmusicplayer.song.FileManager;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -36,8 +36,8 @@ public class SongPickerActivity extends BaseActivity {
     SearchView svSongFile;
     @BindView(R.id.fab_song_file_scroll_first)
     FloatingActionButton fabSongScrollFirst;
-    SongInfoAdapter adapter;
-    List <SongInfo> songInfos;
+    private SongQueryAdapter queryAdapter;
+    private List <SongInfo> songInfos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,17 +68,17 @@ public class SongPickerActivity extends BaseActivity {
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.action_select_all:
-                adapter.selectAll();
+                queryAdapter.selectAll();
                 break;
             case R.id.action_save:
                 save();
                 this.finish();
                 return true;
             case R.id.action_sort_ascend:
-                adapter.sortByName(true);
+                queryAdapter.sortByName(true);
                 break;
             case R.id.action_sort_descend:
-                adapter.sortByName(false);
+                queryAdapter.sortByName(false);
                 break;
             default:
                 break;
@@ -86,11 +86,11 @@ public class SongPickerActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void initAlarmSong() {
+    private void initAlarmSong() {
         songInfos = FileManager.getInstance(SongPickerActivity.this).getSongInfos();
-        adapter = new SongInfoAdapter(songInfos, rvSongFile, this, true);
-        adapter.setQueryTextListener(svSongFile, this.getColor(R.color.colorGreen));
-        ViewerHelper.showOrHideScrollFirst(rvSongFile, adapter.getLayoutManager(),
+        queryAdapter = new SongQueryAdapter(songInfos, rvSongFile, this, true);
+        queryAdapter.setQueryTextListener(svSongFile, this.getColor(R.color.colorGreen));
+        ViewerHelper.showOrHideScrollFirst(rvSongFile, queryAdapter.getLayoutManager(),
                 fabSongScrollFirst);
     }
 
@@ -112,6 +112,6 @@ public class SongPickerActivity extends BaseActivity {
 
     @OnClick(R.id.fab_song_file_scroll_first)
     public void scrollToFirstSongOnClick(View view) {
-        adapter.scrollToPosition(0);
+        queryAdapter.scrollToPosition(0);
     }
 }

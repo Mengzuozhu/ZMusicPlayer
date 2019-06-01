@@ -16,6 +16,8 @@ import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.TimeHelper;
 import com.mzz.zmusicplayer.contract.MainContract;
+import com.mzz.zmusicplayer.contract.MusicPlayerContract;
+import com.mzz.zmusicplayer.presenter.MusicPlayerPresenter;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.IPlayer;
@@ -31,7 +33,8 @@ import butterknife.OnClick;
 /**
  * The type Control fragment.
  */
-public class ControlFragment extends Fragment implements MusicPlayerContract.View, PlayObserver {
+public class MusicControlFragment extends Fragment implements MusicPlayerContract.View,
+        PlayObserver {
     private static final String SONG_INFO = "SONG_INFO";
     private static final long UPDATE_PROGRESS_INTERVAL = 1000;
     @BindView(R.id.tv_song_name)
@@ -75,10 +78,10 @@ public class ControlFragment extends Fragment implements MusicPlayerContract.Vie
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment ControlFragment.
+     * @return A new instance of fragment MusicControlFragment.
      */
-    public static ControlFragment newInstance(PlayList playList) {
-        ControlFragment fragment = new ControlFragment();
+    public static MusicControlFragment newInstance(PlayList playList) {
+        MusicControlFragment fragment = new MusicControlFragment();
         Bundle args = new Bundle();
         args.putParcelable(SONG_INFO, playList);
         fragment.setArguments(args);

@@ -23,7 +23,7 @@ import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
-import com.mzz.zmusicplayer.ui.ControlFragment;
+import com.mzz.zmusicplayer.ui.MusicControlFragment;
 import com.mzz.zmusicplayer.ui.SongPickerActivity;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @BindView(R.id.fab_song_scroll_first)
     FloatingActionButton fabSongScrollFirst;
     MainContract.Presenter mainPresenter;
-    ControlFragment controlFragment;
+    MusicControlFragment musicControlFragment;
     PlayedMode playedMode;
 
     @Override
@@ -58,7 +58,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         }
 
         mainPresenter = new MainPresenter(this);
-        controlFragment.setMainPresenter(mainPresenter);
+        musicControlFragment.setMainPresenter(mainPresenter);
         ViewerHelper.showOrHideScrollFirst(rvSong, mainPresenter.getLayoutManager(),
                 fabSongScrollFirst);
         playedMode = AppSetting.getPlayMode();
@@ -85,7 +85,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         playedMode = playedMode.getNextMode();
         item.setTitle(playedMode.getDesc());
         AppSetting.setPlayMode(playedMode);
-        controlFragment.setPlayMode(playedMode);
+        musicControlFragment.setPlayMode(playedMode);
+        mainPresenter.updateSongCountAndMode();
     }
 
     private void initMenu() {
@@ -127,12 +128,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         if (playList == null) {
             playList = new PlayList();
         }
-        if (controlFragment == null) {
-            controlFragment = ControlFragment.newInstance(playList);
+        if (musicControlFragment == null) {
+            musicControlFragment = MusicControlFragment.newInstance(playList);
             getSupportFragmentManager().beginTransaction().replace(R.id.layout_control,
-                    controlFragment).commit();
+                    musicControlFragment).commit();
         } else {
-            controlFragment.setPlayList(playList);
+            musicControlFragment.setPlayList(playList);
         }
     }
 
@@ -162,6 +163,11 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @OnClick(R.id.fab_song_scroll_first)
     public void scrollToFirstSongOnClick(View view) {
         mainPresenter.scrollToFirst();
+    }
+
+    @OnClick(R.id.fab_song_locate)
+    public void locateToSelectedSongOnClick(View view) {
+        mainPresenter.locateToSelectedSong();
     }
 
 }

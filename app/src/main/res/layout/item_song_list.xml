@@ -11,13 +11,14 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:buttonTint="@color/colorGreen"
         android:text="@string/empty"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <RelativeLayout
-        android:id="@+id/layout_song_begin"
+        android:id="@+id/layout_song_num"
         android:layout_width="40dp"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -42,24 +43,22 @@
             android:layout_centerVertical="true"
             android:text="@string/undefined"
             android:textSize="13sp" />
-    </RelativeLayout>
 
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/tv_item_song_name"
         style="@style/StyleTextView"
-        android:layout_gravity="start"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/undefined"
         android:textSize="17sp"
-        app:layout_constraintStart_toEndOf="@+id/layout_song_begin"
+        app:layout_constraintStart_toEndOf="@+id/layout_song_num"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_item_song_artist"
         style="@style/StyleTextView"
-        android:layout_gravity="start"
         android:layout_marginStart="0dp"
         android:text="@string/undefined"
         android:textColor="@color/colorGray"

@@ -7,12 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
+import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.adapter.SongInfoAdapter;
+import com.mzz.zmusicplayer.adapter.MainSongAdapter;
 import com.mzz.zmusicplayer.contract.MainContract;
 import com.mzz.zmusicplayer.model.SongModel;
 import com.mzz.zmusicplayer.setting.AppSetting;
+import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.setting.SongOrderMode;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -28,9 +31,10 @@ import java.util.List;
  */
 public class MainPresenter implements MainContract.Presenter {
 
+    private TextView tcSongCountAndMode;
     private RecyclerView recyclerView;
     private PlayList playList;
-    private SongInfoAdapter baseAdapter;
+    private MainSongAdapter baseAdapter;
     private MainContract.View mView;
     private FragmentActivity context;
     private SongInfo currentColorSong;
@@ -53,7 +57,7 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     private void intiAdapter() {
-        baseAdapter = new SongInfoAdapter(playList.getSongInfos(), recyclerView,
+        baseAdapter = new MainSongAdapter(playList.getSongInfos(), recyclerView,
                 context, false);
         baseAdapter.setOnItemClickListener((adapter, view, position) -> {
             playList.setPlayingIndex(position);
@@ -65,6 +69,8 @@ public class MainPresenter implements MainContract.Presenter {
     private void setHeader() {
         View header = LayoutInflater.from(context).inflate(R.layout.content_song_header,
                 recyclerView, false);
+        tcSongCountAndMode = header.findViewById(R.id.tv_song_count_mode);
+        updateSongCountAndMode();
         ImageView searchView = header.findViewById(R.id.iv_header_search);
         searchView.setOnClickListener(v -> showSearchActivity());
         ImageView sortView = header.findViewById(R.id.iv_header_sort);
@@ -72,6 +78,20 @@ public class MainPresenter implements MainContract.Presenter {
         baseAdapter.setHeaderView(header);
         //隐藏头部
 //        scrollToPosition(1);
+    }
+
+    @Override
+    public void updateSongCountAndMode() {
+        PlayedMode playMode = playList.getPlayMode();
+        String songCountAndMode;
+        if (playMode == PlayedMode.SINGLE) {
+            songCountAndMode = StringHelper.getLocalFormat("%s", playMode.getDesc(),
+                    playList.getSongInfos().size());
+        } else {
+            songCountAndMode = StringHelper.getLocalFormat("%s(%d首)", playMode.getDesc(),
+                    playList.getSongInfos().size());
+        }
+        tcSongCountAndMode.setText(songCountAndMode);
     }
 
     private void showSearchActivity() {
@@ -138,5 +158,15 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void scrollToFirst() {
         baseAdapter.scrollToPosition(0);
+    }
+
+    /**
+     * 定位到当前播放的歌曲位置
+     */
+    @Override
+    public void locateToSelectedSong() {
+        if (currentColorSong != null) {
+            baseAdapter.scrollToPosition(currentColorSong.getAdapterPosition());
+        }
     }
 }

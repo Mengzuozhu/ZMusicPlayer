@@ -1,10 +1,9 @@
 package com.mzz.zmusicplayer.model;
 
-import com.mzz.zmusicplayer.MyApplication;
+import com.mzz.zmusicplayer.MusicApplication;
 import com.mzz.zmusicplayer.greendao.db.DaoSession;
 import com.mzz.zmusicplayer.greendao.db.SongInfoDao;
 import com.mzz.zmusicplayer.setting.AppSetting;
-import com.mzz.zmusicplayer.setting.SongOrderMode;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public class SongModel {
     private static SongInfoDao songInfoDao;
 
     static {
-        daoSession = MyApplication.getDaoSession();
+        daoSession = MusicApplication.getDaoSession();
         songInfoDao = daoSession.getSongInfoDao();
     }
 

@@ -1,4 +1,4 @@
-package com.mzz.zmusicplayer.ui;
+package com.mzz.zmusicplayer.presenter;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
+import com.mzz.zmusicplayer.contract.MusicPlayerContract;
 import com.mzz.zmusicplayer.song.PlaybackService;
 
 public class MusicPlayerPresenter implements MusicPlayerContract.Presenter {

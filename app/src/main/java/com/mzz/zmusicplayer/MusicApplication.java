@@ -13,15 +13,15 @@ import org.greenrobot.greendao.database.Database;
  * date : 2019 2019/4/26 21:22
  * description :
  */
-public class MyApplication extends Application {
+public class MusicApplication extends Application {
     private static DaoSession daoSession;
-    private static MyApplication sInstance;
+    private static MusicApplication sInstance;
 
     public static DaoSession getDaoSession() {
         return daoSession;
     }
 
-    public static MyApplication getInstance() {
+    public static MusicApplication getInstance() {
         return sInstance;
     }
 

@@ -1,18 +1,16 @@
-package com.mzz.zmusicplayer.ui;
+package com.mzz.zmusicplayer.contract;
 
 import android.support.annotation.Nullable;
 
 import com.mzz.zmusicplayer.song.SongInfo;
 
-interface MusicPlayerContract {
+public interface MusicPlayerContract {
 
     interface View {
 
         void handleError(Throwable error);
 
         void onSongUpdated(@Nullable SongInfo song);
-//
-//        void updatePlayMode(PlayMode playMode);
 
         void updatePlayToggle(boolean play);
     }

@@ -3,7 +3,7 @@ package com.mzz.zmusicplayer.setting;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.mzz.zmusicplayer.MyApplication;
+import com.mzz.zmusicplayer.MusicApplication;
 
 import lombok.Data;
 
@@ -22,7 +22,7 @@ public class AppSetting {
     private static SharedPreferences getSharedPreferences() {
         if (sharedPreferences == null) {
             sharedPreferences =
-                    MyApplication.getInstance().getApplicationContext().getSharedPreferences(APP_SETTING, Context.MODE_PRIVATE);
+                    MusicApplication.getInstance().getApplicationContext().getSharedPreferences(APP_SETTING, Context.MODE_PRIVATE);
         }
         return sharedPreferences;
     }

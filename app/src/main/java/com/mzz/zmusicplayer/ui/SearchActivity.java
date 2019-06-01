@@ -5,14 +5,12 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.View;
 import android.widget.SearchView;
 
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.adapter.SongInfoAdapter;
+import com.mzz.zmusicplayer.adapter.SongQueryAdapter;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.ArrayList;
@@ -27,8 +25,7 @@ public class SearchActivity extends BaseActivity {
     SearchView mSearchView;
     @BindView(R.id.rv_search)
     RecyclerView rvSearch;
-    SongInfoAdapter baseAdapter;
-    private List <SongInfo> songInfos;
+    private SongQueryAdapter queryAdapter;
 
     public static void startForResult(FragmentActivity activity,
                                       ArrayList <? extends Parcelable> value) {
@@ -44,8 +41,8 @@ public class SearchActivity extends BaseActivity {
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
 
-        songInfos = getIntent().getParcelableArrayListExtra(SEARCH_DATA);
-        baseAdapter = new SongInfoAdapter(songInfos, rvSearch,
+        List <SongInfo> songInfos = getIntent().getParcelableArrayListExtra(SEARCH_DATA);
+        queryAdapter = new SongQueryAdapter(songInfos, rvSearch,
                 this, false);
     }
 
@@ -56,7 +53,7 @@ public class SearchActivity extends BaseActivity {
         mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         mSearchView.onActionViewExpanded();
         mSearchView.setQueryHint("搜索");
-        baseAdapter.setQueryTextListener(mSearchView, this.getColor(R.color.colorGreen));
+        queryAdapter.setQueryTextListener(mSearchView, this.getColor(R.color.colorGreen));
         return super.onCreateOptionsMenu(menu);
     }
 }

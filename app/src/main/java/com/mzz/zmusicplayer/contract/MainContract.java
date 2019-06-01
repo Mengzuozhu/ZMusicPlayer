@@ -17,7 +17,7 @@ import java.util.List;
 public interface MainContract {
 
     interface View {
-        
+
         FragmentActivity getActivity();
 
         void updateControlFragment(PlayList playList);
@@ -35,5 +35,9 @@ public interface MainContract {
         void addSongs(List <SongInfo> songInfos);
 
         void scrollToFirst();
+
+        void locateToSelectedSong();
+
+        void updateSongCountAndMode();
     }
 }
