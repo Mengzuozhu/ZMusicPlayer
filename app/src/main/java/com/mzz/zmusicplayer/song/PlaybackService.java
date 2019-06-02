@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
+import com.mzz.zmusicplayer.MusicApplication;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.NotificationHandler;
 import com.mzz.zmusicplayer.setting.PlayedMode;
@@ -44,6 +45,7 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
         mPlayer = Player.getInstance();
         mPlayer.registerCallback(this);
         registerLockScreenReceiver();
+        showNotification();
     }
 
     private void registerLockScreenReceiver() {
@@ -91,6 +93,7 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
                 }
                 stopForeground(true);
                 unregisterCallback(this);
+                MusicApplication.getInstance().exitApp();
                 break;
         }
         return START_STICKY;
@@ -169,18 +172,8 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
     }
 
     @Override
-    public int getCurrentSongDuration() {
-        return 0;
-    }
-
-    @Override
     public int getCurrentPosition() {
-        return 0;
-    }
-
-    @Override
-    public int getPlayingIndex() {
-        return 0;
+        return mPlayer.getCurrentPosition();
     }
 
     @Override
@@ -270,8 +263,8 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
         remoteView.setImageViewResource(R.id.iv_notify_play_pause, R.drawable.play);
         remoteView.setImageViewResource(R.id.iv_notify_play_next, R.drawable.next);
 
-//        remoteView.setOnClickPendingIntent(R.id.iv_notify_close,
-//                getPendingIntent(ACTION_STOP_SERVICE));
+        remoteView.setOnClickPendingIntent(R.id.iv_notify_close,
+                getPendingIntent(ACTION_STOP_SERVICE));
         remoteView.setOnClickPendingIntent(R.id.iv_notify_play_pre,
                 getPendingIntent(ACTION_PLAY_LAST));
         remoteView.setOnClickPendingIntent(R.id.iv_notify_play_next,

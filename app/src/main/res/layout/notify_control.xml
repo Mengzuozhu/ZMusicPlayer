@@ -59,8 +59,8 @@
 
         <ImageView
             android:id="@+id/iv_notify_close"
-            android:layout_width="@dimen/image_size_32"
-            android:layout_height="@dimen/image_size_32"
+            android:layout_width="@dimen/image_size_24"
+            android:layout_height="@dimen/image_size_24"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="0dp"

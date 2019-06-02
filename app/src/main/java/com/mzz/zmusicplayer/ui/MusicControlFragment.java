@@ -35,7 +35,7 @@ import butterknife.OnClick;
  */
 public class MusicControlFragment extends Fragment implements MusicPlayerContract.View,
         PlayObserver {
-    private static final String SONG_INFO = "SONG_INFO";
+    private static final String PLAY_LIST = "PLAY_LIST";
     private static final long UPDATE_PROGRESS_INTERVAL = 1000;
     @BindView(R.id.tv_song_name)
     TextView tvSongName;
@@ -49,6 +49,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     TextView tvDuration;
     @BindView(R.id.iv_play_pause)
     ImageView ivPlayOrPause;
+    private int currentSongDuration;
     //与后台服务共用同一个播放器
     private IPlayer mPlayer;
     private Handler mHandler = new Handler();
@@ -59,16 +60,22 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         public void run() {
             if (isDetached()) return;
 
-            updateProgressTextWithDuration(mPlayer.getCurrentPosition());
+            int currentPosition = mPlayer.getCurrentPosition();
+            updateProgress(currentPosition);
+        }
+
+        private void updateProgress(int currentPosition) {
+            if (currentSongDuration == 0) return;
+
+            updateProgressTextWithDuration(currentPosition);
+            float percent = (float) currentPosition / currentSongDuration;
             float progressMax = seekBarProgress.getProgressMax();
-            float percent =
-                    (float) mPlayer.getCurrentPosition() / mPlayer.getCurrentSongDuration();
             int progress = (int) (progressMax * percent);
             if (progress >= 0 && progress <= progressMax) {
                 seekBarProgress.setProgress(progress);
                 if (mPlayer.isPlaying()) {
                     //在播放中，则每隔1s触发一次更新事件
-                    mHandler.postDelayed(this, UPDATE_PROGRESS_INTERVAL);
+                    mHandler.postDelayed(mProgressCallback, UPDATE_PROGRESS_INTERVAL);
                 }
             }
         }
@@ -83,7 +90,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     public static MusicControlFragment newInstance(PlayList playList) {
         MusicControlFragment fragment = new MusicControlFragment();
         Bundle args = new Bundle();
-        args.putParcelable(SONG_INFO, playList);
+        args.putParcelable(PLAY_LIST, playList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -102,11 +109,12 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         Bundle bundle = getArguments();
         PlayList mPlayList = new PlayList();
         if (bundle != null) {
-            mPlayList = bundle.getParcelable(SONG_INFO);
+            mPlayList = bundle.getParcelable(PLAY_LIST);
         }
         mPlayer = Player.getInstance();
         mPlayer.registerCallback(this);
         mPlayer.setPlayList(mPlayList);
+        currentSongDuration = mPlayer.getPlayingSong().getDuration();
         musicPresenter = new MusicPlayerPresenter(getActivity(), this);
         musicPresenter.subscribe();
     }
@@ -194,10 +202,11 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
             mainPresenter.updatePlaySongBackgroundColor(song);
         }
         //记录播放歌曲位置
-        AppSetting.setLastPlaySongId(mPlayer.getPlayingSong().getId());
+        AppSetting.setLastPlaySongId(song.getId());
         tvSongName.setText(song.getName());
         tvArtist.setText(song.getArtist());
-        tvDuration.setText(TimeHelper.formatDuration(mPlayer.getCurrentSongDuration()));
+        currentSongDuration = song.getDuration();
+        tvDuration.setText(TimeHelper.formatDuration(currentSongDuration));
         updateProgressTextWithDuration(0);
     }
 

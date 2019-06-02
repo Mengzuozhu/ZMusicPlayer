@@ -44,5 +44,6 @@ public interface MainContract {
 
         void deleteByKeyInTx(Iterable <Long> key);
 
+        void finishMainActivity();
     }
 }

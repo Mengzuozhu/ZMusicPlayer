@@ -16,7 +16,8 @@ public class AppSetting {
     private static final String APP_SETTING = "AppSetting";
     private static final String PLAY_MODE = "PLAY_MODE";
     private static final String SONG_ORDER_MODE = "SONG_ORDER_MODE";
-    private static final String LAST_PLAY_SONG_INDEX = "LAST_PLAY_SONG_INDEX";
+    private static final String LAST_PLAY_SONG_ID = "LAST_PLAY_SONG_ID";
+    private static final String LAST_PROGRESS_MILLI = "LAST_PROGRESS_MILLI";
     private static SharedPreferences sharedPreferences;
 
     private static SharedPreferences getSharedPreferences() {
@@ -71,7 +72,7 @@ public class AppSetting {
      * @return the last play song index
      */
     public static long getLastPlaySongId() {
-        return getSharedPreferences().getLong(LAST_PLAY_SONG_INDEX, 0);
+        return getSharedPreferences().getLong(LAST_PLAY_SONG_ID, 0);
     }
 
     /**
@@ -80,7 +81,25 @@ public class AppSetting {
      * @param playSongId the play song index
      */
     public static void setLastPlaySongId(long playSongId) {
-        getEdit().putLong(LAST_PLAY_SONG_INDEX, playSongId).apply();
+        getEdit().putLong(LAST_PLAY_SONG_ID, playSongId).apply();
+    }
+
+    /**
+     * Gets last progress milli.
+     *
+     * @return the last progress milli
+     */
+    public static int getLastProgressMilli() {
+        return getSharedPreferences().getInt(LAST_PROGRESS_MILLI, 0);
+    }
+
+    /**
+     * Sets last progress milli.
+     *
+     * @param progressMilli the play song id
+     */
+    public static void setLastProgressMilli(int progressMilli) {
+        putInt(LAST_PROGRESS_MILLI, progressMilli);
     }
 
     private static void putInt(String key, int value) {

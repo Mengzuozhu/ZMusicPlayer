@@ -27,11 +27,7 @@ public interface IPlayer {
 
     boolean seekTo(int progress);
 
-    int getCurrentSongDuration();
-
     int getCurrentPosition();
-
-    int getPlayingIndex();
 
     SongInfo getPlayingSong();
 

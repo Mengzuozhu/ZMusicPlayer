@@ -48,24 +48,11 @@ public class MainPresenter implements MainContract.Presenter {
 
     private void init() {
         List <SongInfo> songInfos = SongModel.getOrderSongInfos();
-        int lastPlaySongIndex = getLastPlaySongIndexById(songInfos);
+        long lastPlaySongId = AppSetting.getLastPlaySongId();
+        int lastPlaySongIndex = PlayList.getSongIndexById(songInfos, lastPlaySongId);
         playList = new PlayList(songInfos, lastPlaySongIndex, AppSetting.getPlayMode());
         intiAdapter();
         mView.updatePlayList(playList);
-    }
-
-    private int getLastPlaySongIndexById(List <SongInfo> songInfos) {
-        long lastPlaySongId = AppSetting.getLastPlaySongId();
-        int lastPlaySongIndex = 0;
-        //根据ID获取上一次播放歌曲的位置
-        for (int i = 0; i < songInfos.size(); i++) {
-            SongInfo songInfo = songInfos.get(i);
-            if (songInfo.getId().equals(lastPlaySongId)) {
-                lastPlaySongIndex = i;
-                break;
-            }
-        }
-        return lastPlaySongIndex;
     }
 
     private void intiAdapter() {
@@ -110,6 +97,13 @@ public class MainPresenter implements MainContract.Presenter {
     public void deleteByKeyInTx(Iterable <Long> keys) {
         SongModel.deleteByKeyInTx(keys);
         init();
+    }
+
+    @Override
+    public void finishMainActivity() {
+        if (activity != null) {
+            activity.finish();
+        }
     }
 
     private void showSongEditActivity() {

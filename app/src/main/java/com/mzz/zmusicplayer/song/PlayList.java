@@ -53,6 +53,26 @@ public class PlayList implements Parcelable {
         this.playMode = tmpPlayMode == -1 ? null : PlayedMode.values()[tmpPlayMode];
     }
 
+    /**
+     * Gets song index by id.
+     *
+     * @param songInfos the song infos
+     * @param songId    the song id
+     * @return the song index by id
+     */
+    public static int getSongIndexById(List <SongInfo> songInfos, long songId) {
+        int songIndex = 0;
+        //根据ID获取歌曲在列表中的位置
+        for (int i = 0; i < songInfos.size(); i++) {
+            SongInfo songInfo = songInfos.get(i);
+            if (songInfo.getId().equals(songId)) {
+                songIndex = i;
+                break;
+            }
+        }
+        return songIndex;
+    }
+
     boolean isEmpty() {
         return songInfos.isEmpty();
     }

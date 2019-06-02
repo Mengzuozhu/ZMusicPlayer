@@ -141,20 +141,15 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     @Override
-    public int getPlayingIndex() {
-        return mPlayList.getPlayingIndex();
-    }
-
-    @Override
-    public boolean seekTo(int progress) {
+    public boolean seekTo(int progressMilli) {
         if (mPlayList.isEmpty()) return false;
 
         SongInfo currentSong = mPlayList.getPlayingSong();
         if (currentSong != null) {
-            if (progress >= currentSong.getDuration()) {
+            if (progressMilli >= currentSong.getDuration()) {
                 onCompletion(mPlayer);
             } else {
-                mPlayer.seekTo(progress);
+                mPlayer.seekTo(progressMilli);
             }
             return true;
         }
@@ -164,18 +159,6 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     @Override
     public void onCompletion(MediaPlayer mp) {
         playNext();
-    }
-
-    @Override
-    public int getCurrentSongDuration() {
-        int duration;
-        SongInfo currentSong = getPlayingSong();
-        if (currentSong != null) {
-            duration = currentSong.getDuration();
-        } else {
-            duration = getCurrentPosition();
-        }
-        return duration;
     }
 
     @Override
