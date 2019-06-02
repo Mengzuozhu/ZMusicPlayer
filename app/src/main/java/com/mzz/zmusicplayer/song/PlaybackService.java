@@ -3,7 +3,10 @@ package com.mzz.zmusicplayer.song;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
@@ -30,6 +33,7 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
     private static final String ACTION_STOP_SERVICE = "com.mzz.zmusicplayer.ACTION.STOP_SERVICE";
     private static final int NOTIFICATION_ID = 1;
     private final Binder mBinder = new LocalBinder();
+    private BroadcastReceiver lockScreenReceiver;
     private NotificationHandler notificationHandler;
     private RemoteViews mContentViewSmall;
     private Player mPlayer;
@@ -39,29 +43,55 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
         super.onCreate();
         mPlayer = Player.getInstance();
         mPlayer.registerCallback(this);
+        registerLockScreenReceiver();
+    }
+
+    private void registerLockScreenReceiver() {
+        lockScreenReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) {
+                    //锁屏后，显示播放工具栏
+                    showNotification();
+                }
+            }
+        };
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(lockScreenReceiver, filter);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent != null) {
-            String action = intent.getAction();
-            if (ACTION_PLAY_TOGGLE.equals(action)) {
+        if (intent == null) {
+            return START_STICKY;
+        }
+        String action = intent.getAction();
+        if (action == null) {
+            return START_STICKY;
+        }
+        switch (action) {
+            case ACTION_PLAY_TOGGLE:
                 if (isPlaying()) {
                     pause();
                 } else {
                     play();
                 }
-            } else if (ACTION_PLAY_NEXT.equals(action)) {
+                break;
+            case ACTION_PLAY_NEXT:
                 playNext();
-            } else if (ACTION_PLAY_LAST.equals(action)) {
+                break;
+            case ACTION_PLAY_LAST:
                 playPrevious();
-            } else if (ACTION_STOP_SERVICE.equals(action)) {
+                break;
+            case ACTION_STOP_SERVICE:
                 if (isPlaying()) {
                     pause();
                 }
                 stopForeground(true);
                 unregisterCallback(this);
-            }
+                break;
         }
         return START_STICKY;
     }
@@ -82,6 +112,9 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
     @Override
     public void onDestroy() {
         releasePlayer();
+        if (lockScreenReceiver != null) {
+            unregisterReceiver(lockScreenReceiver);
+        }
         super.onDestroy();
     }
 
@@ -206,13 +239,14 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
         }
         if (Build.VERSION.SDK_INT >= 26) {
             Notification.Builder builder = notificationHandler.getChannelNotificationBuilder();
-            builder.setCustomBigContentView(getSmallContentView())
+            //不使用自定义大视图，否则会折叠通知栏
+            builder.setCustomContentView(getSmallContentView())
                     .setSmallIcon(R.drawable.music)
                     .setOngoing(true);
             notification = builder.build();
         } else {
             NotificationCompat.Builder builder = notificationHandler.getNotification25Builder();
-            builder.setCustomBigContentView(getSmallContentView())
+            builder.setCustomContentView(getSmallContentView())
                     .setSmallIcon(R.drawable.music)
                     .setOngoing(true);
             notification = builder.build();

@@ -1,6 +1,7 @@
 package com.mzz.zmusicplayer;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,6 +21,7 @@ import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.contract.MainContract;
 import com.mzz.zmusicplayer.edit.EditHandler;
 import com.mzz.zmusicplayer.presenter.MainPresenter;
+import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.PlayList;
@@ -45,9 +47,10 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     NavigationView navView;
     @BindView(R.id.fab_song_scroll_first)
     FloatingActionButton fabSongScrollFirst;
-    MainContract.Presenter mainPresenter;
-    MusicControlFragment musicControlFragment;
-    PlayedMode playedMode;
+    private MainContract.Presenter mainPresenter;
+    private MusicControlFragment musicControlFragment;
+    private PlayedMode playedMode;
+    private HeadsetReceiver headsetReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,18 @@ public class MainActivity extends BaseActivity implements MainContract.View {
             actionBar.setHomeAsUpIndicator(R.drawable.menu);
         }
 
+        init();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (headsetReceiver != null) {
+            unregisterReceiver(headsetReceiver);
+        }
+    }
+
+    private void init() {
         mainPresenter = new MainPresenter(this);
         musicControlFragment.setMainPresenter(mainPresenter);
         ViewerHelper.showOrHideScrollFirst(rvSong, mainPresenter.getLayoutManager(),
@@ -68,6 +83,10 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         playedMode = AppSetting.getPlayMode();
         initMenu();
         initNavigationView();
+        headsetReceiver = new HeadsetReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_HEADSET_PLUG);
+        registerReceiver(headsetReceiver, intentFilter);
     }
 
     private void initNavigationView() {

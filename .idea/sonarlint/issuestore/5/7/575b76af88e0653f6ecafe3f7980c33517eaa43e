@@ -1,4 +1,3 @@
 
-squid:S1319¥"yThe type of the "entityProperty" object should be an interface such as "List" rather than the implementation "ArrayList".(šÂÖÜşÿÿÿÿ8†›çœ°-
-squid:S1488T"^Immediately return this expression instead of assigning it to the temporary variable "bitmap".(ö¡ÄÁûÿÿÿÿ8†›çœ°-
-”squid:S1319 "pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(®ê´üÿÿÿÿ8†›çœ°-
+squid:S1319¢"yThe type of the "entityProperty" object should be an interface such as "List" rather than the implementation "ArrayList".(šÂÖÜşÿÿÿÿ8Ë‚Š±-
+”squid:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(®ê´üÿÿÿÿ8Ë‚Š±-

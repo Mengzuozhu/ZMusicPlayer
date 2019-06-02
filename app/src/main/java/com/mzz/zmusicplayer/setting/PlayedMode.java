@@ -10,9 +10,9 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 public enum PlayedMode {
-    RANDOM(0, "随机播放"),
+    ORDER(0, "顺序播放"),
     SINGLE(1, "单曲循环"),
-    ORDER(2, "顺序播放");
+    RANDOM(2, "随机播放");
 
     @Getter
     private final int id;

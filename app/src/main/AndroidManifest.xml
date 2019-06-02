@@ -18,7 +18,9 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
+
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
@@ -27,7 +29,9 @@
             android:label="添加歌曲" />
         <activity android:name=".ui.SongEditActivity" />
 
-        <service android:name=".song.PlaybackService">
+        <service
+            android:name=".song.PlaybackService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.mzz.zmusicplayer.ACTION.PLAY_TOGGLE" />
                 <action android:name="com.mzz.zmusicplayer.ACTION.PLAY_NEXT" />
@@ -35,6 +39,8 @@
                 <action android:name="com.mzz.zmusicplayer.ACTION.STOP_SERVICE" />
             </intent-filter>
         </service>
+
+        <receiver android:name=".receiver.HeadsetReceiver" />
     </application>
 
 </manifest>
