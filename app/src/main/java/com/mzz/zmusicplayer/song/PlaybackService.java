@@ -276,12 +276,11 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
     private void updateRemoteViews(RemoteViews remoteView) {
         SongInfo currentSong = mPlayer.getPlayingSong();
         if (currentSong != null) {
-            remoteView.setTextViewText(R.id.tv_notify_song_name, currentSong.getName());
-            remoteView.setTextViewText(R.id.tv_notify_artist, currentSong.getArtist());
+            remoteView.setTextViewText(R.id.tv_notify_song_name, String.format("%s-%s",
+                    currentSong.getName(), currentSong.getArtist()));
         } else {
             String undefined = this.getString(R.string.undefined);
             remoteView.setTextViewText(R.id.tv_notify_song_name, undefined);
-            remoteView.setTextViewText(R.id.tv_notify_artist, undefined);
         }
         remoteView.setImageViewResource(R.id.iv_notify_play_pause, isPlaying()
                 ? R.drawable.pause : R.drawable.play);

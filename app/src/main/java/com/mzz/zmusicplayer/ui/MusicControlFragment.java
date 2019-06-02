@@ -9,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.TimeHelper;
 import com.mzz.zmusicplayer.contract.MainContract;
@@ -39,10 +39,8 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     private static final long UPDATE_PROGRESS_INTERVAL = 1000;
     @BindView(R.id.tv_song_name)
     TextView tvSongName;
-    @BindView(R.id.tv_artist)
-    TextView tvArtist;
     @BindView(R.id.progress_song)
-    CircularProgressBar seekBarProgress;
+    SeekBar seekBarProgress;
     @BindView(R.id.tv_progress)
     TextView tvProgress;
     @BindView(R.id.tv_duration)
@@ -61,24 +59,25 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
             if (isDetached()) return;
 
             int currentPosition = mPlayer.getCurrentPosition();
-            updateProgress(currentPosition);
+            updateProgress(currentPosition, true);
         }
 
-        private void updateProgress(int currentPosition) {
+        private void updateProgress(int currentPosition, boolean isPostAgain) {
             if (currentSongDuration == 0) return;
 
             updateProgressTextWithDuration(currentPosition);
             float percent = (float) currentPosition / currentSongDuration;
-            float progressMax = seekBarProgress.getProgressMax();
+            float progressMax = seekBarProgress.getMax();
             int progress = (int) (progressMax * percent);
             if (progress >= 0 && progress <= progressMax) {
                 seekBarProgress.setProgress(progress);
-                if (mPlayer.isPlaying()) {
+                if (mPlayer.isPlaying() && isPostAgain) {
                     //在播放中，则每隔1s触发一次更新事件
                     mHandler.postDelayed(mProgressCallback, UPDATE_PROGRESS_INTERVAL);
                 }
             }
         }
+
     };
 
     /**
@@ -117,6 +116,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         currentSongDuration = mPlayer.getPlayingSong().getDuration();
         musicPresenter = new MusicPlayerPresenter(getActivity(), this);
         musicPresenter.subscribe();
+        setSeekBarListener();
     }
 
     @Override
@@ -131,6 +131,33 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
 
     public void setMainPresenter(MainContract.Presenter mainPresenter) {
         this.mainPresenter = mainPresenter;
+    }
+
+    private void setSeekBarListener() {
+        seekBarProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    updateProgressTextWithDuration(getDuration(progress));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                mHandler.removeCallbacks(mProgressCallback);
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (!mPlayer.isPlaying()) {
+                    mPlayer.play();
+                }
+                mPlayer.seekTo(getDuration(seekBar.getProgress()));
+                if (mPlayer.isPlaying()) {
+                    updateProgressBar();
+                }
+            }
+        });
     }
 
     public void setPlayList(PlayList playList) {
@@ -176,8 +203,13 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         mPlayer.playNext();
     }
 
-    private void updateProgressTextWithDuration(int duration) {
-        tvProgress.setText(TimeHelper.formatDuration(duration));
+    private void updateProgressTextWithDuration(int playDuration) {
+        tvProgress.setText(TimeHelper.formatDuration(playDuration));
+    }
+
+    private int getDuration(int seekBarProgress) {
+        float percent = (float) seekBarProgress / this.seekBarProgress.getMax();
+        return (int) (currentSongDuration * percent);
     }
 
     @Override
@@ -185,7 +217,6 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         //重置所有状态
         String undefined = this.getString(R.string.undefined);
         tvSongName.setText(undefined);
-        tvArtist.setText(undefined);
         tvDuration.setText(undefined);
         tvProgress.setText(undefined);
         mHandler.removeCallbacks(mProgressCallback);
@@ -203,8 +234,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         }
         //记录播放歌曲位置
         AppSetting.setLastPlaySongId(song.getId());
-        tvSongName.setText(song.getName());
-        tvArtist.setText(song.getArtist());
+        tvSongName.setText(String.format("%s-%s", song.getName(), song.getArtist()));
         currentSongDuration = song.getDuration();
         tvDuration.setText(TimeHelper.formatDuration(currentSongDuration));
         updateProgressTextWithDuration(0);
