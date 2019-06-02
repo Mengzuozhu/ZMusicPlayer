@@ -122,10 +122,6 @@ public class MainPresenter implements MainContract.Presenter {
         popupMenu.inflate(R.menu.menu_sort_by_name);
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             int itemId = menuItem.getItemId();
-            //点击的菜单与配置中的一样，则不需要排序
-            if (AppSetting.getSongSortMode().getMenuId() == itemId) {
-                return true;
-            }
             switch (itemId) {
                 case R.id.action_sort_ascend_by_name:
                     baseAdapter.sortByName(true);
@@ -136,7 +132,7 @@ public class MainPresenter implements MainContract.Presenter {
                     AppSetting.setSongOrderMode(SongOrderMode.ORDER_DESCEND_BY_NAME);
                     return true;
                 case R.id.action_sort_by_add_time:
-                    baseAdapter.sortByAddTime();
+                    baseAdapter.sortById();
                     AppSetting.setSongOrderMode(SongOrderMode.ORDER_ASCEND_BY_ADD_TIME);
                     return true;
                 default:

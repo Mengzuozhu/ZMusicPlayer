@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.mzz.zandroidcommon.adapter.CheckableAndDraggableAdapter;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.List;
@@ -96,19 +97,15 @@ public class SongInfoAdapter extends CheckableAndDraggableAdapter <SongInfo> {
      * @param isAscend the is ascend
      */
     public void sortByName(boolean isAscend) {
-        if (isAscend) {
-            songInfos.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
-        } else {
-            songInfos.sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
-        }
+        PlayList.sortByChineseName(songInfos, isAscend);
         notifyDataSetChanged();
     }
 
     /**
      * Sort by add time.
      */
-    public void sortByAddTime() {
-        songInfos.sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
+    public void sortById() {
+        PlayList.sortById(songInfos);
         notifyDataSetChanged();
     }
 

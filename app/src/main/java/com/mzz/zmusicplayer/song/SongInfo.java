@@ -14,7 +14,10 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.converter.PropertyConverter;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import lombok.Getter;
 import lombok.Setter;

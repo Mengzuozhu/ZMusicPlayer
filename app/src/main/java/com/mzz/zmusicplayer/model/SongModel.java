@@ -4,6 +4,7 @@ import com.mzz.zmusicplayer.MusicApplication;
 import com.mzz.zmusicplayer.greendao.db.DaoSession;
 import com.mzz.zmusicplayer.greendao.db.SongInfoDao;
 import com.mzz.zmusicplayer.setting.AppSetting;
+import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.ArrayList;
@@ -29,18 +30,23 @@ public class SongModel {
      * @return the order song infos
      */
     public static List <SongInfo> getOrderSongInfos() {
+        List <SongInfo> songInfos = loadAll();
         switch (AppSetting.getSongSortMode()) {
             case ORDER_ASCEND_BY_NAME:
-                return songInfoDao.queryBuilder().orderAsc(SongInfoDao.Properties.Name).list();
+                PlayList.sortByChineseName(songInfos, true);
+                break;
             case ORDER_DESCEND_BY_NAME:
-                return songInfoDao.queryBuilder().orderDesc(SongInfoDao.Properties.Name).list();
+                PlayList.sortByChineseName(songInfos, false);
+                break;
             default:
-                return songInfoDao.queryBuilder().orderAsc(SongInfoDao.Properties.Id).list();
+                PlayList.sortById(songInfos);
+                break;
         }
+        return songInfos;
     }
 
     private static List <SongInfo> loadAll() {
-        return daoSession.loadAll(SongInfo.class);
+        return songInfoDao.loadAll();
     }
 
     /**
