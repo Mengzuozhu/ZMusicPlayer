@@ -29,6 +29,8 @@ public class SongInfoAdapter extends CheckableAndDraggableAdapter <SongInfo> {
     private LinearLayoutManager layoutManager;
     private List <SongInfo> songInfos;
     private RecyclerView recyclerView;
+    @Getter
+    private Context context;
     private boolean isShowCheckBox;
     private int chbSongSelectId;
 
@@ -45,6 +47,7 @@ public class SongInfoAdapter extends CheckableAndDraggableAdapter <SongInfo> {
         super(R.layout.item_song_list, songInfos, recyclerView);
         this.songInfos = songInfos;
         this.recyclerView = recyclerView;
+        this.context = context;
         this.isShowCheckBox = isShowCheckBox;
         chbSongSelectId = R.id.chb_item_song_select;
         if (isShowCheckBox) {

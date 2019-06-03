@@ -21,18 +21,17 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PlayList implements Parcelable {
 
-    public static final Parcelable.Creator <PlayList> CREATOR =
-            new Parcelable.Creator <PlayList>() {
-                @Override
-                public PlayList createFromParcel(Parcel source) {
-                    return new PlayList(source);
-                }
+    public static final Creator <PlayList> CREATOR = new Creator <PlayList>() {
+        @Override
+        public PlayList createFromParcel(Parcel source) {
+            return new PlayList(source);
+        }
 
-                @Override
-                public PlayList[] newArray(int size) {
-                    return new PlayList[size];
-                }
-            };
+        @Override
+        public PlayList[] newArray(int size) {
+            return new PlayList[size];
+        }
+    };
     @Getter
     private List <SongInfo> songInfos;
     @Getter
@@ -46,7 +45,7 @@ public class PlayList implements Parcelable {
         this.songInfos = new ArrayList <>();
     }
 
-    private PlayList(Parcel in) {
+    protected PlayList(Parcel in) {
         this.songInfos = in.createTypedArrayList(SongInfo.CREATOR);
         this.playingIndex = in.readInt();
         int tmpPlayMode = in.readInt();
@@ -81,8 +80,6 @@ public class PlayList implements Parcelable {
      */
     public static void sortByChineseName(List <SongInfo> songInfos, boolean isAscend) {
         if (isAscend) {
-//            songInfos.sort((o1, o2) -> Collator.getInstance(Locale.CHINESE).compare(o1.getName(),
-//                    o2.getName()));
             songInfos.sort((o1, o2) -> {
                 String spell = o1.getSpell();
                 if (spell == null) {
@@ -91,8 +88,6 @@ public class PlayList implements Parcelable {
                 return spell.compareTo(o2.getSpell());
             });
         } else {
-//            songInfos.sort((o1, o2) -> Collator.getInstance(Locale.CHINESE).compare(o2.getName(),
-//                    o1.getName()));
             songInfos.sort((o1, o2) -> {
                 String spell = o2.getSpell();
                 if (spell == null) {

@@ -75,8 +75,6 @@ public class MainPresenter implements MainContract.Presenter {
         ImageView sortView = header.findViewById(R.id.iv_header_sort);
         sortView.setOnClickListener(v -> showSongOrderPopupMenu(sortView));
         baseAdapter.setHeaderView(header);
-        //隐藏头部
-//        scrollToPosition(1);
     }
 
     @Override
@@ -112,8 +110,7 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     private void showSearchActivity() {
-        MusicSearchActivity.startForResult(activity,
-                (ArrayList <SongInfo>) playList.getSongInfos());
+        MusicSearchActivity.startForResult(activity, playList);
     }
 
     private void showSongOrderPopupMenu(View view) {

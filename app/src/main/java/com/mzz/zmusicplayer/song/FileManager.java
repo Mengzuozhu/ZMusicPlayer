@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.github.promeg.pinyinhelper.Pinyin;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +69,7 @@ public class FileManager {
                 artist = artist.trim();
                 SongInfo song = new SongInfo();
                 song.setName(name);
+                song.setSpell(getUpperSpell(name));
                 song.setPath(path);
                 song.setArtist(artist);
                 song.setDuration(duration);
@@ -78,6 +81,14 @@ public class FileManager {
             Log.d("FileManager", "e:" + e.getMessage());
         }
         return songs;
+    }
+
+    private String getUpperSpell(String name) {
+        String pinyin = Pinyin.toPinyin(name, "");
+        if (pinyin == null) {
+            pinyin = "";
+        }
+        return pinyin.toUpperCase();
     }
 
     private String extractName(String name) {

@@ -10,10 +10,12 @@ import android.widget.SearchView;
 
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.adapter.SongQueryAdapter;
+import com.mzz.zmusicplayer.adapter.MusicSearchAdapter;
+import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
-import java.util.ArrayList;
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,14 +26,13 @@ public class MusicSearchActivity extends BaseActivity {
     public static final String SEARCH_DATA = "SEARCH_DATA";
     @BindView(R.id.rv_search)
     RecyclerView rvSearch;
-    SearchView mSearchView;
-    private SongQueryAdapter queryAdapter;
+    SearchView searchView;
+    private MusicSearchAdapter queryAdapter;
 
     public static void startForResult(FragmentActivity activity,
-                                      ArrayList <? extends Parcelable> value) {
-        Intent intent =
-                new Intent(activity, MusicSearchActivity.class).putParcelableArrayListExtra(SEARCH_DATA,
-                        value);
+                                      Parcelable value) {
+        Intent intent = new Intent(activity, MusicSearchActivity.class).putExtra(SEARCH_DATA,
+                value);
         activity.startActivity(intent);
     }
 
@@ -41,19 +42,28 @@ public class MusicSearchActivity extends BaseActivity {
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
 
-        List <SongInfo> songInfos = getIntent().getParcelableArrayListExtra(SEARCH_DATA);
-        queryAdapter = new SongQueryAdapter(songInfos, rvSearch,
-                this, false);
+        PlayList playList = getIntent().getParcelableExtra(SEARCH_DATA);
+        //重置选中歌曲的颜色，避免出现多个选中歌曲
+        List <SongInfo> songInfos = playList.getSongInfos();
+        for (SongInfo songInfo : songInfos) {
+            songInfo.setPlayListSelected(false);
+        }
+        queryAdapter = new MusicSearchAdapter(playList, rvSearch, this, false);
+        queryAdapter.setOnItemClickListener((adapter, view, position) -> {
+            SongInfo song = queryAdapter.getItem(position);
+            EventBus.getDefault().post(song);
+            queryAdapter.updatePlaySongBackgroundColor(song);
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
         //通过MenuItem得到SearchView
-        mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        mSearchView.onActionViewExpanded();
-        mSearchView.setQueryHint("搜索");
-        queryAdapter.setQueryTextListener(mSearchView, this.getColor(R.color.colorGreen));
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.onActionViewExpanded();
+        searchView.setQueryHint("搜索");
+        queryAdapter.setQueryTextListener(searchView);
         return super.onCreateOptionsMenu(menu);
     }
 }

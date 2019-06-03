@@ -54,6 +54,7 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
     private String name;
     private String path;
     private String artist;
+    //全大写的中文拼写，英文保存原样
     private String spell;
     private int duration;
     private boolean isChecked = true;
@@ -75,8 +76,6 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
     }
 
     protected SongInfo(Parcel in) {
-        this.adapterPosition = in.readInt();
-        this.isPlayListSelected = in.readByte() != 0;
         this.id = (Long) in.readValue(Long.class.getClassLoader());
         this.name = in.readString();
         this.path = in.readString();
@@ -154,8 +153,6 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.adapterPosition);
-        dest.writeByte(this.isPlayListSelected ? (byte) 1 : (byte) 0);
         dest.writeValue(this.id);
         dest.writeString(this.name);
         dest.writeString(this.path);

@@ -100,6 +100,12 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     @Override
+    public boolean play(SongInfo songInfo) {
+        int songIndexById = PlayList.getSongIndexById(mPlayList.getSongInfos(), songInfo.getId());
+        return play(songIndexById);
+    }
+
+    @Override
     public boolean pause() {
         if (mPlayer.isPlaying()) {
             mPlayer.pause();

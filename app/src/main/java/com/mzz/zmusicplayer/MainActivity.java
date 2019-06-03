@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.mzz.zandroidcommon.common.EventBusHelper;
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.contract.MainContract;
@@ -29,6 +30,8 @@ import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.MusicControlFragment;
 import com.mzz.zmusicplayer.ui.SongEditActivity;
 import com.mzz.zmusicplayer.ui.SongPickerActivity;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;

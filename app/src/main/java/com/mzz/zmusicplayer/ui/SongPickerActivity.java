@@ -55,7 +55,7 @@ public class SongPickerActivity extends BaseActivity {
         RxPermissions rxPermissions = new RxPermissions(this);
         rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE).subscribe(granted -> {
             if (granted) {
-                initAlarmSong();
+                initAdapter();
             } else {
                 showToast("无权限访问");
             }
@@ -79,10 +79,10 @@ public class SongPickerActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initAlarmSong() {
+    private void initAdapter() {
         songInfos = FileManager.getInstance(SongPickerActivity.this).getSongInfos();
         queryAdapter = new SongQueryAdapter(songInfos, rvSongFile, this, true);
-        queryAdapter.setQueryTextListener(svSongFile, this.getColor(R.color.colorGreen));
+        queryAdapter.setQueryTextListener(svSongFile);
         ViewerHelper.showOrHideScrollFirst(rvSongFile, queryAdapter.getLayoutManager(),
                 fabSongScrollFirst);
         initHeader();

@@ -13,6 +13,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mzz.zandroidcommon.common.EventBusHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.TimeHelper;
 import com.mzz.zmusicplayer.contract.MainContract;
@@ -25,6 +26,8 @@ import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.PlayObserver;
 import com.mzz.zmusicplayer.song.Player;
 import com.mzz.zmusicplayer.song.SongInfo;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -120,11 +123,13 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         musicPresenter = new MusicPlayerPresenter(getActivity(), this);
         musicPresenter.subscribe();
         setSeekBarListener();
+        EventBusHelper.register(this);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        EventBusHelper.unregister(this);
         mHandler.removeCallbacks(mProgressCallback);
         mPlayer.unregisterCallback(this);
         AppSetting.setLastPlaySongId(mPlayer.getPlayingSong().getId());
@@ -173,6 +178,12 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
 
     public void setPlayingIndex(int playingIndex) {
         mPlayer.play(playingIndex);
+        onSongUpdated(mPlayer.getPlayingSong());
+    }
+
+    @Subscribe
+    public void setPlayingSong(SongInfo songInfo) {
+        mPlayer.play(songInfo);
         onSongUpdated(mPlayer.getPlayingSong());
     }
 
