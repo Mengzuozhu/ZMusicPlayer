@@ -24,8 +24,6 @@ android {
     greendao {
         schemaVersion 1
         daoPackage 'com.mzz.zmusicplayer.greendao.db'
-        //自定义生成数据库文件的目录
-//        targetGenDir 'src/main/java'
     }
     repositories {
         flatDir { dirs 'libs' }
@@ -60,7 +58,6 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
     implementation(name: 'ZAndroidCommon', ext: 'aar')
-    implementation 'com.mikhaellopez:circularprogressbar:2.0.0'
     implementation 'tyrantgit:explosionfield:1.0.1'
-
+    implementation 'com.github.promeg:tinypinyin:2.0.3'
 }

@@ -1,3 +1,6 @@
 
-squid:S1319¢"yThe type of the "entityProperty" object should be an interface such as "List" rather than the implementation "ArrayList".(šÂÖÜşÿÿÿÿ8Ë‚Š±-
-”squid:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(®ê´üÿÿÿÿ8Ë‚Š±-
+Zsquid:UselessImportCheck"/Remove this unused import 'java.text.Collator'.(Á¬ÓË8Â˜×Ã±-
+]squid:UselessImportCheck"-Remove this unused import 'java.util.Locale'.(åğ×±ûÿÿÿÿ8Â˜×Ã±-
+”squid:S1319 "pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(®ê´üÿÿÿÿ8Ë‚Š±-
+squid:S1319¥"yThe type of the "entityProperty" object should be an interface such as "List" rather than the implementation "ArrayList".(šÂÖÜşÿÿÿÿ8Ë‚Š±-
+[squid:UselessImportCheck"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ8Â˜×Ã±-

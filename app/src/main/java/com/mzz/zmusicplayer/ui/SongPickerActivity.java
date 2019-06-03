@@ -15,6 +15,7 @@ import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.github.promeg.pinyinhelper.Pinyin;
 import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zandroidcommon.view.ViewerHelper;
@@ -129,9 +130,14 @@ public class SongPickerActivity extends BaseActivity {
 
     private ArrayList <SongInfo> getCheckedSongInfos() {
         ArrayList <SongInfo> checkedSongs = new ArrayList <>();
-        for (SongInfo songFile : songInfos) {
-            if (songFile.getIsChecked()) {
-                checkedSongs.add(songFile);
+        for (SongInfo songInfo : songInfos) {
+            if (songInfo.getIsChecked()) {
+                String pinyin = Pinyin.toPinyin(songInfo.getName(), "");
+                if (pinyin == null) {
+                    pinyin = songInfo.getName();
+                }
+                songInfo.setSpell(pinyin);
+                checkedSongs.add(songInfo);
             }
         }
         return checkedSongs;

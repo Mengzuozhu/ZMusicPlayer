@@ -126,3 +126,5 @@ s
 Capp/src/main/java/com/mzz/zmusicplayer/adapter/MainSongAdapter.java,4\e\4e573706cd0850d0608417aca6f5fdc210c4fd29
 s
 Capp/src/main/java/com/mzz/zmusicplayer/ui/MusicControlFragment.java,e\f\ef5682975908356370ceed0bd838bd34c977a11d
+t
+Dapp/src/main/java/com/mzz/zmusicplayer/receiver/HeadsetReceiver.java,6\5\6573efa020d2291b0b573130e624547648d03434

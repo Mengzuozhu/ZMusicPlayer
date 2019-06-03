@@ -5,10 +5,8 @@ import android.os.Parcelable;
 
 import com.mzz.zmusicplayer.setting.PlayedMode;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
 import lombok.AllArgsConstructor;
@@ -83,11 +81,25 @@ public class PlayList implements Parcelable {
      */
     public static void sortByChineseName(List <SongInfo> songInfos, boolean isAscend) {
         if (isAscend) {
-            songInfos.sort((o1, o2) -> Collator.getInstance(Locale.CHINESE).compare(o1.getName(),
-                    o2.getName()));
+//            songInfos.sort((o1, o2) -> Collator.getInstance(Locale.CHINESE).compare(o1.getName(),
+//                    o2.getName()));
+            songInfos.sort((o1, o2) -> {
+                String spell = o1.getSpell();
+                if (spell == null) {
+                    return -1;
+                }
+                return spell.compareTo(o2.getSpell());
+            });
         } else {
-            songInfos.sort((o1, o2) -> Collator.getInstance(Locale.CHINESE).compare(o2.getName(),
-                    o1.getName()));
+//            songInfos.sort((o1, o2) -> Collator.getInstance(Locale.CHINESE).compare(o2.getName(),
+//                    o1.getName()));
+            songInfos.sort((o1, o2) -> {
+                String spell = o2.getSpell();
+                if (spell == null) {
+                    return -1;
+                }
+                return spell.compareTo(o1.getSpell());
+            });
         }
     }
 

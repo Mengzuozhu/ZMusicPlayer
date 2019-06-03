@@ -113,7 +113,10 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         mPlayer = Player.getInstance();
         mPlayer.registerCallback(this);
         mPlayer.setPlayList(mPlayList);
-        currentSongDuration = mPlayer.getPlayingSong().getDuration();
+        SongInfo playingSong = mPlayer.getPlayingSong();
+        if (playingSong != null) {
+            currentSongDuration = playingSong.getDuration();
+        }
         musicPresenter = new MusicPlayerPresenter(getActivity(), this);
         musicPresenter.subscribe();
         setSeekBarListener();
