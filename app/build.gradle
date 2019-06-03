@@ -60,4 +60,5 @@ dependencies {
     implementation(name: 'ZAndroidCommon', ext: 'aar')
     implementation 'tyrantgit:explosionfield:1.0.1'
     implementation 'com.github.promeg:tinypinyin:2.0.3'
+    implementation 'com.github.JakeWharton:ViewPagerIndicator:2.4.1'
 }

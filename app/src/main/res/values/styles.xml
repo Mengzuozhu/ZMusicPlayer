@@ -55,4 +55,27 @@
         <item name="android:layout_marginEnd">@dimen/list_item_margin_8</item>
         <item name="android:buttonTint">@color/colorGreen</item>
     </style>
+
+    <style name="StyledIndicators" parent="AppTheme">
+        <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
+    </style>
+
+    <style name="CustomTabPageIndicator" parent="Widget.TabPageIndicator">
+        <item name="android:background">@drawable/tab_background</item>
+        <item name="android:textAppearance">@style/CustomTabPageIndicator.Text</item>
+        <item name="android:textColor">@drawable/tab_title_color</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:dividerPadding">10dp</item>
+        <item name="android:showDividers">middle</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:fadingEdge">horizontal</item>
+        <item name="android:fadingEdgeLength">8dp</item>
+    </style>
+
+    <style name="CustomTabPageIndicator.Text" parent="android:TextAppearance.Medium">
+        <item name="android:typeface">monospace</item>
+    </style>
 </resources>

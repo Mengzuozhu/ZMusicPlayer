@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -244,6 +245,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
             return;
         }
         if (mainPresenter != null) {
+            Log.d("MusicControlFragment", "mainPresenter:" + mainPresenter);
             mainPresenter.updatePlaySongBackgroundColor(song);
         }
         //记录播放歌曲位置

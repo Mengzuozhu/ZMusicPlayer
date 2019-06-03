@@ -4,53 +4,47 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.mzz.zandroidcommon.common.EventBusHelper;
 import com.mzz.zandroidcommon.view.BaseActivity;
-import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.contract.MainContract;
 import com.mzz.zmusicplayer.edit.EditHandler;
-import com.mzz.zmusicplayer.presenter.MainPresenter;
 import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.PlayList;
+import com.mzz.zmusicplayer.song.PlayListener;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.MusicControlFragment;
 import com.mzz.zmusicplayer.ui.SongEditActivity;
 import com.mzz.zmusicplayer.ui.SongPickerActivity;
-
-import org.greenrobot.eventbus.Subscribe;
+import com.viewpagerindicator.TabPageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
-public class MainActivity extends BaseActivity implements MainContract.View {
+public class MainActivity extends BaseActivity implements PlayListener {
 
-    @BindView(R.id.rv_song)
-    RecyclerView rvSong;
+    private static final String[] CONTENT = new String[]{"本地"};
     @BindView(R.id.layout_drawer)
     DrawerLayout layoutDrawer;
     @BindView(R.id.nav_view)
     NavigationView navView;
-    @BindView(R.id.fab_song_scroll_first)
-    FloatingActionButton fabSongScrollFirst;
-    private MainContract.Presenter mainPresenter;
+    PlayListFragment playListFragment;
+    private Fragment[] fragments;
     private MusicControlFragment musicControlFragment;
     private PlayedMode playedMode;
     private HeadsetReceiver headsetReceiver;
@@ -79,10 +73,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     private void init() {
-        mainPresenter = new MainPresenter(this);
-        musicControlFragment.setMainPresenter(mainPresenter);
-        ViewerHelper.showOrHideScrollFirst(rvSong, mainPresenter.getLayoutManager(),
-                fabSongScrollFirst);
+        initTabPage();
         playedMode = AppSetting.getPlayMode();
         initMenu();
         initNavigationView();
@@ -90,6 +81,20 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_HEADSET_PLUG);
         registerReceiver(headsetReceiver, intentFilter);
+    }
+
+    private void initTabPage() {
+        playListFragment = PlayListFragment.newInstance();
+        fragments = new Fragment[CONTENT.length];
+        fragments[0] = playListFragment;
+        FragmentPagerAdapter adapter =
+                new GoogleMusicAdapter(getSupportFragmentManager());
+
+        ViewPager pager = findViewById(R.id.pager);
+        pager.setAdapter(adapter);
+
+        TabPageIndicator indicator = findViewById(R.id.indicator);
+        indicator.setViewPager(pager);
     }
 
     private void initNavigationView() {
@@ -112,7 +117,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         item.setTitle(playedMode.getDesc());
         AppSetting.setPlayMode(playedMode);
         musicControlFragment.setPlayMode(playedMode);
-        mainPresenter.updateSongCountAndMode();
+        playListFragment.updateSongCountAndMode();
     }
 
     private void initMenu() {
@@ -150,6 +155,14 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     @Override
+    public void setMainPresenter(MainContract.Presenter mainPresenter) {
+        if (musicControlFragment == null) {
+            updatePlayList(new PlayList());
+        }
+        musicControlFragment.setMainPresenter(mainPresenter);
+    }
+
+    @Override
     public void updatePlayList(PlayList playList) {
         if (playList == null) {
             playList = new PlayList();
@@ -173,16 +186,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     @Override
-    public RecyclerView getRecyclerView() {
-        return rvSong;
-    }
-
-    @Override
-    public FragmentActivity getActivity() {
-        return this;
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data == null) {
@@ -191,7 +194,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         if (resultCode == SongPickerActivity.ADD_SONG_CODE) {
             ArrayList <SongInfo> newSongInfos =
                     data.getParcelableArrayListExtra(SongPickerActivity.ADD_SONG);
-            mainPresenter.addSongs(newSongInfos);
+            playListFragment.addSongs(newSongInfos);
         } else if (resultCode == SongEditActivity.EDIT_SAVE) {
             onSaveEditEvent(data);
         }
@@ -204,17 +207,28 @@ public class MainActivity extends BaseActivity implements MainContract.View {
             return;
         }
         List <Long> ids = EditHandler.integerToLongList(deleteIds);
-        mainPresenter.deleteByKeyInTx(ids);
+        playListFragment.deleteByKeyInTx(ids);
     }
 
-    @OnClick(R.id.fab_song_scroll_first)
-    public void scrollToFirstSongOnClick(View view) {
-        mainPresenter.scrollToFirst();
-    }
+    class GoogleMusicAdapter extends FragmentPagerAdapter {
+        GoogleMusicAdapter(FragmentManager fm) {
+            super(fm);
+        }
 
-    @OnClick(R.id.fab_song_locate)
-    public void locateToSelectedSongOnClick(View view) {
-        mainPresenter.locateToSelectedSong();
+        @Override
+        public Fragment getItem(int position) {
+            return fragments[position];
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return CONTENT[position % CONTENT.length].toUpperCase();
+        }
+
+        @Override
+        public int getCount() {
+            return CONTENT.length;
+        }
     }
 
 }

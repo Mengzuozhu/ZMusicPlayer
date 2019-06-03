@@ -64,8 +64,6 @@ A
 gradlew.bat,2\a\2a45a911a8f1836b0b6c5b758962572012d8f8c3
 ?
 settings.gradle,0\5\05efc8b1657769a27696d478ded1e95f38737233
-s
-Capp/src/main/java/com/mzz/zmusicplayer/common/TextQueryHandler.java,e\e\eef8cd70079884f6974e21fb6279b15c7f7987d3
 r
 Bapp/src/main/java/com/mzz/zmusicplayer/common/UpgradeDbHelper.java,5\e\5ea51c425a581e58a7c7445f98c1d034fc1c3704
 X
@@ -128,3 +126,7 @@ s
 Capp/src/main/java/com/mzz/zmusicplayer/ui/MusicControlFragment.java,e\f\ef5682975908356370ceed0bd838bd34c977a11d
 t
 Dapp/src/main/java/com/mzz/zmusicplayer/receiver/HeadsetReceiver.java,6\5\6573efa020d2291b0b573130e624547648d03434
+t
+Dapp/src/main/java/com/mzz/zmusicplayer/adapter/TextQueryHandler.java,f\8\f833bb32902c39917ecf75b0f53e5167b0bf7fe7
+v
+Fapp/src/main/java/com/mzz/zmusicplayer/adapter/MusicSearchAdapter.java,f\3\f3f1d45b27220b33a60cf1685b5d953bef892616

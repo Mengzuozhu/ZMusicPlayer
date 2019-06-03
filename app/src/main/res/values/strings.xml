@@ -12,4 +12,7 @@
     <string name="sort_by_add_time">按添加时间排序</string>
     <string name="delete_all">全删</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

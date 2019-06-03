@@ -8,51 +8,29 @@
     android:background="@color/colorGrey"
     tools:context=".MainActivity">
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/layout_song_list"
+        <com.viewpagerindicator.TabPageIndicator
+            android:id="@+id/indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorDark" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            app:layout_constraintBottom_toTopOf="@+id/layout_control"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_song"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_song_scroll_first"
-                style="@style/StyleFab"
-                android:src="@drawable/up_arrow"
-                app:backgroundTint="@color/colorWhite"
-                app:fabSize="mini"
-                app:layout_constraintBottom_toTopOf="@+id/fab_song_locate"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_song_locate"
-                style="@style/StyleFab"
-                android:src="@drawable/water_locate"
-                app:backgroundTint="@color/colorWhite"
-                app:fabSize="mini"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-        </android.support.constraint.ConstraintLayout>
+            android:layout_weight="1" />
 
         <RelativeLayout
             android:id="@+id/layout_control"
             android:layout_width="match_parent"
             android:layout_height="@dimen/control_height"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-    </android.support.constraint.ConstraintLayout>
+            android:background="@color/colorDark" />
+    </LinearLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"

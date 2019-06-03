@@ -18,9 +18,12 @@ import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.setting.SongOrderMode;
 import com.mzz.zmusicplayer.song.PlayList;
+import com.mzz.zmusicplayer.song.PlayListener;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.MusicSearchActivity;
 import com.mzz.zmusicplayer.ui.SongEditActivity;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,15 +37,15 @@ public class MainPresenter implements MainContract.Presenter {
 
     private TextView tcSongCountAndMode;
     private RecyclerView recyclerView;
+    private PlayListener playListener;
     private PlayList playList;
     private MainSongAdapter baseAdapter;
-    private MainContract.View mView;
     private FragmentActivity activity;
 
-    public MainPresenter(MainContract.View mView) {
-        this.mView = mView;
+    public MainPresenter(MainContract.View mView, PlayListener playListener) {
         activity = mView.getActivity();
         recyclerView = mView.getRecyclerView();
+        this.playListener = playListener;
         init();
     }
 
@@ -52,12 +55,14 @@ public class MainPresenter implements MainContract.Presenter {
         int lastPlaySongIndex = PlayList.getSongIndexById(songInfos, lastPlaySongId);
         playList = new PlayList(songInfos, lastPlaySongIndex, AppSetting.getPlayMode());
         intiAdapter();
-        mView.updatePlayList(playList);
+        playListener.updatePlayList(playList);
+//        EventBus.getDefault().post(playList);
+//        mView.updatePlayList(playList);
     }
 
     private void intiAdapter() {
         baseAdapter = new MainSongAdapter(playList, recyclerView, activity, false);
-        baseAdapter.setOnItemClickListener((adapter, view, position) -> mView.setPlayingIndex(position));
+        baseAdapter.setOnItemClickListener((adapter, view, position) -> playListener.setPlayingIndex(position));
         baseAdapter.setOnItemLongClickListener((adapter, view, position) -> {
             showSongEditActivity();
             return false;
