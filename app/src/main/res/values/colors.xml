@@ -14,7 +14,8 @@
     <color name="colorDark">#0B2848</color>
     <color name="colorDarkBlack">#09274B</color>
     <color name="colorDarkBlue">#1E95BD</color>
-    <color name="colorGrey">#293e56</color>
+    <color name="colorLightBlue">#2394BC</color>
+    <color name="colorGrey">#293E56</color>
     <color name="empty">#00000000</color>
 
 </resources>

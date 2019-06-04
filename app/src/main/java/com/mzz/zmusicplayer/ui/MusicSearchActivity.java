@@ -51,7 +51,7 @@ public class MusicSearchActivity extends BaseActivity {
                 break;
             }
         }
-        queryAdapter = new MusicSearchAdapter(playList, rvSearch, this, false);
+        queryAdapter = new MusicSearchAdapter(playList, rvSearch, false);
         queryAdapter.setOnItemClickListener((adapter, view, position) -> {
             SongInfo song = queryAdapter.getItem(position);
             EventBus.getDefault().post(song);

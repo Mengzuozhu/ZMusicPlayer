@@ -60,6 +60,7 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
     private Date lastPlayTime = new Date();
     private int duration;
     private boolean isChecked = true;
+    private boolean isFavorite = false;
 
     @Generated(hash = 1061935912)
     public SongInfo() {
@@ -75,7 +76,6 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         this.isChecked = in.readByte() != 0;
     }
 
-    @Generated(hash = 312297733)
     public SongInfo(Long id, String name, String path, String artist, String nameSpell,
                     Date lastPlayTime, int duration, boolean isChecked) {
         this.id = id;
@@ -86,6 +86,20 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         this.lastPlayTime = lastPlayTime;
         this.duration = duration;
         this.isChecked = isChecked;
+    }
+
+    @Generated(hash = 180802117)
+    public SongInfo(Long id, String name, String path, String artist, String nameSpell,
+            Date lastPlayTime, int duration, boolean isChecked, boolean isFavorite) {
+        this.id = id;
+        this.name = name;
+        this.path = path;
+        this.artist = artist;
+        this.nameSpell = nameSpell;
+        this.lastPlayTime = lastPlayTime;
+        this.duration = duration;
+        this.isChecked = isChecked;
+        this.isFavorite = isFavorite;
     }
 
     @Override
@@ -171,6 +185,14 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
 
     public void setLastPlayTime(Date lastPlayTime) {
         this.lastPlayTime = lastPlayTime;
+    }
+
+    public boolean getIsFavorite() {
+        return this.isFavorite;
+    }
+
+    public void setIsFavorite(boolean isFavorite) {
+        this.isFavorite = isFavorite;
     }
 
     public static class SongInfoListConverter implements PropertyConverter <ArrayList <SongInfo>,

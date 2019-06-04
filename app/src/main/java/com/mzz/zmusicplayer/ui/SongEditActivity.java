@@ -1,21 +1,17 @@
 package com.mzz.zmusicplayer.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.SearchView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.adapter.SongEditAdapter;
 import com.mzz.zmusicplayer.edit.EditHandler;
 import com.mzz.zmusicplayer.song.SongInfo;
 
@@ -31,6 +27,8 @@ public class SongEditActivity extends BaseActivity {
     public static final int EDIT_SAVE = 3;
     @BindView(R.id.rv_edit)
     RecyclerView rvEdit;
+    @BindView(R.id.sv_edit)
+    SearchView svEdit;
     EditHandler <SongInfo> editHandler;
 
     /**
@@ -77,27 +75,9 @@ public class SongEditActivity extends BaseActivity {
     }
 
     private void init(ArrayList <SongInfo> editData) {
-        BaseQuickAdapter adapter =
-                new BaseQuickAdapter <SongInfo, BaseViewHolder>(R.layout.item_song_edit,
-                        editData) {
-                    @Override
-                    protected void convert(BaseViewHolder helper, SongInfo songInfo) {
-                        helper.setText(R.id.tv_edit_item_song_name, songInfo.getName());
-                        helper.setText(R.id.tv_edit_item_song_artist, songInfo.getArtist());
-                        helper.setText(R.id.tv_edit_item_song_num,
-                                String.valueOf(helper.getAdapterPosition()));
-                        helper.addOnClickListener(R.id.iv_edit_del);
-                    }
-                };
-        rvEdit.setLayoutManager(new LinearLayoutManager(this));
-        rvEdit.setAdapter(adapter);
-        adapter.setHeaderView(getEmptyDummyHeader(this));
+        SongEditAdapter adapter = new SongEditAdapter(R.layout.item_song_edit, rvEdit, editData);
+        adapter.setQueryTextListener(svEdit);
         editHandler = new EditHandler <>(this, editData, adapter).setOnItemChildDeleteListener();
-    }
-
-    private View getEmptyDummyHeader(Context context) {
-        //为使得头部一致，设置一个空头部
-        return LayoutInflater.from(context).inflate(R.layout.content_empty, rvEdit, false);
     }
 
     private void save() {

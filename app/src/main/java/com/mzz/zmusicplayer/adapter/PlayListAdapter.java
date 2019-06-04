@@ -1,6 +1,5 @@
 package com.mzz.zmusicplayer.adapter;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -29,14 +28,12 @@ public class PlayListAdapter extends SongInfoAdapter {
      *
      * @param playList       the play list
      * @param recyclerView   the recycler view
-     * @param context        the context
      * @param isShowCheckBox the is show check box
      */
-    public PlayListAdapter(PlayList playList, RecyclerView recyclerView, Context context,
-                           boolean isShowCheckBox) {
-        super(playList.getSongInfos(), recyclerView, context, isShowCheckBox);
+    public PlayListAdapter(PlayList playList, RecyclerView recyclerView, boolean isShowCheckBox) {
+        super(playList.getSongInfos(), recyclerView, isShowCheckBox);
         this.playList = playList;
-        selectColor = context.getColor(R.color.colorGreen);
+        selectColor = recyclerView.getContext().getColor(R.color.colorGreen);
     }
 
     @Override

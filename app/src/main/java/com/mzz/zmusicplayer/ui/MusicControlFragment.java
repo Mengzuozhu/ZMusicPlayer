@@ -53,6 +53,8 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     TextView tvDuration;
     @BindView(R.id.iv_play_pause)
     ImageView ivPlayOrPause;
+    @BindView(R.id.iv_favorite)
+    ImageView ivFavorite;
     MusicControlListener controlListener;
     private int currentSongDuration;
     //与后台服务共用同一个播放器
@@ -203,6 +205,27 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         mPlayer.setPlayMode(playMode);
     }
 
+    @OnClick(R.id.iv_favorite)
+    public void onFavoriteAction() {
+        if (mPlayer == null) return;
+
+        SongInfo playingSong = mPlayer.getPlayingSong();
+        if (playingSong == null) {
+            return;
+        }
+        boolean isFavorite = !playingSong.getIsFavorite();
+        playingSong.setIsFavorite(isFavorite);
+
+        updateFavoriteState(isFavorite);
+    }
+
+    @OnClick(R.id.iv_play_pre)
+    public void onPlayPreviousAction() {
+        if (mPlayer == null) return;
+
+        mPlayer.playPrevious();
+    }
+
     @OnClick(R.id.iv_play_pause)
     public void onPlayStateChangeAction() {
         if (mPlayer == null) return;
@@ -213,13 +236,6 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
             mPlayer.play();
         }
         onPlayStatusChanged(mPlayer.isPlaying());
-    }
-
-    @OnClick(R.id.iv_play_pre)
-    public void onPlayPreviousAction() {
-        if (mPlayer == null) return;
-
-        mPlayer.playPrevious();
     }
 
     @OnClick(R.id.iv_play_next)
@@ -258,6 +274,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         currentSongDuration = song.getDuration();
         tvDuration.setText(TimeHelper.formatDuration(currentSongDuration));
         updateProgressTextWithDuration(0);
+        updateFavoriteState(song.getIsFavorite());
     }
 
     @Override
@@ -283,6 +300,10 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     @Override
     public void updatePlayToggle(boolean isPlaying) {
         ivPlayOrPause.setImageResource(isPlaying ? R.drawable.pause : R.drawable.play);
+    }
+
+    private void updateFavoriteState(boolean isFavorite) {
+        ivFavorite.setImageResource(isFavorite ? R.drawable.favorite : R.drawable.favorite_white);
     }
 
     private void updateProgressTextWithDuration(int playDuration) {

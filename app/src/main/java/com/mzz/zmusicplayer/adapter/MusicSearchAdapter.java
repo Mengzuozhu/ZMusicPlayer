@@ -1,6 +1,5 @@
 package com.mzz.zmusicplayer.adapter;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.widget.SearchView;
 
@@ -23,13 +22,13 @@ public class MusicSearchAdapter extends PlayListAdapter {
      *
      * @param playList       the play list
      * @param recyclerView   the recycler view
-     * @param context        the context
      * @param isShowCheckBox the is show check box
      */
-    public MusicSearchAdapter(PlayList playList, RecyclerView recyclerView, Context context,
+    public MusicSearchAdapter(PlayList playList, RecyclerView recyclerView,
                               boolean isShowCheckBox) {
-        super(playList, recyclerView, context, isShowCheckBox);
-        textQueryHandler = new TextQueryHandler(this, playList.getSongInfos());
+        super(playList, recyclerView, isShowCheckBox);
+        textQueryHandler = new TextQueryHandler(this, recyclerView.getContext(),
+                playList.getSongInfos());
     }
 
     @Override

@@ -81,7 +81,7 @@ public class SongPickerActivity extends BaseActivity {
 
     private void initAdapter() {
         songInfos = FileManager.getInstance(SongPickerActivity.this).getSongInfos();
-        queryAdapter = new SongQueryAdapter(songInfos, rvSongFile, this, true);
+        queryAdapter = new SongQueryAdapter(songInfos, rvSongFile, true);
         queryAdapter.setQueryTextListener(svSongFile);
         ViewerHelper.showOrHideScrollFirst(rvSongFile, queryAdapter.getLayoutManager(),
                 fabSongScrollFirst);

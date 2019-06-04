@@ -1,10 +1,12 @@
 package com.mzz.zmusicplayer.adapter;
 
+import android.content.Context;
 import android.support.annotation.IdRes;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.widget.SearchView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.mzz.zandroidcommon.view.TextQueryHelper;
 import com.mzz.zmusicplayer.R;
@@ -26,15 +28,15 @@ public class TextQueryHandler {
     @Setter
     @IdRes
     private int queryColor;
-    private SongInfoAdapter adapter;
+    private BaseQuickAdapter adapter;
     private List <SongInfo> songInfos;
     private Map <String, Spannable> nameAndQuerySpans;
 
-    TextQueryHandler(SongInfoAdapter adapter, List <SongInfo> songInfos) {
+    TextQueryHandler(BaseQuickAdapter adapter, Context context, List <SongInfo> songInfos) {
         this.adapter = adapter;
         this.songInfos = songInfos;
         this.nameAndQuerySpans = new HashMap <>();
-        queryColor = adapter.getContext().getColor(R.color.colorRed);
+        queryColor = context.getColor(R.color.colorRed);
     }
 
     /**

@@ -79,7 +79,7 @@ public class RecentFragment extends Fragment {
         List <SongInfo> recentSongs = getRecentSongs();
         mPlayList.setSongInfos(recentSongs);
         if (baseAdapter == null) {
-            baseAdapter = new PlayListAdapter(mPlayList, rvRecentSong, getActivity(), false);
+            baseAdapter = new PlayListAdapter(mPlayList, rvRecentSong, false);
             baseAdapter.setOnItemClickListener((adapter, view, position) -> {
                 SongInfo song = baseAdapter.getItem(position);
                 EventBus.getDefault().post(song);
