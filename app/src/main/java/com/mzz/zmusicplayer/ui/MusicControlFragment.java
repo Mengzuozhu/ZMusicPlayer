@@ -179,7 +179,12 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         if (playList == null) {
             playList = new PlayList();
         }
-        mPlayer.play(playList);
+
+        if (mPlayer.isPlaying()) {
+            mPlayer.play(playList);
+        } else {
+            mPlayer.setPlayList(playList);
+        }
         onSongUpdated(mPlayer.getPlayingSong());
     }
 
@@ -222,15 +227,6 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         if (mPlayer == null) return;
 
         mPlayer.playNext();
-    }
-
-    private void updateProgressTextWithDuration(int playDuration) {
-        tvProgress.setText(TimeHelper.formatDuration(playDuration));
-    }
-
-    private int getDuration(int seekBarProgress) {
-        float percent = (float) seekBarProgress / this.seekBarProgress.getMax();
-        return (int) (currentSongDuration * percent);
     }
 
     @Override
@@ -284,14 +280,23 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         updatePlayToggle(isPlaying);
     }
 
-    private void updateProgressBar() {
-        mHandler.removeCallbacks(mProgressCallback);
-        mHandler.post(mProgressCallback);
-    }
-
     @Override
     public void updatePlayToggle(boolean isPlaying) {
         ivPlayOrPause.setImageResource(isPlaying ? R.drawable.pause : R.drawable.play);
+    }
+
+    private void updateProgressTextWithDuration(int playDuration) {
+        tvProgress.setText(TimeHelper.formatDuration(playDuration));
+    }
+
+    private int getDuration(int seekBarProgress) {
+        float percent = (float) seekBarProgress / this.seekBarProgress.getMax();
+        return (int) (currentSongDuration * percent);
+    }
+
+    private void updateProgressBar() {
+        mHandler.removeCallbacks(mProgressCallback);
+        mHandler.post(mProgressCallback);
     }
 
     @Override

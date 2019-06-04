@@ -37,7 +37,7 @@ public interface LocalMusicContract {
 
         void updateSongCountAndMode();
 
-        void deleteByKeyInTx(Iterable <Long> key);
+        void deleteByKeyInTx(List <Long> keys);
 
         void finishMainActivity();
     }

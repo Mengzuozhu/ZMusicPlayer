@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -133,6 +134,21 @@ public class PlayList implements Parcelable {
         });
     }
 
+    /**
+     * Add all.
+     *
+     * @param c the c
+     */
+    public void addAll(Collection <SongInfo> c) {
+        songInfos.addAll(c);
+        recentSongs.addAll(c);
+    }
+
+    /**
+     * Is empty boolean.
+     *
+     * @return the boolean
+     */
     boolean isEmpty() {
         return songInfos.isEmpty();
     }

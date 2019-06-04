@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.MusicSearchActivity" />
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:theme="@style/StyledIndicators">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,7 +29,9 @@
         <activity
             android:name=".ui.SongPickerActivity"
             android:label="添加歌曲" />
-        <activity android:name=".ui.SongEditActivity" />
+        <activity
+            android:name=".ui.SongEditActivity"
+            android:label="编辑歌曲" />
 
         <service
             android:name=".song.PlaybackService"

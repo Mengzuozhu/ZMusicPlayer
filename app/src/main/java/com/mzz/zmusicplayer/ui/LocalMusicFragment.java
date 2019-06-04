@@ -83,7 +83,7 @@ public class LocalMusicFragment extends Fragment implements LocalMusicContract.V
         mainPresenter.addSongs(newSongInfos);
     }
 
-    public void deleteByKeyInTx(Iterable <Long> keys) {
+    public void deleteByKeyInTx(List <Long> keys) {
         mainPresenter.deleteByKeyInTx(keys);
     }
 
@@ -112,7 +112,7 @@ public class LocalMusicFragment extends Fragment implements LocalMusicContract.V
 
     public interface LocalMusicListener {
 
-        void updatePlayList(PlayList playList);
+        void setPlayList(PlayList playList);
 
         void setPlayingIndex(int playingIndex);
     }

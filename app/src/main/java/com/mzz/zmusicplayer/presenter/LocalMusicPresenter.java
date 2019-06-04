@@ -55,7 +55,7 @@ public class LocalMusicPresenter implements LocalMusicContract.Presenter {
         playList = new PlayList(songInfos, lastPlaySongIndex, AppSetting.getPlayMode());
         intiAdapter();
         updatePlaySongBackgroundColor(playList.getPlayingSong());
-        localMusicListener.updatePlayList(playList);
+        localMusicListener.setPlayList(playList);
     }
 
     private void intiAdapter() {
@@ -77,6 +77,8 @@ public class LocalMusicPresenter implements LocalMusicContract.Presenter {
         searchView.setOnClickListener(v -> showSearchActivity());
         ImageView sortView = header.findViewById(R.id.iv_header_sort);
         sortView.setOnClickListener(v -> showSongOrderPopupMenu(sortView));
+        ImageView editView = header.findViewById(R.id.iv_header_edit);
+        editView.setOnClickListener(v -> showSongEditActivity());
         baseAdapter.setHeaderView(header);
     }
 
@@ -95,7 +97,10 @@ public class LocalMusicPresenter implements LocalMusicContract.Presenter {
     }
 
     @Override
-    public void deleteByKeyInTx(Iterable <Long> keys) {
+    public void deleteByKeyInTx(List <Long> keys) {
+        if (keys.isEmpty()) {
+            return;
+        }
         SongModel.deleteByKeyInTx(keys);
         init();
     }
@@ -154,9 +159,8 @@ public class LocalMusicPresenter implements LocalMusicContract.Presenter {
 
     @Override
     public void addSongs(List <SongInfo> newSongInfos) {
-        List <SongInfo> songInfos = playList.getSongInfos();
-        songInfos.addAll(newSongInfos);
-        baseAdapter.setNewData(songInfos);
+        playList.addAll(newSongInfos);
+        baseAdapter.setNewData(playList.getSongInfos());
         SongModel.insertOrReplaceInTx(newSongInfos);
         updateSongCountAndMode();
     }

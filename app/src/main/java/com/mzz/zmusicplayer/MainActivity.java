@@ -161,7 +161,7 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
     }
 
     @Override
-    public void updatePlayList(PlayList playList) {
+    public void setPlayList(PlayList playList) {
         if (playList == null) {
             playList = new PlayList();
         }
@@ -179,7 +179,7 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
         if (musicControlFragment != null) {
             musicControlFragment.setPlayingIndex(playingIndex);
         } else {
-            updatePlayList(new PlayList());
+            setPlayList(new PlayList());
         }
     }
 
