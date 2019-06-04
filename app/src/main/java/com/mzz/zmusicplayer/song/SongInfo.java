@@ -15,6 +15,7 @@ import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.converter.PropertyConverter;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -54,22 +55,11 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
     private String name;
     private String path;
     private String artist;
-    //全大写的中文拼写，英文保存原样
-    private String spell;
+    //全大写的歌名中文拼写，英文保存原样
+    private String nameSpell;
+    private Date lastPlayTime = new Date();
     private int duration;
     private boolean isChecked = true;
-
-    @Generated(hash = 889003151)
-    public SongInfo(Long id, String name, String path, String artist, String spell, int duration,
-                    boolean isChecked) {
-        this.id = id;
-        this.name = name;
-        this.path = path;
-        this.artist = artist;
-        this.spell = spell;
-        this.duration = duration;
-        this.isChecked = isChecked;
-    }
 
     @Generated(hash = 1061935912)
     public SongInfo() {
@@ -80,9 +70,22 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         this.name = in.readString();
         this.path = in.readString();
         this.artist = in.readString();
-        this.spell = in.readString();
+        this.nameSpell = in.readString();
         this.duration = in.readInt();
         this.isChecked = in.readByte() != 0;
+    }
+
+    @Generated(hash = 312297733)
+    public SongInfo(Long id, String name, String path, String artist, String nameSpell,
+                    Date lastPlayTime, int duration, boolean isChecked) {
+        this.id = id;
+        this.name = name;
+        this.path = path;
+        this.artist = artist;
+        this.nameSpell = nameSpell;
+        this.lastPlayTime = lastPlayTime;
+        this.duration = duration;
+        this.isChecked = isChecked;
     }
 
     @Override
@@ -138,12 +141,12 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         this.id = id;
     }
 
-    public String getSpell() {
-        return this.spell;
+    public String getNameSpell() {
+        return this.nameSpell;
     }
 
-    public void setSpell(String spell) {
-        this.spell = spell;
+    public void setNameSpell(String nameSpell) {
+        this.nameSpell = nameSpell;
     }
 
     @Override
@@ -157,9 +160,17 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         dest.writeString(this.name);
         dest.writeString(this.path);
         dest.writeString(this.artist);
-        dest.writeString(this.spell);
+        dest.writeString(this.nameSpell);
         dest.writeInt(this.duration);
         dest.writeByte(this.isChecked ? (byte) 1 : (byte) 0);
+    }
+
+    public Date getLastPlayTime() {
+        return this.lastPlayTime;
+    }
+
+    public void setLastPlayTime(Date lastPlayTime) {
+        this.lastPlayTime = lastPlayTime;
     }
 
     public static class SongInfoListConverter implements PropertyConverter <ArrayList <SongInfo>,

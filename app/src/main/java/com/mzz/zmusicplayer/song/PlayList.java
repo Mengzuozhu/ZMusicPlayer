@@ -6,10 +6,11 @@ import android.os.Parcelable;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +19,6 @@ import lombok.Setter;
  * date : 2019 2019/5/29 11:17
  * description :
  */
-@AllArgsConstructor
 public class PlayList implements Parcelable {
 
     public static final Creator <PlayList> CREATOR = new Creator <PlayList>() {
@@ -32,8 +32,11 @@ public class PlayList implements Parcelable {
             return new PlayList[size];
         }
     };
+    @Setter
     @Getter
     private List <SongInfo> songInfos;
+    @Getter
+    private LinkedList <SongInfo> recentSongs;
     @Getter
     @Setter
     private int playingIndex = 0;
@@ -43,6 +46,14 @@ public class PlayList implements Parcelable {
 
     public PlayList() {
         this.songInfos = new ArrayList <>();
+    }
+
+    public PlayList(List <SongInfo> songInfos, int playingIndex, PlayedMode playMode) {
+        this.songInfos = songInfos;
+        this.playingIndex = playingIndex;
+        this.playMode = playMode;
+        recentSongs = new LinkedList <>(songInfos);
+        sortByLastPlayTime(recentSongs);
     }
 
     protected PlayList(Parcel in) {
@@ -81,19 +92,19 @@ public class PlayList implements Parcelable {
     public static void sortByChineseName(List <SongInfo> songInfos, boolean isAscend) {
         if (isAscend) {
             songInfos.sort((o1, o2) -> {
-                String spell = o1.getSpell();
+                String spell = o1.getNameSpell();
                 if (spell == null) {
                     return -1;
                 }
-                return spell.compareTo(o2.getSpell());
+                return spell.compareTo(o2.getNameSpell());
             });
         } else {
             songInfos.sort((o1, o2) -> {
-                String spell = o2.getSpell();
+                String spell = o2.getNameSpell();
                 if (spell == null) {
                     return -1;
                 }
-                return spell.compareTo(o1.getSpell());
+                return spell.compareTo(o1.getNameSpell());
             });
         }
     }
@@ -107,10 +118,40 @@ public class PlayList implements Parcelable {
         songInfos.sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
     }
 
+    /**
+     * Sort by last play time.
+     *
+     * @param songInfos the song infos
+     */
+    private static void sortByLastPlayTime(List <SongInfo> songInfos) {
+        songInfos.sort((o1, o2) -> {
+            Date lastPlayTime = o2.getLastPlayTime();
+            if (lastPlayTime == null) {
+                return -1;
+            }
+            return lastPlayTime.compareTo(o1.getLastPlayTime());
+        });
+    }
+
     boolean isEmpty() {
         return songInfos.isEmpty();
     }
 
+    /**
+     * Update recent songs.
+     *
+     * @param song the song
+     */
+    public void updateRecentSongs(SongInfo song) {
+        recentSongs.remove(song);
+        recentSongs.addFirst(song);
+    }
+
+    /**
+     * Gets playing song.
+     *
+     * @return the playing song
+     */
     public SongInfo getPlayingSong() {
         if (playingIndex < 0) {
             playingIndex = 0;
@@ -122,6 +163,11 @@ public class PlayList implements Parcelable {
         return null;
     }
 
+    /**
+     * Previous song info.
+     *
+     * @return the song info
+     */
     SongInfo previous() {
         switch (playMode) {
             //循环当前歌曲
@@ -137,6 +183,11 @@ public class PlayList implements Parcelable {
         return getPlayingSong();
     }
 
+    /**
+     * Next song info.
+     *
+     * @return the song info
+     */
     SongInfo next() {
         switch (playMode) {
             //循环当前歌曲

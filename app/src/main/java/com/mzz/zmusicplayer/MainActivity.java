@@ -17,15 +17,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mzz.zandroidcommon.view.BaseActivity;
-import com.mzz.zmusicplayer.contract.MainContract;
 import com.mzz.zmusicplayer.edit.EditHandler;
 import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.PlayList;
-import com.mzz.zmusicplayer.song.PlayListener;
 import com.mzz.zmusicplayer.song.SongInfo;
+import com.mzz.zmusicplayer.ui.LocalMusicFragment;
 import com.mzz.zmusicplayer.ui.MusicControlFragment;
+import com.mzz.zmusicplayer.ui.RecentFragment;
 import com.mzz.zmusicplayer.ui.SongEditActivity;
 import com.mzz.zmusicplayer.ui.SongPickerActivity;
 import com.viewpagerindicator.TabPageIndicator;
@@ -36,14 +36,16 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity implements PlayListener {
+public class MainActivity extends BaseActivity implements LocalMusicFragment.LocalMusicListener,
+        MusicControlFragment.MusicControlListener {
 
-    private static final String[] CONTENT = new String[]{"本地"};
+    private static final String[] CONTENT = new String[]{"最近", "本地"};
     @BindView(R.id.layout_drawer)
     DrawerLayout layoutDrawer;
     @BindView(R.id.nav_view)
     NavigationView navView;
-    PlayListFragment playListFragment;
+    private RecentFragment recentFragment;
+    private LocalMusicFragment localMusicFragment;
     private Fragment[] fragments;
     private MusicControlFragment musicControlFragment;
     private PlayedMode playedMode;
@@ -84,9 +86,11 @@ public class MainActivity extends BaseActivity implements PlayListener {
     }
 
     private void initTabPage() {
-        playListFragment = PlayListFragment.newInstance();
+        localMusicFragment = LocalMusicFragment.newInstance();
+        recentFragment = RecentFragment.newInstance();
         fragments = new Fragment[CONTENT.length];
-        fragments[0] = playListFragment;
+        fragments[0] = recentFragment;
+        fragments[1] = localMusicFragment;
         FragmentPagerAdapter adapter =
                 new GoogleMusicAdapter(getSupportFragmentManager());
 
@@ -95,6 +99,7 @@ public class MainActivity extends BaseActivity implements PlayListener {
 
         TabPageIndicator indicator = findViewById(R.id.indicator);
         indicator.setViewPager(pager);
+        indicator.setCurrentItem(1);
     }
 
     private void initNavigationView() {
@@ -103,7 +108,8 @@ public class MainActivity extends BaseActivity implements PlayListener {
         navView.setNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_scan) {
-                openActivityForResult(SongPickerActivity.class, SongPickerActivity.ADD_SONG_CODE);
+                startActivityForResult(new Intent(this, SongPickerActivity.class),
+                        SongPickerActivity.ADD_SONG_CODE);
                 layoutDrawer.closeDrawers();
             } else if (itemId == R.id.nav_play_mode) {
                 setPlayMode(item);
@@ -117,7 +123,7 @@ public class MainActivity extends BaseActivity implements PlayListener {
         item.setTitle(playedMode.getDesc());
         AppSetting.setPlayMode(playedMode);
         musicControlFragment.setPlayMode(playedMode);
-        playListFragment.updateSongCountAndMode();
+        localMusicFragment.updateSongCountAndMode();
     }
 
     private void initMenu() {
@@ -155,14 +161,6 @@ public class MainActivity extends BaseActivity implements PlayListener {
     }
 
     @Override
-    public void setMainPresenter(MainContract.Presenter mainPresenter) {
-        if (musicControlFragment == null) {
-            updatePlayList(new PlayList());
-        }
-        musicControlFragment.setMainPresenter(mainPresenter);
-    }
-
-    @Override
     public void updatePlayList(PlayList playList) {
         if (playList == null) {
             playList = new PlayList();
@@ -194,7 +192,7 @@ public class MainActivity extends BaseActivity implements PlayListener {
         if (resultCode == SongPickerActivity.ADD_SONG_CODE) {
             ArrayList <SongInfo> newSongInfos =
                     data.getParcelableArrayListExtra(SongPickerActivity.ADD_SONG);
-            playListFragment.addSongs(newSongInfos);
+            localMusicFragment.addSongs(newSongInfos);
         } else if (resultCode == SongEditActivity.EDIT_SAVE) {
             onSaveEditEvent(data);
         }
@@ -207,7 +205,12 @@ public class MainActivity extends BaseActivity implements PlayListener {
             return;
         }
         List <Long> ids = EditHandler.integerToLongList(deleteIds);
-        playListFragment.deleteByKeyInTx(ids);
+        localMusicFragment.deleteByKeyInTx(ids);
+    }
+
+    @Override
+    public void updatePlaySongBackgroundColor(SongInfo song) {
+        localMusicFragment.updatePlaySongBackgroundColor(song);
     }
 
     class GoogleMusicAdapter extends FragmentPagerAdapter {

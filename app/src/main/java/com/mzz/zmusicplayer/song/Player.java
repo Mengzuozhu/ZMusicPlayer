@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+
 /**
  * author : Mzz
  * date : 2019 2019/5/28 18:52
@@ -19,11 +21,12 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     private static Player sInstance = new Player();
     private MediaPlayer mPlayer;
     private boolean isPaused;
-    private PlayList mPlayList;
+    @Getter
+    private PlayList playList;
     private List <PlayObserver> mPlayObservers = new ArrayList <>(2);
 
     private Player() {
-        mPlayList = new PlayList();
+        playList = new PlayList();
         mPlayer = new MediaPlayer();
         mPlayer.setOnCompletionListener(this);
     }
@@ -42,7 +45,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         if (list == null) {
             list = new PlayList();
         }
-        mPlayList = list;
+        playList = list;
     }
 
     @Override
@@ -75,12 +78,12 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
 
     @Override
     public SongInfo getPlayingSong() {
-        return mPlayList.getPlayingSong();
+        return playList.getPlayingSong();
     }
 
     @Override
     public void setPlayMode(PlayedMode playMode) {
-        mPlayList.setPlayMode(playMode);
+        playList.setPlayMode(playMode);
     }
 
     @Override
@@ -94,14 +97,14 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
 
     @Override
     public boolean play(int playingIndex) {
-        mPlayList.setPlayingIndex(playingIndex);
+        playList.setPlayingIndex(playingIndex);
         isPaused = false;
         return play();
     }
 
     @Override
     public boolean play(SongInfo songInfo) {
-        int songIndexById = PlayList.getSongIndexById(mPlayList.getSongInfos(), songInfo.getId());
+        int songIndexById = PlayList.getSongIndexById(playList.getSongInfos(), songInfo.getId());
         return play(songIndexById);
     }
 
@@ -119,7 +122,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     @Override
     public boolean playPrevious() {
         isPaused = false;
-        SongInfo previous = mPlayList.previous();
+        SongInfo previous = playList.previous();
         notifyPlayPrevious(previous);
         return play();
     }
@@ -127,7 +130,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     @Override
     public boolean playNext() {
         isPaused = false;
-        SongInfo next = mPlayList.next();
+        SongInfo next = playList.next();
         notifyPlayNext(next);
         return play();
     }
@@ -148,9 +151,9 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
 
     @Override
     public boolean seekTo(int progressMilli) {
-        if (mPlayList.isEmpty()) return false;
+        if (playList.isEmpty()) return false;
 
-        SongInfo currentSong = mPlayList.getPlayingSong();
+        SongInfo currentSong = playList.getPlayingSong();
         if (currentSong != null) {
             if (progressMilli >= currentSong.getDuration()) {
                 onCompletion(mPlayer);
@@ -169,10 +172,12 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
 
     @Override
     public void releasePlayer() {
+        if (mPlayer == null) {
+            return;
+        }
         mPlayer.reset();
         mPlayer.release();
         mPlayer = null;
-//        sInstance = null;
     }
 
     private void notifyPlayStatusChanged(boolean isPlaying) {

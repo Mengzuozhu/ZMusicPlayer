@@ -1,4 +1,4 @@
-package com.mzz.zmusicplayer;
+package com.mzz.zmusicplayer.ui;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,9 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mzz.zandroidcommon.view.ViewerHelper;
-import com.mzz.zmusicplayer.contract.MainContract;
-import com.mzz.zmusicplayer.presenter.MainPresenter;
-import com.mzz.zmusicplayer.song.PlayListener;
+import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.contract.LocalMusicContract;
+import com.mzz.zmusicplayer.presenter.LocalMusicPresenter;
+import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.List;
@@ -22,24 +23,22 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import lombok.Getter;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link PlayListFragment#newInstance} factory method to
+ * Use the {@link LocalMusicFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PlayListFragment extends Fragment implements MainContract.View {
+public class LocalMusicFragment extends Fragment implements LocalMusicContract.View {
 
     @BindView(R.id.rv_song)
     RecyclerView rvSong;
     @BindView(R.id.fab_song_scroll_first)
     FloatingActionButton fabSongScrollFirst;
-    PlayListener playListener;
-    @Getter
-    private MainContract.Presenter mainPresenter;
+    private LocalMusicListener localMusicListener;
+    private LocalMusicContract.Presenter mainPresenter;
 
-    public PlayListFragment() {
+    public LocalMusicFragment() {
         // Required empty public constructor
     }
 
@@ -47,21 +46,16 @@ public class PlayListFragment extends Fragment implements MainContract.View {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment PlayListFragment.
+     * @return A new instance of fragment LocalMusicFragment.
      */
-    public static PlayListFragment newInstance() {
-        PlayListFragment fragment = new PlayListFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+    public static LocalMusicFragment newInstance() {
+        return new LocalMusicFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_play_list, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_play_list, container, false);
     }
 
     @Override
@@ -72,14 +66,17 @@ public class PlayListFragment extends Fragment implements MainContract.View {
     }
 
     private void init() {
-        FragmentActivity activity = getActivity();
-        if (activity instanceof PlayListener) {
-            playListener = (PlayListener) activity;
-        }
-        mainPresenter = new MainPresenter(this, playListener);
-        playListener.setMainPresenter(mainPresenter);
+        getListener();
+        mainPresenter = new LocalMusicPresenter(this, localMusicListener);
         ViewerHelper.showOrHideScrollFirst(rvSong, mainPresenter.getLayoutManager(),
                 fabSongScrollFirst);
+    }
+
+    private void getListener() {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof LocalMusicListener) {
+            localMusicListener = (LocalMusicListener) activity;
+        }
     }
 
     public void addSongs(List <SongInfo> newSongInfos) {
@@ -92,6 +89,10 @@ public class PlayListFragment extends Fragment implements MainContract.View {
 
     public void updateSongCountAndMode() {
         mainPresenter.updateSongCountAndMode();
+    }
+
+    public void updatePlaySongBackgroundColor(SongInfo song) {
+        mainPresenter.updatePlaySongBackgroundColor(song);
     }
 
     @Override
@@ -109,4 +110,10 @@ public class PlayListFragment extends Fragment implements MainContract.View {
         mainPresenter.locateToSelectedSong();
     }
 
+    public interface LocalMusicListener {
+
+        void updatePlayList(PlayList playList);
+
+        void setPlayingIndex(int playingIndex);
+    }
 }

@@ -95,6 +95,8 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
                 unregisterCallback(this);
                 MusicApplication.getInstance().exitApp();
                 break;
+            default:
+                break;
         }
         return START_STICKY;
     }
@@ -119,6 +121,11 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
             unregisterReceiver(lockScreenReceiver);
         }
         super.onDestroy();
+    }
+
+    @Override
+    public PlayList getPlayList() {
+        return mPlayer.getPlayList();
     }
 
     @Override

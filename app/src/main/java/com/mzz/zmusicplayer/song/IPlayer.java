@@ -11,6 +11,8 @@ public interface IPlayer {
 
     void setPlayList(PlayList list);
 
+    PlayList getPlayList();
+
     boolean play();
 
     boolean play(PlayList list);

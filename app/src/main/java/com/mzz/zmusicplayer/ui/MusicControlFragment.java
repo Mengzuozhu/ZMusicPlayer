@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +14,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mzz.zandroidcommon.common.DateHelper;
 import com.mzz.zandroidcommon.common.EventBusHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.TimeHelper;
-import com.mzz.zmusicplayer.contract.MainContract;
 import com.mzz.zmusicplayer.contract.MusicPlayerContract;
 import com.mzz.zmusicplayer.presenter.MusicPlayerPresenter;
 import com.mzz.zmusicplayer.setting.AppSetting;
@@ -29,6 +29,8 @@ import com.mzz.zmusicplayer.song.Player;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,11 +53,11 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     TextView tvDuration;
     @BindView(R.id.iv_play_pause)
     ImageView ivPlayOrPause;
+    MusicControlListener controlListener;
     private int currentSongDuration;
     //与后台服务共用同一个播放器
     private IPlayer mPlayer;
     private Handler mHandler = new Handler();
-    private MainContract.Presenter mainPresenter;
     private MusicPlayerContract.Presenter musicPresenter;
     private Runnable mProgressCallback = new Runnable() {
         @Override
@@ -124,6 +126,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         musicPresenter = new MusicPlayerPresenter(getActivity(), this);
         musicPresenter.subscribe();
         setSeekBarListener();
+        getListener();
         EventBusHelper.register(this);
     }
 
@@ -138,8 +141,11 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         musicPresenter.unsubscribe();
     }
 
-    public void setMainPresenter(MainContract.Presenter mainPresenter) {
-        this.mainPresenter = mainPresenter;
+    private void getListener() {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof MusicControlListener) {
+            controlListener = (MusicControlListener) activity;
+        }
     }
 
     private void setSeekBarListener() {
@@ -244,10 +250,12 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         if (song == null) {
             return;
         }
-        if (mainPresenter != null) {
-            Log.d("MusicControlFragment", "mainPresenter:" + mainPresenter);
-            mainPresenter.updatePlaySongBackgroundColor(song);
+        if (controlListener != null) {
+            controlListener.updatePlaySongBackgroundColor(song);
         }
+        Calendar nowTime = DateHelper.getNowTime();
+        song.setLastPlayTime(nowTime.getTime());
+        mPlayer.getPlayList().updateRecentSongs(song);
         //记录播放歌曲位置
         AppSetting.setLastPlaySongId(song.getId());
         tvSongName.setText(String.format("%s-%s", song.getName(), song.getArtist()));
@@ -291,4 +299,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
+    public interface MusicControlListener {
+        void updatePlaySongBackgroundColor(SongInfo song);
+    }
 }

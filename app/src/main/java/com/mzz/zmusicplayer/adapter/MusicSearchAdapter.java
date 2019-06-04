@@ -14,7 +14,7 @@ import com.mzz.zmusicplayer.song.SongInfo;
  * date : 2019 2019/6/3 10:52
  * description :
  */
-public class MusicSearchAdapter extends MainSongAdapter {
+public class MusicSearchAdapter extends PlayListAdapter {
 
     private TextQueryHandler textQueryHandler;
 

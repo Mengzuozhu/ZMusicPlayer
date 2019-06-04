@@ -16,7 +16,7 @@ import com.mzz.zmusicplayer.song.SongInfo;
  * date : 2019 2019/6/1 15:56
  * description :
  */
-public class MainSongAdapter extends SongInfoAdapter {
+public class PlayListAdapter extends SongInfoAdapter {
     private int itemSongNameId = R.id.tv_item_song_name;
     private int[] textViewIds = new int[]{itemSongNameId, R.id.tv_item_song_artist,
             R.id.tv_item_song_num};
@@ -32,7 +32,7 @@ public class MainSongAdapter extends SongInfoAdapter {
      * @param context        the context
      * @param isShowCheckBox the is show check box
      */
-    public MainSongAdapter(PlayList playList, RecyclerView recyclerView, Context context,
+    public PlayListAdapter(PlayList playList, RecyclerView recyclerView, Context context,
                            boolean isShowCheckBox) {
         super(playList.getSongInfos(), recyclerView, context, isShowCheckBox);
         this.playList = playList;

@@ -11,19 +11,17 @@ import android.widget.TextView;
 
 import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.adapter.MainSongAdapter;
-import com.mzz.zmusicplayer.contract.MainContract;
+import com.mzz.zmusicplayer.adapter.PlayListAdapter;
+import com.mzz.zmusicplayer.contract.LocalMusicContract;
 import com.mzz.zmusicplayer.model.SongModel;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.setting.SongOrderMode;
 import com.mzz.zmusicplayer.song.PlayList;
-import com.mzz.zmusicplayer.song.PlayListener;
 import com.mzz.zmusicplayer.song.SongInfo;
+import com.mzz.zmusicplayer.ui.LocalMusicFragment;
 import com.mzz.zmusicplayer.ui.MusicSearchActivity;
 import com.mzz.zmusicplayer.ui.SongEditActivity;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,19 +31,20 @@ import java.util.List;
  * date : 2019 2019/5/28 17:50
  * description :
  */
-public class MainPresenter implements MainContract.Presenter {
+public class LocalMusicPresenter implements LocalMusicContract.Presenter {
 
     private TextView tcSongCountAndMode;
     private RecyclerView recyclerView;
-    private PlayListener playListener;
+    private LocalMusicFragment.LocalMusicListener localMusicListener;
     private PlayList playList;
-    private MainSongAdapter baseAdapter;
+    private PlayListAdapter baseAdapter;
     private FragmentActivity activity;
 
-    public MainPresenter(MainContract.View mView, PlayListener playListener) {
+    public LocalMusicPresenter(LocalMusicContract.View mView,
+                               LocalMusicFragment.LocalMusicListener localMusicListener) {
         activity = mView.getActivity();
         recyclerView = mView.getRecyclerView();
-        this.playListener = playListener;
+        this.localMusicListener = localMusicListener;
         init();
     }
 
@@ -55,14 +54,13 @@ public class MainPresenter implements MainContract.Presenter {
         int lastPlaySongIndex = PlayList.getSongIndexById(songInfos, lastPlaySongId);
         playList = new PlayList(songInfos, lastPlaySongIndex, AppSetting.getPlayMode());
         intiAdapter();
-        playListener.updatePlayList(playList);
-//        EventBus.getDefault().post(playList);
-//        mView.updatePlayList(playList);
+        updatePlaySongBackgroundColor(playList.getPlayingSong());
+        localMusicListener.updatePlayList(playList);
     }
 
     private void intiAdapter() {
-        baseAdapter = new MainSongAdapter(playList, recyclerView, activity, false);
-        baseAdapter.setOnItemClickListener((adapter, view, position) -> playListener.setPlayingIndex(position));
+        baseAdapter = new PlayListAdapter(playList, recyclerView, activity, false);
+        baseAdapter.setOnItemClickListener((adapter, view, position) -> localMusicListener.setPlayingIndex(position));
         baseAdapter.setOnItemLongClickListener((adapter, view, position) -> {
             showSongEditActivity();
             return false;
@@ -110,8 +108,7 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     private void showSongEditActivity() {
-        SongEditActivity.startForResult(activity,
-                (ArrayList <SongInfo>) playList.getSongInfos());
+        SongEditActivity.startForResult(activity, (ArrayList <SongInfo>) playList.getSongInfos());
     }
 
     private void showSearchActivity() {

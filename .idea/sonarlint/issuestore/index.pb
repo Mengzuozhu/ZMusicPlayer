@@ -11,10 +11,6 @@ i
 9app/src/main/java/com/mzz/zmusicplayer/song/SongInfo.java,5\7\575b76af88e0653f6ecafe3f7980c33517eaa43e
 l
 <app/src/main/java/com/mzz/zmusicplayer/song/FileManager.java,6\2\6288555ae46d990cbcc072d3b22665b83bac1e38
-q
-Aapp/src/main/java/com/mzz/zmusicplayer/contract/MainContract.java,3\1\310e2336c97e711848ccc88bc7bcb574c5fbbf6d
-s
-Capp/src/main/java/com/mzz/zmusicplayer/presenter/MainPresenter.java,5\4\54fad273e39a67c5402ecba4cb547b8fb26d7fcc
 m
 =app/src/main/java/com/mzz/zmusicplayer/common/TimeHelper.java,7\7\77dd994d2bd20bdff286708f6d8f0a49a7241e7f
 g
@@ -121,8 +117,6 @@ Japp/src/main/java/com/mzz/zmusicplayer/presenter/MusicPlayerPresenter.java,a\d
 x
 Happ/src/main/java/com/mzz/zmusicplayer/contract/MusicPlayerContract.java,4\5\456906e633ad4396f316c4244272f2723aba6de3
 s
-Capp/src/main/java/com/mzz/zmusicplayer/adapter/MainSongAdapter.java,4\e\4e573706cd0850d0608417aca6f5fdc210c4fd29
-s
 Capp/src/main/java/com/mzz/zmusicplayer/ui/MusicControlFragment.java,e\f\ef5682975908356370ceed0bd838bd34c977a11d
 t
 Dapp/src/main/java/com/mzz/zmusicplayer/receiver/HeadsetReceiver.java,6\5\6573efa020d2291b0b573130e624547648d03434
@@ -130,3 +124,13 @@ t
 Dapp/src/main/java/com/mzz/zmusicplayer/adapter/TextQueryHandler.java,f\8\f833bb32902c39917ecf75b0f53e5167b0bf7fe7
 v
 Fapp/src/main/java/com/mzz/zmusicplayer/adapter/MusicSearchAdapter.java,f\3\f3f1d45b27220b33a60cf1685b5d953bef892616
+q
+Aapp/src/main/java/com/mzz/zmusicplayer/ui/LocalMusicFragment.java,3\8\38c1854d46ce387b4d88318f8810fad37444d2a7
+y
+Iapp/src/main/java/com/mzz/zmusicplayer/presenter/LocalMusicPresenter.java,1\b\1b003385ebaf3f7452d1b45c9dbd7864c21293b3
+w
+Gapp/src/main/java/com/mzz/zmusicplayer/contract/LocalMusicContract.java,a\d\adf4c0f5f3fbb134e0f7225d4f4649cee66395c1
+m
+=app/src/main/java/com/mzz/zmusicplayer/ui/RecentFragment.java,a\1\a183ebe729f46e37c35e72d0c59392738ae49514
+s
+Capp/src/main/java/com/mzz/zmusicplayer/adapter/PlayListAdapter.java,4\3\43274a2e86f326449611a48cdf5b71723d74e307

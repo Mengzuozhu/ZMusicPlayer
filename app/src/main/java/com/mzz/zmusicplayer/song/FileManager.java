@@ -69,7 +69,7 @@ public class FileManager {
                 artist = artist.trim();
                 SongInfo song = new SongInfo();
                 song.setName(name);
-                song.setSpell(getUpperSpell(name));
+                song.setNameSpell(getUpperSpell(name));
                 song.setPath(path);
                 song.setArtist(artist);
                 song.setDuration(duration);

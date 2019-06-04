@@ -1,3 +1,4 @@
 
-squid:S1319®"yThe type of the "entityProperty" object should be an interface such as "List" rather than the implementation "ArrayList".(šÂÖÜşÿÿÿÿ8È™Ë×±-
-”squid:S1319©"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(®ê´üÿÿÿÿ8È™Ë×±-
+”squid:S1319´"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(®ê´üÿÿÿÿ8È™Ë×±-
+squid:S1319¹"yThe type of the "entityProperty" object should be an interface such as "List" rather than the implementation "ArrayList".(šÂÖÜşÿÿÿÿ8È™Ë×±-
+esquid:S00107O"AConstructor has 8 parameters, which is greater than 7 authorized.(…“ñÒûÿÿÿÿ8Âƒ¹€²-

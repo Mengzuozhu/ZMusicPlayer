@@ -46,7 +46,10 @@ public class MusicSearchActivity extends BaseActivity {
         //重置选中歌曲的颜色，避免出现多个选中歌曲
         List <SongInfo> songInfos = playList.getSongInfos();
         for (SongInfo songInfo : songInfos) {
-            songInfo.setPlayListSelected(false);
+            if (songInfo.isPlayListSelected()) {
+                songInfo.setPlayListSelected(false);
+                break;
+            }
         }
         queryAdapter = new MusicSearchAdapter(playList, rvSearch, this, false);
         queryAdapter.setOnItemClickListener((adapter, view, position) -> {

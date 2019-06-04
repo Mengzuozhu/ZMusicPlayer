@@ -1,4 +1,3 @@
 
-nsquid:UselessImportCheck"">Remove this unused import 'org.greenrobot.eventbus.Subscribe'.(ÃÆİøÿÿÿÿ8¿§Ù±-
-qsquid:MaximumInheritanceDepth+"<This class has 6 parents which is greater than 5 authorized.(ç¡÷Ëüÿÿÿÿ8¶‚Ê¸±-
-tsquid:UselessImportCheck"IRemove this unused import 'com.mzz.zandroidcommon.common.EventBusHelper'.(âØİ8ÖÂ¨Ù±-
+€squid:S1450/"]Remove the "recentFragment" field and declare it as a local variable in the relevant methods.(”İ«®øÿÿÿÿ8Ù‹²-
+lsquid:MaximumInheritanceDepth'"<This class has 6 parents which is greater than 5 authorized.(³øĞÜ8Ì¿²-

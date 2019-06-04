@@ -136,7 +136,7 @@ public class SongPickerActivity extends BaseActivity {
                 if (pinyin == null) {
                     pinyin = songInfo.getName();
                 }
-                songInfo.setSpell(pinyin);
+                songInfo.setNameSpell(pinyin);
                 checkedSongs.add(songInfo);
             }
         }

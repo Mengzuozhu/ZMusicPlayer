@@ -4,7 +4,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.List;
  * date : 2019 2019/5/28 17:50
  * description :
  */
-public interface MainContract {
+public interface LocalMusicContract {
 
     interface View {
 
