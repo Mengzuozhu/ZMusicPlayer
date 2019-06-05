@@ -83,8 +83,11 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     @Override
-    public void setPlayMode(PlayedMode playMode) {
+    public void changePlayMode() {
+        PlayedMode playMode = playList.getPlayMode();
+        playMode = playMode.getNextMode();
         playList.setPlayMode(playMode);
+        notifyPlayModeChanged(playMode);
     }
 
     @Override
@@ -221,6 +224,14 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         for (PlayObserver playObserver : mPlayObservers) {
             if (playObserver != null) {
                 playObserver.onSwitchNext(song);
+            }
+        }
+    }
+
+    private void notifyPlayModeChanged(PlayedMode playedMode) {
+        for (PlayObserver playObserver : mPlayObservers) {
+            if (playObserver != null) {
+                playObserver.onSwitchPlayMode(playedMode);
             }
         }
     }

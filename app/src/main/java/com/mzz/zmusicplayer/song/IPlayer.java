@@ -37,7 +37,7 @@ public interface IPlayer {
 
     SongInfo getPlayingSong();
 
-    void setPlayMode(PlayedMode playMode);
+    void changePlayMode();
 
     void releasePlayer();
 

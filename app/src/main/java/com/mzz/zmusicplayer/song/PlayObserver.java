@@ -2,6 +2,8 @@ package com.mzz.zmusicplayer.song;
 
 import android.support.annotation.Nullable;
 
+import com.mzz.zmusicplayer.setting.PlayedMode;
+
 /**
  * 播放器观察者
  * author : Mzz
@@ -17,6 +19,8 @@ public interface PlayObserver {
     void onSwitchFavorite(boolean isFavorite);
 
     void onSwitchNext(@Nullable SongInfo next);
+
+    void onSwitchPlayMode(PlayedMode playedMode);
 
     void resetAllState();
 }

@@ -62,7 +62,6 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     private IPlayer mPlayer;
     private Handler mHandler = new Handler();
     private MusicPlayerContract.Presenter musicPresenter;
-    private PlayedMode playedMode;
     private Runnable mProgressCallback = new Runnable() {
         @Override
         public void run() {
@@ -133,8 +132,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         }
         musicPresenter = new MusicPlayerPresenter(getActivity(), this);
         musicPresenter.subscribe();
-        playedMode = AppSetting.getPlayMode();
-        ivPlayMode.setImageResource(playedMode.getIcon());
+        ivPlayMode.setImageResource(AppSetting.getPlayMode().getIcon());
         setSeekBarListener();
         getListener();
         EventBusHelper.register(this);
@@ -209,10 +207,6 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         onSongUpdated(mPlayer.getPlayingSong());
     }
 
-    public void setPlayMode(PlayedMode playMode) {
-        mPlayer.setPlayMode(playMode);
-    }
-
     @OnClick(R.id.iv_favorite)
     public void onFavoriteChangeAction() {
         if (mPlayer == null) return;
@@ -250,13 +244,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     public void onPlayModeAction() {
         if (mPlayer == null) return;
 
-        playedMode = playedMode.getNextMode();
-        ivPlayMode.setImageResource(playedMode.getIcon());
-        AppSetting.setPlayMode(playedMode);
-        mPlayer.setPlayMode(playedMode);
-        if (controlListener != null) {
-            controlListener.updateSongCountAndMode();
-        }
+        mPlayer.changePlayMode();
     }
 
     @Override
@@ -303,6 +291,15 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     @Override
     public void onSwitchNext(@Nullable SongInfo next) {
         onSongUpdated(next);
+    }
+
+    @Override
+    public void onSwitchPlayMode(PlayedMode playedMode) {
+        ivPlayMode.setImageResource(playedMode.getIcon());
+        AppSetting.setPlayMode(playedMode);
+        if (controlListener != null) {
+            controlListener.updateSongCountAndMode();
+        }
     }
 
     @Override

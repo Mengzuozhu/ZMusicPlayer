@@ -33,7 +33,7 @@ public class PlayList implements Parcelable {
             return new PlayList[size];
         }
     };
-    private static final int RECENT_MAX_COUNT = 2;
+    private static final int RECENT_MAX_COUNT = 50;
     @Setter
     @Getter
     private List <SongInfo> songInfos;
@@ -202,19 +202,6 @@ public class PlayList implements Parcelable {
     }
 
     /**
-     * Gets playing song adapter position.
-     *
-     * @return the playing song adapter position
-     */
-    public int getPlayingSongAdapterPosition() {
-        SongInfo playingSong = getPlayingSong();
-        if (playingSong != null) {
-            return songInfos.indexOf(playingSong) + 1;
-        }
-        return 0;
-    }
-
-    /**
      * Previous song info.
      *
      * @return the song info
@@ -229,6 +216,8 @@ public class PlayList implements Parcelable {
                 break;
             case RANDOM:
                 playingIndex = getRandomPlayIndex();
+                break;
+            default:
                 break;
         }
         return getPlayingSong();

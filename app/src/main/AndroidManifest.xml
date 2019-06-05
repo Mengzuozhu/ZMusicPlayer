@@ -38,10 +38,11 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="com.mzz.zmusicplayer.ACTION.PLAY_TOGGLE" />
-                <action android:name="com.mzz.zmusicplayer.ACTION_FAVORITE" />
+                <action android:name="com.mzz.zmusicplayer.ACTION.FAVORITE" />
                 <action android:name="com.mzz.zmusicplayer.ACTION.PLAY_NEXT" />
                 <action android:name="com.mzz.zmusicplayer.ACTION.PLAY_PRE" />
                 <action android:name="com.mzz.zmusicplayer.ACTION.STOP_SERVICE" />
+                <action android:name="com.mzz.zmusicplayer.ACTION.PLAY_MODE" />
             </intent-filter>
         </service>
 

@@ -175,7 +175,7 @@ public class LocalMusicPresenter implements LocalMusicContract.Presenter {
      */
     @Override
     public void locateToSelectedSong() {
-        int adapterPosition = playList.getPlayingSongAdapterPosition();
+        int adapterPosition = playList.getPlayingIndex() + 1;
         playListAdapter.scrollToPosition(adapterPosition);
     }
 }

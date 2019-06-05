@@ -12,12 +12,16 @@ import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.util.SparseArray;
 import android.widget.RemoteViews;
 
 import com.mzz.zmusicplayer.MusicApplication;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.NotificationHandler;
 import com.mzz.zmusicplayer.setting.PlayedMode;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * Created with Android Studio.
@@ -26,13 +30,14 @@ import com.mzz.zmusicplayer.setting.PlayedMode;
  * Time: 4:27 PM
  * Desc: PlayService
  */
-public class PlaybackService extends Service implements IPlayer, PlayObserver {
+public class PlaybackService extends Service implements PlayObserver {
 
     private static final String ACTION_PLAY_TOGGLE = "com.mzz.zmusicplayer.ACTION.PLAY_TOGGLE";
-    private static final String ACTION_SWITCH_FAVORITE = "com.mzz.zmusicplayer.ACTION_FAVORITE";
+    private static final String ACTION_SWITCH_FAVORITE = "com.mzz.zmusicplayer.ACTION.FAVORITE";
     private static final String ACTION_PLAY_PRE = "com.mzz.zmusicplayer.ACTION.PLAY_PRE";
     private static final String ACTION_PLAY_NEXT = "com.mzz.zmusicplayer.ACTION.PLAY_NEXT";
     private static final String ACTION_STOP_SERVICE = "com.mzz.zmusicplayer.ACTION.STOP_SERVICE";
+    private static final String ACTION_PLAY_MODE = "com.mzz.zmusicplayer.ACTION.PLAY_MODE";
     private static final int NOTIFICATION_ID = 1;
     private final Binder mBinder = new LocalBinder();
     private BroadcastReceiver lockScreenReceiver;
@@ -91,7 +96,6 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
             case ACTION_PLAY_NEXT:
                 playNext();
                 break;
-
             case ACTION_STOP_SERVICE:
                 if (isPlaying()) {
                     pause();
@@ -99,6 +103,9 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
                 stopForeground(true);
                 unregisterCallback(this);
                 MusicApplication.getInstance().exitApp();
+                break;
+            case ACTION_PLAY_MODE:
+                changePlayMode();
                 break;
             default:
                 break;
@@ -128,98 +135,43 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
         super.onDestroy();
     }
 
-    @Override
-    public PlayList getPlayList() {
-        return mPlayer.getPlayList();
-    }
-
-    @Override
-    public void setPlayList(PlayList list) {
-        mPlayer.setPlayList(list);
-    }
-
-    @Override
-    public boolean play() {
+    private boolean play() {
         return mPlayer.play();
     }
 
-    @Override
-    public boolean play(PlayList list) {
-        return mPlayer.play(list);
-    }
-
-    @Override
-    public boolean play(int playingIndex) {
-        return mPlayer.play(playingIndex);
-    }
-
-    @Override
-    public boolean play(SongInfo songInfo) {
-        return mPlayer.play(songInfo);
-    }
-
-    @Override
-    public void switchFavorite() {
+    private void switchFavorite() {
         mPlayer.switchFavorite();
     }
 
-    @Override
-    public boolean playPrevious() {
-        return mPlayer.playPrevious();
+    private void playPrevious() {
+        mPlayer.playPrevious();
     }
 
-    @Override
-    public boolean playNext() {
-        return mPlayer.playNext();
+    private void playNext() {
+        mPlayer.playNext();
     }
 
-    @Override
-    public boolean pause() {
-        return mPlayer.pause();
+    private void pause() {
+        mPlayer.pause();
     }
 
-    @Override
+    private void changePlayMode() {
+        mPlayer.changePlayMode();
+    }
+
     public boolean isPlaying() {
         return mPlayer.isPlaying();
     }
 
-    @Override
     public SongInfo getPlayingSong() {
         return mPlayer.getPlayingSong();
     }
 
-    @Override
-    public boolean seekTo(int progress) {
-        return mPlayer.seekTo(progress);
-    }
-
-    @Override
-    public int getCurrentPosition() {
-        return mPlayer.getCurrentPosition();
-    }
-
-    @Override
-    public void setPlayMode(PlayedMode playMode) {
-        mPlayer.setPlayMode(playMode);
-    }
-
-    @Override
-    public void registerCallback(PlayObserver callback) {
-        mPlayer.registerCallback(callback);
-    }
-
-    @Override
-    public void unregisterCallback(PlayObserver callback) {
+    private void unregisterCallback(PlayObserver callback) {
         mPlayer.unregisterCallback(callback);
     }
 
-    @Override
-    public void clearCallbacks() {
-        mPlayer.clearCallbacks();
-    }
-
-    @Override
-    public void releasePlayer() {
+    private void releasePlayer() {
         mPlayer.releasePlayer();
         super.onDestroy();
     }
@@ -236,6 +188,11 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
 
     @Override
     public void onSwitchNext(@Nullable SongInfo next) {
+        showNotification();
+    }
+
+    @Override
+    public void onSwitchPlayMode(PlayedMode playedMode) {
         showNotification();
     }
 
@@ -284,23 +241,27 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
     }
 
     private void setUpRemoteView(RemoteViews remoteView) {
-        remoteView.setImageViewResource(R.id.iv_notify_close,
-                android.R.drawable.ic_menu_close_clear_cancel);
-        remoteView.setImageViewResource(R.id.iv_favorite, R.drawable.favorite_white);
-        remoteView.setImageViewResource(R.id.iv_play_pre, R.drawable.previous);
-        remoteView.setImageViewResource(R.id.iv_play_pause, R.drawable.play);
-        remoteView.setImageViewResource(R.id.iv_play_next, R.drawable.next);
+        SparseArray <DrawableAndAction> idAndDrawables = new SparseArray <>();
+        idAndDrawables.put(R.id.iv_notify_close,
+                new DrawableAndAction(android.R.drawable.ic_menu_close_clear_cancel,
+                        ACTION_STOP_SERVICE));
+        idAndDrawables.put(R.id.iv_favorite, new DrawableAndAction(R.drawable.favorite_white,
+                ACTION_SWITCH_FAVORITE));
+        idAndDrawables.put(R.id.iv_play_pre, new DrawableAndAction(R.drawable.previous,
+                ACTION_PLAY_PRE));
+        idAndDrawables.put(R.id.iv_play_pause, new DrawableAndAction(R.drawable.play,
+                ACTION_PLAY_TOGGLE));
+        idAndDrawables.put(R.id.iv_play_next, new DrawableAndAction(R.drawable.next,
+                ACTION_PLAY_NEXT));
+        idAndDrawables.put(R.id.iv_play_mode, new DrawableAndAction(R.drawable.order,
+                ACTION_PLAY_MODE));
 
-        remoteView.setOnClickPendingIntent(R.id.iv_notify_close,
-                getPendingIntent(ACTION_STOP_SERVICE));
-        remoteView.setOnClickPendingIntent(R.id.iv_favorite,
-                getPendingIntent(ACTION_SWITCH_FAVORITE));
-        remoteView.setOnClickPendingIntent(R.id.iv_play_pre,
-                getPendingIntent(ACTION_PLAY_PRE));
-        remoteView.setOnClickPendingIntent(R.id.iv_play_next,
-                getPendingIntent(ACTION_PLAY_NEXT));
-        remoteView.setOnClickPendingIntent(R.id.iv_play_pause,
-                getPendingIntent(ACTION_PLAY_TOGGLE));
+        for (int i = 0; i < idAndDrawables.size(); i++) {
+            int id = idAndDrawables.keyAt(i);
+            DrawableAndAction drawableAndAction = idAndDrawables.valueAt(i);
+            remoteView.setImageViewResource(id, drawableAndAction.drawable);
+            remoteView.setOnClickPendingIntent(id, getPendingIntent(drawableAndAction.action));
+        }
     }
 
     private void updateRemoteViews(RemoteViews remoteView) {
@@ -316,6 +277,8 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
         }
         remoteView.setImageViewResource(R.id.iv_play_pause, isPlaying()
                 ? R.drawable.pause : R.drawable.play);
+        PlayedMode playMode = mPlayer.getPlayList().getPlayMode();
+        remoteView.setImageViewResource(R.id.iv_play_mode, playMode.getIcon());
     }
 
     private PendingIntent getPendingIntent(String action) {
@@ -327,4 +290,13 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
             return PlaybackService.this;
         }
     }
+
+    @AllArgsConstructor
+    class DrawableAndAction {
+        @Getter
+        Integer drawable;
+        @Getter
+        String action;
+    }
+
 }
