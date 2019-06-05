@@ -22,10 +22,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import lombok.NoArgsConstructor;
 
 /**
  * A simple {@link Fragment} subclass.
  */
+@NoArgsConstructor
 public class FavoriteFragment extends Fragment {
 
     @BindView(R.id.rv_favorite_song)
@@ -33,10 +35,6 @@ public class FavoriteFragment extends Fragment {
     Unbinder unbinder;
     private IPlayer player;
     private PlayList mPlayList;
-
-    public FavoriteFragment() {
-        // Required empty public constructor
-    }
 
     /**
      * New instance favorite fragment.

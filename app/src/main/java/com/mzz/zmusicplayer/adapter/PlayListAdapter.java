@@ -1,9 +1,10 @@
 package com.mzz.zmusicplayer.adapter;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -17,12 +18,13 @@ import com.mzz.zmusicplayer.song.SongInfo;
  * description :
  */
 public class PlayListAdapter extends SongInfoAdapter {
-    protected int itemSongNameId = R.id.tv_item_song_name;
+    int itemSongNameId = R.id.tv_item_song_name;
     private int[] textViewIds = new int[]{itemSongNameId, R.id.tv_item_song_artist,
             R.id.tv_item_song_num};
     private int selectColor;
     private PlayList playList;
     private SongInfo currentColorSong;
+    private Context context;
 
     /**
      * Instantiates a new Song info adapter.
@@ -33,7 +35,9 @@ public class PlayListAdapter extends SongInfoAdapter {
     public PlayListAdapter(PlayList playList, RecyclerView recyclerView) {
         super(R.layout.item_song_local, playList.getSongInfos(), recyclerView);
         this.playList = playList;
-        selectColor = recyclerView.getContext().getColor(R.color.colorGreen);
+        context = recyclerView.getContext();
+        selectColor = context.getColor(R.color.colorGreen);
+        setOnItemChildClickListener((adapter, view, position) -> showSongMoreMenu(view, position));
     }
 
     @Override
@@ -47,7 +51,7 @@ public class PlayListAdapter extends SongInfoAdapter {
         } else {
             resetPlaySongColor(helper);
         }
-
+        helper.addOnClickListener(R.id.iv_song_more);
         helper.setText(itemSongNameId, songInfo.getName());
     }
 
@@ -66,6 +70,20 @@ public class PlayListAdapter extends SongInfoAdapter {
             currentColorSong = song;
             notifyDataSetChanged();
         }
+    }
+
+    private void showSongMoreMenu(View view, int position) {
+        PopupMenu popupMenu = new PopupMenu(context, view);
+        popupMenu.inflate(R.menu.menu_song_more);
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            int itemId = menuItem.getItemId();
+            if (itemId == R.id.action_song_del) {
+                remove(position);
+                return true;
+            }
+            return false;
+        });
+        popupMenu.show();
     }
 
     private void resetPlaySongColor(BaseViewHolder helper) {

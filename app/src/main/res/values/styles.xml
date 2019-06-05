@@ -61,12 +61,12 @@
     </style>
 
     <style name="CustomTabPageIndicator" parent="Widget.TabPageIndicator">
-        <item name="android:background">@drawable/tab_background</item>
+        <item name="android:background">@color/colorDark</item>
         <item name="android:textAppearance">@style/CustomTabPageIndicator.Text</item>
         <item name="android:textColor">@drawable/tab_title_color</item>
         <item name="android:textSize">15sp</item>
         <item name="android:paddingTop">2dp</item>
-        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingBottom">10dp</item>
         <item name="android:dividerPadding">10dp</item>
         <item name="android:showDividers">middle</item>
         <item name="android:paddingLeft">8dp</item>
@@ -91,4 +91,5 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginEnd">8dp</item>
     </style>
+
 </resources>

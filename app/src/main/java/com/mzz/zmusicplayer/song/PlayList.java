@@ -174,7 +174,9 @@ public class PlayList implements Parcelable {
             if (recentSongs.size() >= RECENT_MAX_COUNT) {
                 break;
             }
-            recentSongs.add(songInfo);
+            if (!recentSongs.contains(songInfo)) {
+                recentSongs.add(songInfo);
+            }
         }
         sortByLastPlayTime(recentSongs);
     }

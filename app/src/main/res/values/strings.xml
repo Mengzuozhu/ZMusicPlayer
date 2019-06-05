@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ZMusicPlayer</string>
+    <string name="app_name">梦音乐</string>
     <string name="song_db_name">T_SONG_LIST</string>
     <string name="undefined">未知</string>
     <string name="complete">完成</string>
@@ -11,8 +11,5 @@
     <string name="sort_descend_by_name">按歌名降序</string>
     <string name="sort_by_add_time">按添加时间排序</string>
     <string name="delete_all">全删</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

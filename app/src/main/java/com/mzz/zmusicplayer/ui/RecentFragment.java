@@ -21,6 +21,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import lombok.NoArgsConstructor;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +30,7 @@ import butterknife.Unbinder;
  * Use the {@link RecentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+@NoArgsConstructor
 public class RecentFragment extends Fragment {
 
     @BindView(R.id.rv_recent_song)
@@ -36,10 +38,6 @@ public class RecentFragment extends Fragment {
     private Unbinder unbinder;
     private IPlayer player;
     private PlayList mPlayList;
-
-    public RecentFragment() {
-        // Required empty public constructor
-    }
 
     /**
      * Use this factory method to create a new instance of
@@ -82,7 +80,7 @@ public class RecentFragment extends Fragment {
         }
         List <SongInfo> recentSongs = getRecentSongs();
         mPlayList.setSongInfos(recentSongs);
-        PlayListAdapter   baseAdapter = new PlayListAdapter(mPlayList, rvRecentSong);
+        PlayListAdapter baseAdapter = new PlayListAdapter(mPlayList, rvRecentSong);
         baseAdapter.setOnItemClickListener((adapter, view, position) -> {
             SongInfo song = baseAdapter.getItem(position);
             EventBus.getDefault().post(song);

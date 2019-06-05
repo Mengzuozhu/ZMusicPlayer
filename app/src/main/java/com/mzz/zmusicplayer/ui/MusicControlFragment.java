@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mzz.zandroidcommon.common.EventBusHelper;
+import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.TimeHelper;
 import com.mzz.zmusicplayer.contract.MusicPlayerContract;
@@ -300,6 +301,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         if (controlListener != null) {
             controlListener.updateSongCountAndMode();
         }
+        ViewerHelper.showToast(getContext(), playedMode.getDesc());
     }
 
     @Override
