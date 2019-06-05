@@ -2,6 +2,7 @@ package com.mzz.zmusicplayer.adapter;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -38,10 +39,9 @@ public class PlayListAdapter extends SongInfoAdapter {
     @Override
     protected void convert(BaseViewHolder helper, SongInfo songInfo) {
         super.convert(helper, songInfo);
-        int adapterPosition = helper.getAdapterPosition();
-        songInfo.setAdapterPosition(adapterPosition);
         if (songInfo.isPlayListSelected()) {
             changePlaySongColor(helper);
+            int adapterPosition = helper.getAdapterPosition();
             //排序后，播放位置可能变化，因此重新设置播放位置
             playList.setPlayingIndex(adapterPosition - 1);
         } else {

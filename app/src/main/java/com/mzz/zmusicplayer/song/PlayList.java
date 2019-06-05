@@ -33,6 +33,7 @@ public class PlayList implements Parcelable {
             return new PlayList[size];
         }
     };
+    private static final int RECENT_MAX_COUNT = 2;
     @Setter
     @Getter
     private List <SongInfo> songInfos;
@@ -54,7 +55,7 @@ public class PlayList implements Parcelable {
         this.playingIndex = playingIndex;
         this.playMode = playMode;
         recentSongs = new LinkedList <>(songInfos);
-        sortByLastPlayTime(recentSongs);
+        addRecentSongs(songInfos);
     }
 
     protected PlayList(Parcel in) {
@@ -145,7 +146,7 @@ public class PlayList implements Parcelable {
      */
     public void addAll(Collection <SongInfo> c) {
         songInfos.addAll(c);
-        recentSongs.addAll(c);
+        addRecentSongs(c);
     }
 
     /**
@@ -165,6 +166,23 @@ public class PlayList implements Parcelable {
     public void updateRecentSongs(SongInfo song) {
         recentSongs.remove(song);
         recentSongs.addFirst(song);
+        removeRecentSong();
+    }
+
+    private void addRecentSongs(Collection <SongInfo> songInfos) {
+        for (SongInfo songInfo : songInfos) {
+            if (recentSongs.size() >= RECENT_MAX_COUNT) {
+                break;
+            }
+            recentSongs.add(songInfo);
+        }
+        sortByLastPlayTime(recentSongs);
+    }
+
+    private void removeRecentSong() {
+        while (recentSongs.size() > RECENT_MAX_COUNT) {
+            recentSongs.removeLast();
+        }
     }
 
     /**
@@ -191,13 +209,9 @@ public class PlayList implements Parcelable {
     public int getPlayingSongAdapterPosition() {
         SongInfo playingSong = getPlayingSong();
         if (playingSong != null) {
-            int position = playingSong.getAdapterPosition();
-            if (position == -1) {
-                position = songInfos.indexOf(playingSong) + 1;
-            }
-            return position;
+            return songInfos.indexOf(playingSong) + 1;
         }
-        return -1;
+        return 0;
     }
 
     /**

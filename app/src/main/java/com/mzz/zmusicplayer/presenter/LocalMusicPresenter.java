@@ -37,7 +37,7 @@ public class LocalMusicPresenter implements LocalMusicContract.Presenter {
     private RecyclerView recyclerView;
     private LocalMusicFragment.LocalMusicListener localMusicListener;
     private PlayList playList;
-    private PlayListAdapter baseAdapter;
+    private PlayListAdapter playListAdapter;
     private FragmentActivity activity;
 
     public LocalMusicPresenter(LocalMusicContract.View mView,
@@ -59,9 +59,9 @@ public class LocalMusicPresenter implements LocalMusicContract.Presenter {
     }
 
     private void intiAdapter() {
-        baseAdapter = new PlayListAdapter(playList, recyclerView);
-        baseAdapter.setOnItemClickListener((adapter, view, position) -> localMusicListener.setPlayingIndex(position));
-        baseAdapter.setOnItemLongClickListener((adapter, view, position) -> {
+        playListAdapter = new PlayListAdapter(playList, recyclerView);
+        playListAdapter.setOnItemClickListener((adapter, view, position) -> localMusicListener.setPlayingIndex(position));
+        playListAdapter.setOnItemLongClickListener((adapter, view, position) -> {
             showSongEditActivity();
             return false;
         });
@@ -79,7 +79,7 @@ public class LocalMusicPresenter implements LocalMusicContract.Presenter {
         sortView.setOnClickListener(v -> showSongOrderPopupMenu(sortView));
         ImageView editView = header.findViewById(R.id.iv_header_edit);
         editView.setOnClickListener(v -> showSongEditActivity());
-        baseAdapter.setHeaderView(header);
+        playListAdapter.setHeaderView(header);
     }
 
     @Override
@@ -128,15 +128,15 @@ public class LocalMusicPresenter implements LocalMusicContract.Presenter {
             int itemId = menuItem.getItemId();
             switch (itemId) {
                 case R.id.action_sort_ascend_by_name:
-                    baseAdapter.sortByName(true);
+                    playListAdapter.sortByName(true);
                     AppSetting.setSongOrderMode(SongOrderMode.ORDER_ASCEND_BY_NAME);
                     return true;
                 case R.id.action_sort_descend_by_name:
-                    baseAdapter.sortByName(false);
+                    playListAdapter.sortByName(false);
                     AppSetting.setSongOrderMode(SongOrderMode.ORDER_DESCEND_BY_NAME);
                     return true;
                 case R.id.action_sort_by_add_time:
-                    baseAdapter.sortById();
+                    playListAdapter.sortById();
                     AppSetting.setSongOrderMode(SongOrderMode.ORDER_ASCEND_BY_ADD_TIME);
                     return true;
                 default:
@@ -149,25 +149,25 @@ public class LocalMusicPresenter implements LocalMusicContract.Presenter {
 
     @Override
     public void updatePlaySongBackgroundColor(SongInfo song) {
-        baseAdapter.updatePlaySongBackgroundColor(song);
+        playListAdapter.updatePlaySongBackgroundColor(song);
     }
 
     @Override
     public LinearLayoutManager getLayoutManager() {
-        return baseAdapter.getLayoutManager();
+        return playListAdapter.getLayoutManager();
     }
 
     @Override
     public void addSongs(List <SongInfo> newSongInfos) {
         playList.addAll(newSongInfos);
-        baseAdapter.setNewData(playList.getSongInfos());
+        playListAdapter.setNewData(playList.getSongInfos());
         SongModel.insertOrReplaceInTx(newSongInfos);
         updateSongCountAndMode();
     }
 
     @Override
     public void scrollToFirst() {
-        baseAdapter.scrollToPosition(0);
+        playListAdapter.scrollToPosition(0);
     }
 
     /**
@@ -176,6 +176,6 @@ public class LocalMusicPresenter implements LocalMusicContract.Presenter {
     @Override
     public void locateToSelectedSong() {
         int adapterPosition = playList.getPlayingSongAdapterPosition();
-        baseAdapter.scrollToPosition(adapterPosition);
+        playListAdapter.scrollToPosition(adapterPosition);
     }
 }

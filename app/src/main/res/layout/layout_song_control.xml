@@ -44,5 +44,11 @@
         android:layout_marginStart="@dimen/image_margin_32"
         android:layout_toEndOf="@+id/iv_play_pause"
         android:src="@drawable/next" />
+    <ImageView
+        android:id="@+id/iv_play_mode"
+        style="@style/StyleControlImage"
+        android:layout_marginStart="@dimen/image_margin_32"
+        android:layout_toEndOf="@+id/iv_play_next"
+        android:src="@drawable/order" />
 
 </RelativeLayout>

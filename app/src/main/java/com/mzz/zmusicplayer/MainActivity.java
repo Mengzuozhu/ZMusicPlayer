@@ -2,25 +2,20 @@ package com.mzz.zmusicplayer;
 
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mzz.zandroidcommon.view.BaseActivity;
+import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.adapter.MusicPagerAdapter;
 import com.mzz.zmusicplayer.adapter.PageFragment;
 import com.mzz.zmusicplayer.edit.EditHandler;
 import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
-import com.mzz.zmusicplayer.setting.AppSetting;
-import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.FavoriteFragment;
@@ -42,11 +37,8 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
 
     @BindView(R.id.layout_drawer)
     DrawerLayout layoutDrawer;
-    @BindView(R.id.nav_view)
-    NavigationView navView;
     private LocalMusicFragment localMusicFragment;
     private MusicControlFragment musicControlFragment;
-    private PlayedMode playedMode;
     private HeadsetReceiver headsetReceiver;
 
     @Override
@@ -55,11 +47,7 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
         this.setTitle("");
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.menu);
-        }
+        ViewerHelper.displayHomeAsUpOrNot(this.getSupportActionBar(), false);
 
         init();
     }
@@ -72,11 +60,24 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_add_song) {
+            startActivityForResult(new Intent(this, SongPickerActivity.class),
+                    SongPickerActivity.ADD_SONG_CODE);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void init() {
         initTabPage();
-        playedMode = AppSetting.getPlayMode();
-        initMenu();
-        initNavigationView();
         headsetReceiver = new HeadsetReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_HEADSET_PLUG);
@@ -102,36 +103,6 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
         indicator.setCurrentItem(1);
     }
 
-    private void initNavigationView() {
-        ColorStateList csl = this.getColorStateList(R.color.colorWhite);
-        navView.setItemTextColor(csl);
-        navView.setNavigationItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.nav_scan) {
-                startActivityForResult(new Intent(this, SongPickerActivity.class),
-                        SongPickerActivity.ADD_SONG_CODE);
-                layoutDrawer.closeDrawers();
-            } else if (itemId == R.id.nav_play_mode) {
-                setPlayMode(item);
-            }
-            return true;
-        });
-    }
-
-    private void setPlayMode(MenuItem item) {
-        playedMode = playedMode.getNextMode();
-        item.setTitle(playedMode.getDesc());
-        AppSetting.setPlayMode(playedMode);
-        musicControlFragment.setPlayMode(playedMode);
-        localMusicFragment.updateSongCountAndMode();
-    }
-
-    private void initMenu() {
-        Menu menu = navView.getMenu();
-        MenuItem menuItem = menu.findItem(R.id.nav_play_mode);
-        menuItem.setTitle(playedMode.getDesc());
-    }
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -145,19 +116,6 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
     public void onBackPressed() {
         //返回键，不退出程序
         moveTaskToBack(true);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            if (layoutDrawer.isDrawerOpen(GravityCompat.START)) {
-                layoutDrawer.closeDrawers();
-            } else {
-                layoutDrawer.openDrawer(GravityCompat.START);
-            }
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -211,6 +169,11 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
     @Override
     public void updatePlaySongBackgroundColor(SongInfo song) {
         localMusicFragment.updatePlaySongBackgroundColor(song);
+    }
+
+    @Override
+    public void updateSongCountAndMode() {
+        localMusicFragment.updateSongCountAndMode();
     }
 
 }

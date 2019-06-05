@@ -40,11 +40,6 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
             return new SongInfo[size];
         }
     };
-    //当前歌曲在列表中的位置
-    @Transient
-    @Setter
-    @Getter
-    private int adapterPosition = -1;
     //当前歌曲是否被选中
     @Transient
     @Setter

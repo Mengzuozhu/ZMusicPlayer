@@ -32,12 +32,4 @@
             android:background="@color/colorDark" />
     </LinearLayout>
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="180dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@color/colorDark"
-        app:menu="@menu/menu_main" />
-
 </android.support.v4.widget.DrawerLayout>

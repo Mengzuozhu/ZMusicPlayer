@@ -54,12 +54,15 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     ImageView ivPlayOrPause;
     @BindView(R.id.iv_favorite)
     ImageView ivFavorite;
-    MusicControlListener controlListener;
+    @BindView(R.id.iv_play_mode)
+    ImageView ivPlayMode;
+    private MusicControlListener controlListener;
     private int currentSongDuration;
     //与后台服务共用同一个播放器
     private IPlayer mPlayer;
     private Handler mHandler = new Handler();
     private MusicPlayerContract.Presenter musicPresenter;
+    private PlayedMode playedMode;
     private Runnable mProgressCallback = new Runnable() {
         @Override
         public void run() {
@@ -112,6 +115,10 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
+        init();
+    }
+
+    private void init() {
         Bundle bundle = getArguments();
         PlayList mPlayList = new PlayList();
         if (bundle != null) {
@@ -126,6 +133,8 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         }
         musicPresenter = new MusicPlayerPresenter(getActivity(), this);
         musicPresenter.subscribe();
+        playedMode = AppSetting.getPlayMode();
+        ivPlayMode.setImageResource(playedMode.getIcon());
         setSeekBarListener();
         getListener();
         EventBusHelper.register(this);
@@ -209,7 +218,6 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         if (mPlayer == null) return;
 
         mPlayer.switchFavorite();
-//        updateFavoriteState(isFavorite);
     }
 
     @OnClick(R.id.iv_play_pre)
@@ -236,6 +244,19 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         if (mPlayer == null) return;
 
         mPlayer.playNext();
+    }
+
+    @OnClick(R.id.iv_play_mode)
+    public void onPlayModeAction() {
+        if (mPlayer == null) return;
+
+        playedMode = playedMode.getNextMode();
+        ivPlayMode.setImageResource(playedMode.getIcon());
+        AppSetting.setPlayMode(playedMode);
+        mPlayer.setPlayMode(playedMode);
+        if (controlListener != null) {
+            controlListener.updateSongCountAndMode();
+        }
     }
 
     @Override
@@ -320,5 +341,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
 
     public interface MusicControlListener {
         void updatePlaySongBackgroundColor(SongInfo song);
+
+        void updateSongCountAndMode();
     }
 }

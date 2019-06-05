@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_scan"
-            android:title="添加歌曲"
-            app:showAsAction="ifRoom" />
-        <item
-            android:id="@+id/nav_play_mode"
-            android:title="顺序播放"
-            app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_add_song"
+        android:title="添加歌曲"
+        app:showAsAction="never" />
 
-    </group>
 </menu>
