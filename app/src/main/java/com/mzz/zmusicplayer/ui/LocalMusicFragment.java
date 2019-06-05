@@ -23,12 +23,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import lombok.NoArgsConstructor;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link LocalMusicFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+@NoArgsConstructor
 public class LocalMusicFragment extends Fragment implements LocalMusicContract.View {
 
     @BindView(R.id.rv_song)
@@ -37,10 +39,6 @@ public class LocalMusicFragment extends Fragment implements LocalMusicContract.V
     FloatingActionButton fabSongScrollFirst;
     private LocalMusicListener localMusicListener;
     private LocalMusicContract.Presenter mainPresenter;
-
-    public LocalMusicFragment() {
-        // Required empty public constructor
-    }
 
     /**
      * Use this factory method to create a new instance of

@@ -1,27 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_marginBottom="@dimen/margin_bottom_8"
     tools:showIn="@layout/notify_control">
 
+    <TextView
+        android:id="@+id/tv_song_name"
+        style="@style/StyleTextView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="2dp"
+        android:text="@string/undefined"
+        android:textSize="14sp" />
+
     <ImageView
-        android:id="@+id/iv_notify_play_pre"
+        android:id="@+id/iv_favorite"
         style="@style/StyleControlImage"
         android:layout_marginEnd="@dimen/image_margin_32"
-        android:layout_toStartOf="@+id/iv_notify_play_pause"
+        android:layout_toStartOf="@+id/iv_play_pre"
+        android:src="@drawable/favorite_white" />
+
+    <ImageView
+        android:id="@+id/iv_play_pre"
+        style="@style/StyleControlImage"
+        android:layout_marginEnd="@dimen/image_margin_32"
+        android:layout_toStartOf="@+id/iv_play_pause"
         android:src="@drawable/previous" />
 
     <ImageView
-        android:id="@+id/iv_notify_play_pause"
+        android:id="@+id/iv_play_pause"
         style="@style/StyleControlImage"
         android:layout_centerHorizontal="true"
         app:srcCompat="@drawable/play" />
 
     <ImageView
-        android:id="@+id/iv_notify_play_next"
+        android:id="@+id/iv_play_next"
         style="@style/StyleControlImage"
         android:layout_marginStart="@dimen/image_margin_32"
-        android:layout_toEndOf="@+id/iv_notify_play_pause"
+        android:layout_toEndOf="@+id/iv_play_pause"
         android:src="@drawable/next" />
 
-</merge>
+</RelativeLayout>

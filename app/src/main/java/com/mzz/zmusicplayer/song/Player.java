@@ -176,7 +176,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
             return;
         }
         mPlayer.reset();
-        mPlayer.release();
+//        mPlayer.release();
 //        mPlayer = null;
     }
 

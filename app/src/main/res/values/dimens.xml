@@ -25,5 +25,5 @@
     <dimen name="font_12">12sp</dimen>
     <dimen name="control_height">100dp</dimen>
     <dimen name="image_margin_32">32dp</dimen>
-    <dimen name="margin_bottom_8">10dp</dimen>
+    <dimen name="margin_bottom_8">8dp</dimen>
 </resources>

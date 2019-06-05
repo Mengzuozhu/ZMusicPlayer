@@ -271,30 +271,30 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
     private void setUpRemoteView(RemoteViews remoteView) {
         remoteView.setImageViewResource(R.id.iv_notify_close,
                 android.R.drawable.ic_menu_close_clear_cancel);
-        remoteView.setImageViewResource(R.id.iv_notify_play_pre, R.drawable.previous);
-        remoteView.setImageViewResource(R.id.iv_notify_play_pause, R.drawable.play);
-        remoteView.setImageViewResource(R.id.iv_notify_play_next, R.drawable.next);
+        remoteView.setImageViewResource(R.id.iv_play_pre, R.drawable.previous);
+        remoteView.setImageViewResource(R.id.iv_play_pause, R.drawable.play);
+        remoteView.setImageViewResource(R.id.iv_play_next, R.drawable.next);
 
         remoteView.setOnClickPendingIntent(R.id.iv_notify_close,
                 getPendingIntent(ACTION_STOP_SERVICE));
-        remoteView.setOnClickPendingIntent(R.id.iv_notify_play_pre,
+        remoteView.setOnClickPendingIntent(R.id.iv_play_pre,
                 getPendingIntent(ACTION_PLAY_LAST));
-        remoteView.setOnClickPendingIntent(R.id.iv_notify_play_next,
+        remoteView.setOnClickPendingIntent(R.id.iv_play_next,
                 getPendingIntent(ACTION_PLAY_NEXT));
-        remoteView.setOnClickPendingIntent(R.id.iv_notify_play_pause,
+        remoteView.setOnClickPendingIntent(R.id.iv_play_pause,
                 getPendingIntent(ACTION_PLAY_TOGGLE));
     }
 
     private void updateRemoteViews(RemoteViews remoteView) {
         SongInfo currentSong = mPlayer.getPlayingSong();
         if (currentSong != null) {
-            remoteView.setTextViewText(R.id.tv_notify_song_name, String.format("%s-%s",
+            remoteView.setTextViewText(R.id.tv_song_name, String.format("%s-%s",
                     currentSong.getName(), currentSong.getArtist()));
         } else {
             String undefined = this.getString(R.string.undefined);
-            remoteView.setTextViewText(R.id.tv_notify_song_name, undefined);
+            remoteView.setTextViewText(R.id.tv_song_name, undefined);
         }
-        remoteView.setImageViewResource(R.id.iv_notify_play_pause, isPlaying()
+        remoteView.setImageViewResource(R.id.iv_play_pause, isPlaying()
                 ? R.drawable.pause : R.drawable.play);
     }
 

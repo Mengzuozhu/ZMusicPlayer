@@ -116,8 +116,6 @@ s
 Capp/src/main/java/com/mzz/zmusicplayer/ui/MusicControlFragment.java,e\f\ef5682975908356370ceed0bd838bd34c977a11d
 t
 Dapp/src/main/java/com/mzz/zmusicplayer/receiver/HeadsetReceiver.java,6\5\6573efa020d2291b0b573130e624547648d03434
-t
-Dapp/src/main/java/com/mzz/zmusicplayer/adapter/TextQueryHandler.java,f\8\f833bb32902c39917ecf75b0f53e5167b0bf7fe7
 v
 Fapp/src/main/java/com/mzz/zmusicplayer/adapter/MusicSearchAdapter.java,f\3\f3f1d45b27220b33a60cf1685b5d953bef892616
 q
@@ -140,3 +138,5 @@ o
 ?app/src/main/java/com/mzz/zmusicplayer/ui/FavoriteFragment.java,a\7\a7a5ad244b03c3ef1c5aa5056a57f7ed3b3dbd0a
 u
 Eapp/src/main/java/com/mzz/zmusicplayer/adapter/SongPickerAdapter.java,3\0\306e084c96ac185c63deaa6e33daa5f7dd13c96b
+s
+Capp/src/main/java/com/mzz/zmusicplayer/common/TextQueryHandler.java,e\e\eef8cd70079884f6974e21fb6279b15c7f7987d3
