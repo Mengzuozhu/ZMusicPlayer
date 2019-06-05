@@ -49,5 +49,6 @@ public class MusicApplication extends Application {
         for (ActivityManager.AppTask appTask : appTaskList) {
             appTask.finishAndRemoveTask();
         }
+        System.exit(0);
     }
 }
