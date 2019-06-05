@@ -171,13 +171,11 @@ public class LocalMusicPresenter implements LocalMusicContract.Presenter {
     }
 
     /**
-     * 定位到当前播放的歌曲位置
+     * 定位到当前选中播放的歌曲位置
      */
     @Override
     public void locateToSelectedSong() {
-        SongInfo playingSong = playList.getPlayingSong();
-        if (playingSong != null) {
-            baseAdapter.scrollToPosition(playingSong.getAdapterPosition());
-        }
+        int adapterPosition = playList.getPlayingSongAdapterPosition();
+        baseAdapter.scrollToPosition(adapterPosition);
     }
 }

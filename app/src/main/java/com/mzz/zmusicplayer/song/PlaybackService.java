@@ -29,7 +29,8 @@ import com.mzz.zmusicplayer.setting.PlayedMode;
 public class PlaybackService extends Service implements IPlayer, PlayObserver {
 
     private static final String ACTION_PLAY_TOGGLE = "com.mzz.zmusicplayer.ACTION.PLAY_TOGGLE";
-    private static final String ACTION_PLAY_LAST = "com.mzz.zmusicplayer.ACTION.PLAY_LAST";
+    private static final String ACTION_SWITCH_FAVORITE = "com.mzz.zmusicplayer.ACTION_FAVORITE";
+    private static final String ACTION_PLAY_PRE = "com.mzz.zmusicplayer.ACTION.PLAY_PRE";
     private static final String ACTION_PLAY_NEXT = "com.mzz.zmusicplayer.ACTION.PLAY_NEXT";
     private static final String ACTION_STOP_SERVICE = "com.mzz.zmusicplayer.ACTION.STOP_SERVICE";
     private static final int NOTIFICATION_ID = 1;
@@ -74,6 +75,12 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
             return START_STICKY;
         }
         switch (action) {
+            case ACTION_PLAY_PRE:
+                playPrevious();
+                break;
+            case ACTION_SWITCH_FAVORITE:
+                switchFavorite();
+                break;
             case ACTION_PLAY_TOGGLE:
                 if (isPlaying()) {
                     pause();
@@ -84,9 +91,7 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
             case ACTION_PLAY_NEXT:
                 playNext();
                 break;
-            case ACTION_PLAY_LAST:
-                playPrevious();
-                break;
+
             case ACTION_STOP_SERVICE:
                 if (isPlaying()) {
                     pause();
@@ -151,6 +156,11 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
     @Override
     public boolean play(SongInfo songInfo) {
         return mPlayer.play(songInfo);
+    }
+
+    @Override
+    public void switchFavorite() {
+        mPlayer.switchFavorite();
     }
 
     @Override
@@ -220,6 +230,11 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
     }
 
     @Override
+    public void onSwitchFavorite(boolean isFavorite) {
+        showNotification();
+    }
+
+    @Override
     public void onSwitchNext(@Nullable SongInfo next) {
         showNotification();
     }
@@ -271,14 +286,17 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
     private void setUpRemoteView(RemoteViews remoteView) {
         remoteView.setImageViewResource(R.id.iv_notify_close,
                 android.R.drawable.ic_menu_close_clear_cancel);
+        remoteView.setImageViewResource(R.id.iv_favorite, R.drawable.favorite_white);
         remoteView.setImageViewResource(R.id.iv_play_pre, R.drawable.previous);
         remoteView.setImageViewResource(R.id.iv_play_pause, R.drawable.play);
         remoteView.setImageViewResource(R.id.iv_play_next, R.drawable.next);
 
         remoteView.setOnClickPendingIntent(R.id.iv_notify_close,
                 getPendingIntent(ACTION_STOP_SERVICE));
+        remoteView.setOnClickPendingIntent(R.id.iv_favorite,
+                getPendingIntent(ACTION_SWITCH_FAVORITE));
         remoteView.setOnClickPendingIntent(R.id.iv_play_pre,
-                getPendingIntent(ACTION_PLAY_LAST));
+                getPendingIntent(ACTION_PLAY_PRE));
         remoteView.setOnClickPendingIntent(R.id.iv_play_next,
                 getPendingIntent(ACTION_PLAY_NEXT));
         remoteView.setOnClickPendingIntent(R.id.iv_play_pause,
@@ -290,6 +308,8 @@ public class PlaybackService extends Service implements IPlayer, PlayObserver {
         if (currentSong != null) {
             remoteView.setTextViewText(R.id.tv_song_name, String.format("%s-%s",
                     currentSong.getName(), currentSong.getArtist()));
+            remoteView.setImageViewResource(R.id.iv_favorite, currentSong.getIsFavorite()
+                    ? R.drawable.favorite : R.drawable.favorite_white);
         } else {
             String undefined = this.getString(R.string.undefined);
             remoteView.setTextViewText(R.id.tv_song_name, undefined);

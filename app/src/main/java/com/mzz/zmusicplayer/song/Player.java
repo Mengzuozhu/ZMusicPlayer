@@ -3,6 +3,7 @@ package com.mzz.zmusicplayer.song;
 import android.media.MediaPlayer;
 import android.util.Log;
 
+import com.mzz.zmusicplayer.model.SongModel;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 
 import java.io.IOException;
@@ -109,14 +110,15 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     @Override
-    public boolean pause() {
-        if (mPlayer.isPlaying()) {
-            mPlayer.pause();
-            isPaused = true;
-            notifyPlayStatusChanged(false);
-            return true;
+    public void switchFavorite() {
+        SongInfo playingSong = getPlayingSong();
+        if (playingSong == null) {
+            return;
         }
-        return false;
+        boolean isFavorite = !playingSong.getIsFavorite();
+        playingSong.setIsFavorite(isFavorite);
+        SongModel.update(playingSong);
+        notifyFavoriteChanged(isFavorite);
     }
 
     @Override
@@ -125,6 +127,17 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         SongInfo previous = playList.previous();
         notifyPlayPrevious(previous);
         return play();
+    }
+
+    @Override
+    public boolean pause() {
+        if (mPlayer.isPlaying()) {
+            mPlayer.pause();
+            isPaused = true;
+            notifyPlayStatusChanged(false);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -184,6 +197,14 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         for (PlayObserver playObserver : mPlayObservers) {
             if (playObserver != null) {
                 playObserver.onPlayStatusChanged(isPlaying);
+            }
+        }
+    }
+
+    private void notifyFavoriteChanged(boolean isFavorite) {
+        for (PlayObserver playObserver : mPlayObservers) {
+            if (playObserver != null) {
+                playObserver.onSwitchFavorite(isFavorite);
             }
         }
     }

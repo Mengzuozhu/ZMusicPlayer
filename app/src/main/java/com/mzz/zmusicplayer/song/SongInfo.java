@@ -44,7 +44,7 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
     @Transient
     @Setter
     @Getter
-    private int adapterPosition;
+    private int adapterPosition = -1;
     //当前歌曲是否被选中
     @Transient
     @Setter
@@ -90,7 +90,7 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
 
     @Generated(hash = 180802117)
     public SongInfo(Long id, String name, String path, String artist, String nameSpell,
-            Date lastPlayTime, int duration, boolean isChecked, boolean isFavorite) {
+                    Date lastPlayTime, int duration, boolean isChecked, boolean isFavorite) {
         this.id = id;
         this.name = name;
         this.path = path;

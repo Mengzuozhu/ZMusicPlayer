@@ -66,7 +66,7 @@ public class SongInfoAdapter extends CheckableAndDraggableAdapter <SongInfo> {
      * @param position the position
      */
     public void scrollToPosition(int position) {
-        if (getItemCount() > position) {
+        if (position < getItemCount()) {
             recyclerView.scrollToPosition(position);
         }
     }

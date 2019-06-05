@@ -184,6 +184,23 @@ public class PlayList implements Parcelable {
     }
 
     /**
+     * Gets playing song adapter position.
+     *
+     * @return the playing song adapter position
+     */
+    public int getPlayingSongAdapterPosition() {
+        SongInfo playingSong = getPlayingSong();
+        if (playingSong != null) {
+            int position = playingSong.getAdapterPosition();
+            if (position == -1) {
+                position = songInfos.indexOf(playingSong) + 1;
+            }
+            return position;
+        }
+        return -1;
+    }
+
+    /**
      * Previous song info.
      *
      * @return the song info

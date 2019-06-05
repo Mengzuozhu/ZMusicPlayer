@@ -18,7 +18,6 @@ import com.mzz.zandroidcommon.common.EventBusHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.TimeHelper;
 import com.mzz.zmusicplayer.contract.MusicPlayerContract;
-import com.mzz.zmusicplayer.model.SongModel;
 import com.mzz.zmusicplayer.presenter.MusicPlayerPresenter;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
@@ -209,15 +208,8 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     public void onFavoriteChangeAction() {
         if (mPlayer == null) return;
 
-        SongInfo playingSong = mPlayer.getPlayingSong();
-        if (playingSong == null) {
-            return;
-        }
-        boolean isFavorite = !playingSong.getIsFavorite();
-        playingSong.setIsFavorite(isFavorite);
-        SongModel.update(playingSong);
-
-        updateFavoriteState(isFavorite);
+        mPlayer.switchFavorite();
+//        updateFavoriteState(isFavorite);
     }
 
     @OnClick(R.id.iv_play_pre)
@@ -274,12 +266,17 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         currentSongDuration = song.getDuration();
         tvDuration.setText(TimeHelper.formatDuration(currentSongDuration));
         updateProgressTextWithDuration(0);
-        updateFavoriteState(song.getIsFavorite());
+        onSwitchFavorite(song.getIsFavorite());
     }
 
     @Override
     public void onSwitchPrevious(@Nullable SongInfo previous) {
         onSongUpdated(previous);
+    }
+
+    @Override
+    public void onSwitchFavorite(boolean isFavorite) {
+        ivFavorite.setImageResource(isFavorite ? R.drawable.favorite : R.drawable.favorite_white);
     }
 
     @Override
@@ -300,10 +297,6 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     @Override
     public void updatePlayToggle(boolean isPlaying) {
         ivPlayOrPause.setImageResource(isPlaying ? R.drawable.pause : R.drawable.play);
-    }
-
-    private void updateFavoriteState(boolean isFavorite) {
-        ivFavorite.setImageResource(isFavorite ? R.drawable.favorite : R.drawable.favorite_white);
     }
 
     private void updateProgressTextWithDuration(int playDuration) {

@@ -9,9 +9,9 @@ import com.mzz.zmusicplayer.setting.PlayedMode;
  */
 public interface IPlayer {
 
-    void setPlayList(PlayList list);
-
     PlayList getPlayList();
+
+    void setPlayList(PlayList list);
 
     boolean play();
 
@@ -21,9 +21,11 @@ public interface IPlayer {
 
     boolean play(SongInfo songInfo);
 
-    boolean pause();
+    void switchFavorite();
 
     boolean playPrevious();
+
+    boolean pause();
 
     boolean playNext();
 

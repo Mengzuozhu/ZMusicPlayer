@@ -14,6 +14,8 @@ public interface PlayObserver {
 
     void onSwitchPrevious(@Nullable SongInfo previous);
 
+    void onSwitchFavorite(boolean isFavorite);
+
     void onSwitchNext(@Nullable SongInfo next);
 
     void resetAllState();
