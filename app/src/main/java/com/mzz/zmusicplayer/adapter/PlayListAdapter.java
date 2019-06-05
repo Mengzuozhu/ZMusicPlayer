@@ -16,7 +16,7 @@ import com.mzz.zmusicplayer.song.SongInfo;
  * description :
  */
 public class PlayListAdapter extends SongInfoAdapter {
-    private int itemSongNameId = R.id.tv_item_song_name;
+    protected int itemSongNameId = R.id.tv_item_song_name;
     private int[] textViewIds = new int[]{itemSongNameId, R.id.tv_item_song_artist,
             R.id.tv_item_song_num};
     private int selectColor;
@@ -33,7 +33,6 @@ public class PlayListAdapter extends SongInfoAdapter {
         super(R.layout.item_song_local, playList.getSongInfos(), recyclerView);
         this.playList = playList;
         selectColor = recyclerView.getContext().getColor(R.color.colorGreen);
-        recyclerView.setAdapter(this);
     }
 
     @Override

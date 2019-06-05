@@ -1,4 +1,4 @@
-package com.mzz.zmusicplayer.adapter;
+package com.mzz.zmusicplayer.common;
 
 import android.content.Context;
 import android.support.annotation.IdRes;
@@ -32,7 +32,7 @@ public class TextQueryHandler {
     private List <SongInfo> songInfos;
     private Map <String, Spannable> nameAndQuerySpans;
 
-    TextQueryHandler(BaseQuickAdapter adapter, Context context, List <SongInfo> songInfos) {
+    public TextQueryHandler(BaseQuickAdapter adapter, Context context, List <SongInfo> songInfos) {
         this.adapter = adapter;
         this.songInfos = songInfos;
         this.nameAndQuerySpans = new HashMap <>();
@@ -46,8 +46,8 @@ public class TextQueryHandler {
      * @param songInfo       the song info
      * @param itemSongNameId the item song name id
      */
-    void setTextByQueryResult(BaseViewHolder helper, SongInfo songInfo,
-                              @IdRes int itemSongNameId) {
+    public void setTextByQueryResult(BaseViewHolder helper, SongInfo songInfo,
+                                     @IdRes int itemSongNameId) {
         String name = songInfo.getName();
         if (nameAndQuerySpans.containsKey(name)) {
             helper.setText(itemSongNameId, nameAndQuerySpans.get(name));
@@ -59,7 +59,7 @@ public class TextQueryHandler {
     /**
      * Sets query text listener.
      */
-    void setQueryTextListener(SearchView searchView) {
+    public void setQueryTextListener(SearchView searchView) {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

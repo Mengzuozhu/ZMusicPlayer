@@ -75,7 +75,7 @@ public class SongEditActivity extends BaseActivity {
     }
 
     private void init(ArrayList <SongInfo> editData) {
-        SongEditAdapter adapter = new SongEditAdapter(R.layout.item_song_edit, rvEdit, editData);
+        SongEditAdapter adapter = new SongEditAdapter(rvEdit, editData);
         adapter.setQueryTextListener(svEdit);
         editHandler = new EditHandler <>(this, editData, adapter).setOnItemChildDeleteListener();
     }

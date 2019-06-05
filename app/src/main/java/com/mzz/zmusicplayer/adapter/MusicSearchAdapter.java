@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.SearchView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.common.TextQueryHandler;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
@@ -32,7 +32,7 @@ public class MusicSearchAdapter extends PlayListAdapter {
     @Override
     protected void convert(BaseViewHolder helper, SongInfo songInfo) {
         super.convert(helper, songInfo);
-        textQueryHandler.setTextByQueryResult(helper, songInfo, R.id.tv_item_song_name);
+        textQueryHandler.setTextByQueryResult(helper, songInfo, itemSongNameId);
     }
 
     /**

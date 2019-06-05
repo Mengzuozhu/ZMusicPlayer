@@ -6,6 +6,7 @@ import android.widget.SearchView;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.common.TextQueryHandler;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.List;
@@ -27,9 +28,8 @@ public class SongPickerAdapter extends SongInfoAdapter {
      * @param songInfos    the song infos
      * @param recyclerView the recycler view
      */
-    public SongPickerAdapter(int layoutResId, List <SongInfo> songInfos,
-                             RecyclerView recyclerView) {
-        super(layoutResId, songInfos, recyclerView);
+    public SongPickerAdapter(List <SongInfo> songInfos, RecyclerView recyclerView) {
+        super(R.layout.item_song_check, songInfos, recyclerView);
         chbSongSelectId = R.id.chb_item_song_select;
         ViewerHelper.setOnItemClickWithCheckBox(this, chbSongSelectId);
         textQueryHandler = new TextQueryHandler(this, recyclerView.getContext(), songInfos);

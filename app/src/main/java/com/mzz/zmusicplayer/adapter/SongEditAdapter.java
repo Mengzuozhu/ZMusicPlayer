@@ -1,16 +1,12 @@
 package com.mzz.zmusicplayer.adapter;
 
-import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.SearchView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.common.TextQueryHandler;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.List;
@@ -20,33 +16,25 @@ import java.util.List;
  * date : 2019 2019/6/4 18:08
  * description :
  */
-public class SongEditAdapter extends BaseQuickAdapter <SongInfo, BaseViewHolder> {
+public class SongEditAdapter extends SongInfoAdapter {
 
-    private final RecyclerView recyclerView;
     private TextQueryHandler textQueryHandler;
 
-    public SongEditAdapter(int layoutResId, RecyclerView recyclerView,
-                           @Nullable List <SongInfo> data) {
-        super(layoutResId, data);
-        this.recyclerView = recyclerView;
-        Context context = recyclerView.getContext();
-        textQueryHandler = new TextQueryHandler(this, context, data);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(this);
-        setHeaderView(getEmptyDummyHeader(context));
-    }
-
-    private View getEmptyDummyHeader(Context context) {
-        //为使得头部一致，设置一个空头部
-        return LayoutInflater.from(context).inflate(R.layout.content_empty, recyclerView, false);
+    /**
+     * Instantiates a new Song edit adapter.
+     *
+     * @param recyclerView the recycler view
+     * @param data         the data
+     */
+    public SongEditAdapter(RecyclerView recyclerView, @Nullable List <SongInfo> data) {
+        super(R.layout.item_song_edit, data, recyclerView);
+        textQueryHandler = new TextQueryHandler(this, recyclerView.getContext(), data);
     }
 
     @Override
     protected void convert(BaseViewHolder helper, SongInfo songInfo) {
+        super.convert(helper, songInfo);
         textQueryHandler.setTextByQueryResult(helper, songInfo, R.id.tv_item_song_name);
-        helper.setText(R.id.tv_item_song_artist, songInfo.getArtist());
-        helper.setText(R.id.tv_item_song_num,
-                String.valueOf(helper.getAdapterPosition()));
         helper.addOnClickListener(R.id.iv_edit_del);
     }
 
