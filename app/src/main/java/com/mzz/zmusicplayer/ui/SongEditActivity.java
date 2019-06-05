@@ -29,7 +29,7 @@ public class SongEditActivity extends BaseActivity {
     RecyclerView rvEdit;
     @BindView(R.id.sv_edit)
     SearchView svEdit;
-    EditHandler <SongInfo> editHandler;
+    private EditHandler <SongInfo> editHandler;
 
     /**
      * Start for result.

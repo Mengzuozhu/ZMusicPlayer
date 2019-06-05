@@ -57,7 +57,7 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
     private String artist;
     //全大写的歌名中文拼写，英文保存原样
     private String nameSpell;
-    private Date lastPlayTime = new Date();
+    private Date lastPlayTime;
     private int duration;
     private boolean isChecked = true;
     private boolean isFavorite = false;

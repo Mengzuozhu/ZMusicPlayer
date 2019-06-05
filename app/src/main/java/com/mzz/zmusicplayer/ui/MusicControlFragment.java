@@ -14,11 +14,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mzz.zandroidcommon.common.DateHelper;
 import com.mzz.zandroidcommon.common.EventBusHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.TimeHelper;
 import com.mzz.zmusicplayer.contract.MusicPlayerContract;
+import com.mzz.zmusicplayer.model.SongModel;
 import com.mzz.zmusicplayer.presenter.MusicPlayerPresenter;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
@@ -30,7 +30,7 @@ import com.mzz.zmusicplayer.song.SongInfo;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -206,7 +206,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     }
 
     @OnClick(R.id.iv_favorite)
-    public void onFavoriteAction() {
+    public void onFavoriteChangeAction() {
         if (mPlayer == null) return;
 
         SongInfo playingSong = mPlayer.getPlayingSong();
@@ -215,6 +215,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         }
         boolean isFavorite = !playingSong.getIsFavorite();
         playingSong.setIsFavorite(isFavorite);
+        SongModel.update(playingSong);
 
         updateFavoriteState(isFavorite);
     }
@@ -265,8 +266,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         if (controlListener != null) {
             controlListener.updatePlaySongBackgroundColor(song);
         }
-        Calendar nowTime = DateHelper.getNowTime();
-        song.setLastPlayTime(nowTime.getTime());
+        song.setLastPlayTime(new Date());
         mPlayer.getPlayList().updateRecentSongs(song);
         //记录播放歌曲位置
         AppSetting.setLastPlaySongId(song.getId());

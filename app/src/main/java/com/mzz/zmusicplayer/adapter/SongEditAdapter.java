@@ -43,9 +43,9 @@ public class SongEditAdapter extends BaseQuickAdapter <SongInfo, BaseViewHolder>
 
     @Override
     protected void convert(BaseViewHolder helper, SongInfo songInfo) {
-        textQueryHandler.setTextByQueryResult(helper, songInfo, R.id.tv_edit_item_song_name);
-        helper.setText(R.id.tv_edit_item_song_artist, songInfo.getArtist());
-        helper.setText(R.id.tv_edit_item_song_num,
+        textQueryHandler.setTextByQueryResult(helper, songInfo, R.id.tv_item_song_name);
+        helper.setText(R.id.tv_item_song_artist, songInfo.getArtist());
+        helper.setText(R.id.tv_item_song_num,
                 String.valueOf(helper.getAdapterPosition()));
         helper.addOnClickListener(R.id.iv_edit_del);
     }

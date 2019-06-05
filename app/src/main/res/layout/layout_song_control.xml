@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="@layout/notify_control">
+
+    <ImageView
+        android:id="@+id/iv_notify_play_pre"
+        style="@style/StyleControlImage"
+        android:layout_marginEnd="@dimen/image_margin_32"
+        android:layout_toStartOf="@+id/iv_notify_play_pause"
+        android:src="@drawable/previous" />
+
+    <ImageView
+        android:id="@+id/iv_notify_play_pause"
+        style="@style/StyleControlImage"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@drawable/play" />
+
+    <ImageView
+        android:id="@+id/iv_notify_play_next"
+        style="@style/StyleControlImage"
+        android:layout_marginStart="@dimen/image_margin_32"
+        android:layout_toEndOf="@+id/iv_notify_play_pause"
+        android:src="@drawable/next" />
+
+</merge>

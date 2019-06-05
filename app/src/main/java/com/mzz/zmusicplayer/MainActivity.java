@@ -5,8 +5,6 @@ import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -17,12 +15,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mzz.zandroidcommon.view.BaseActivity;
+import com.mzz.zmusicplayer.adapter.MusicPagerAdapter;
+import com.mzz.zmusicplayer.adapter.PageFragment;
 import com.mzz.zmusicplayer.edit.EditHandler;
 import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
+import com.mzz.zmusicplayer.ui.FavoriteFragment;
 import com.mzz.zmusicplayer.ui.LocalMusicFragment;
 import com.mzz.zmusicplayer.ui.MusicControlFragment;
 import com.mzz.zmusicplayer.ui.RecentFragment;
@@ -39,14 +40,11 @@ import butterknife.ButterKnife;
 public class MainActivity extends BaseActivity implements LocalMusicFragment.LocalMusicListener,
         MusicControlFragment.MusicControlListener {
 
-    private static final String[] CONTENT = new String[]{"最近", "本地"};
     @BindView(R.id.layout_drawer)
     DrawerLayout layoutDrawer;
     @BindView(R.id.nav_view)
     NavigationView navView;
-    private RecentFragment recentFragment;
     private LocalMusicFragment localMusicFragment;
-    private Fragment[] fragments;
     private MusicControlFragment musicControlFragment;
     private PlayedMode playedMode;
     private HeadsetReceiver headsetReceiver;
@@ -86,13 +84,15 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
     }
 
     private void initTabPage() {
+        RecentFragment recentFragment = RecentFragment.newInstance();
         localMusicFragment = LocalMusicFragment.newInstance();
-        recentFragment = RecentFragment.newInstance();
-        fragments = new Fragment[CONTENT.length];
-        fragments[0] = recentFragment;
-        fragments[1] = localMusicFragment;
+        FavoriteFragment favoriteFragment = FavoriteFragment.newInstance();
+        List <PageFragment> fragments = new ArrayList <>();
+        fragments.add(new PageFragment(recentFragment, "最近"));
+        fragments.add(new PageFragment(localMusicFragment, "本地"));
+        fragments.add(new PageFragment(favoriteFragment, "喜欢"));
         FragmentPagerAdapter adapter =
-                new GoogleMusicAdapter(getSupportFragmentManager());
+                new MusicPagerAdapter(getSupportFragmentManager(), fragments);
 
         ViewPager pager = findViewById(R.id.pager);
         pager.setAdapter(adapter);
@@ -211,27 +211,6 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
     @Override
     public void updatePlaySongBackgroundColor(SongInfo song) {
         localMusicFragment.updatePlaySongBackgroundColor(song);
-    }
-
-    class GoogleMusicAdapter extends FragmentPagerAdapter {
-        GoogleMusicAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragments[position];
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return CONTENT[position % CONTENT.length].toUpperCase();
-        }
-
-        @Override
-        public int getCount() {
-            return CONTENT.length;
-        }
     }
 
 }

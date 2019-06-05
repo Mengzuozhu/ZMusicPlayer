@@ -59,7 +59,7 @@ public class LocalMusicPresenter implements LocalMusicContract.Presenter {
     }
 
     private void intiAdapter() {
-        baseAdapter = new PlayListAdapter(playList, recyclerView,  false);
+        baseAdapter = new PlayListAdapter(playList, recyclerView);
         baseAdapter.setOnItemClickListener((adapter, view, position) -> localMusicListener.setPlayingIndex(position));
         baseAdapter.setOnItemLongClickListener((adapter, view, position) -> {
             showSongEditActivity();

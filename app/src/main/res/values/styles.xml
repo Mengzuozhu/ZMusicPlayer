@@ -78,4 +78,11 @@
     <style name="CustomTabPageIndicator.Text" parent="android:TextAppearance.Medium">
         <item name="android:typeface">monospace</item>
     </style>
+
+    <style name="StyleControlImage">
+        <item name="android:layout_width">@dimen/image_size_32</item>
+        <item name="android:layout_height">@dimen/image_size_32</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_marginBottom">@dimen/margin_bottom_8</item>
+    </style>
 </resources>

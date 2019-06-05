@@ -25,8 +25,6 @@ Y
 )app/src/main/res/layout/activity_main.xml,7\6\76b07e40f24cce093536731477540f12e7da3cb6
 \
 ,app/src/main/res/layout/fragment_control.xml,8\3\83c2ccd56c56eb4391b6af869ea3fb379e0600c8
-Z
-*app/src/main/res/layout/item_song_list.xml,b\4\b471647ee5a3b7549fff8c24dcbf3878a0ee4157
 b
 2app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml,8\e\8e27ba16c655f421171956147d0fde89b7d25d17
 h
@@ -102,8 +100,6 @@ l
 <app/src/main/java/com/mzz/zmusicplayer/MusicApplication.java,a\d\ad7efba2bce5e413b45aabc660cc784d867412c9
 r
 Bapp/src/main/java/com/mzz/zmusicplayer/ui/MusicSearchActivity.java,e\e\ee8342b2f864ff4f99dacf434261ab5e68778247
-t
-Dapp/src/main/java/com/mzz/zmusicplayer/adapter/SongQueryAdapter.java,9\5\9598f409edfab0d688fb408b5aa4e5cf7177e6b5
 m
 =app/src/main/java/com/mzz/zmusicplayer/edit/EditItemInfo.java,a\d\ade617b16fab316ac2f212f54085420e53c12821
 j
@@ -134,3 +130,13 @@ m
 =app/src/main/java/com/mzz/zmusicplayer/ui/RecentFragment.java,a\1\a183ebe729f46e37c35e72d0c59392738ae49514
 s
 Capp/src/main/java/com/mzz/zmusicplayer/adapter/PlayListAdapter.java,4\3\43274a2e86f326449611a48cdf5b71723d74e307
+p
+@app/src/main/java/com/mzz/zmusicplayer/adapter/PageFragment.java,0\5\05d242c0f758bee073a40520652d834c7c10ad77
+u
+Eapp/src/main/java/com/mzz/zmusicplayer/adapter/MusicPagerAdapter.java,8\6\8698d43dd40bf653434c15a58b0d36375134d5f0
+s
+Capp/src/main/java/com/mzz/zmusicplayer/adapter/SongEditAdapter.java,3\e\3e58133b16b0722576c2f07fbdcf64ff503bee4a
+o
+?app/src/main/java/com/mzz/zmusicplayer/ui/FavoriteFragment.java,a\7\a7a5ad244b03c3ef1c5aa5056a57f7ed3b3dbd0a
+u
+Eapp/src/main/java/com/mzz/zmusicplayer/adapter/SongPickerAdapter.java,3\0\306e084c96ac185c63deaa6e33daa5f7dd13c96b

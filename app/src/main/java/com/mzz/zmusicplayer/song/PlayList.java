@@ -130,7 +130,11 @@ public class PlayList implements Parcelable {
             if (lastPlayTime == null) {
                 return -1;
             }
-            return lastPlayTime.compareTo(o1.getLastPlayTime());
+            Date lastPlayTime2 = o1.getLastPlayTime();
+            if (lastPlayTime2 == null) {
+                return 1;
+            }
+            return lastPlayTime.compareTo(lastPlayTime2);
         });
     }
 

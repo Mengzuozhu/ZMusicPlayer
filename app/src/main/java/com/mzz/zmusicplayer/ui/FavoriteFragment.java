@@ -16,6 +16,7 @@ import com.mzz.zmusicplayer.song.SongInfo;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,40 +25,34 @@ import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * Use the {@link RecentFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
-public class RecentFragment extends Fragment {
+public class FavoriteFragment extends Fragment {
 
-    @BindView(R.id.rv_recent_song)
-    RecyclerView rvRecentSong;
-    private Unbinder unbinder;
+    @BindView(R.id.rv_favorite_song)
+    RecyclerView rvFavoriteSong;
+    Unbinder unbinder;
     private IPlayer player;
     private PlayList mPlayList;
 
-    public RecentFragment() {
+    public FavoriteFragment() {
         // Required empty public constructor
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * New instance favorite fragment.
      *
-     * @return A new instance of fragment RecentFragment.
+     * @return the favorite fragment
      */
-    public static RecentFragment newInstance() {
-        return new RecentFragment();
+    public static FavoriteFragment newInstance() {
+        return new FavoriteFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recent, container, false);
+        View view = inflater.inflate(R.layout.fragment_favorite, container, false);
         unbinder = ButterKnife.bind(this, view);
         mPlayList = new PlayList();
-        //需在创建视图后，重新初始化适配器
         initAdapter();
         return view;
     }
@@ -77,24 +72,32 @@ public class RecentFragment extends Fragment {
     }
 
     private void initAdapter() {
-        if (rvRecentSong == null) {
+        if (rvFavoriteSong == null) {
             return;
         }
-        List <SongInfo> recentSongs = getRecentSongs();
-        mPlayList.setSongInfos(recentSongs);
-        PlayListAdapter   baseAdapter = new PlayListAdapter(mPlayList, rvRecentSong);
+        List <SongInfo> favoriteSongs = getFavoriteSongs();
+        mPlayList.setSongInfos(favoriteSongs);
+        PlayListAdapter baseAdapter = new PlayListAdapter(mPlayList, rvFavoriteSong);
         baseAdapter.setOnItemClickListener((adapter, view, position) -> {
             SongInfo song = baseAdapter.getItem(position);
-            EventBus.getDefault().post(song);
             baseAdapter.updatePlaySongBackgroundColor(song);
+            EventBus.getDefault().post(song);
         });
     }
 
-    private List <SongInfo> getRecentSongs() {
+    private List <SongInfo> getFavoriteSongs() {
         if (player == null) {
             player = Player.getInstance();
         }
-        return player.getPlayList().getRecentSongs();
+        PlayList playList = player.getPlayList();
+        List <SongInfo> favoriteSongs = new ArrayList <>();
+        List <SongInfo> songInfos = playList.getSongInfos();
+        for (SongInfo songInfo : songInfos) {
+            if (songInfo.getIsFavorite()) {
+                favoriteSongs.add(songInfo);
+            }
+        }
+        return favoriteSongs;
     }
 
 }

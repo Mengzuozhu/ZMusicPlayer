@@ -20,35 +20,6 @@
             android:textSize="14sp" />
 
         <ImageView
-            android:id="@+id/iv_notify_play_pre"
-            android:layout_width="@dimen/image_size_32"
-            android:layout_height="@dimen/image_size_32"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="@dimen/image_margin_32"
-            android:layout_marginBottom="@dimen/margin_bottom_8"
-            android:layout_toStartOf="@+id/iv_notify_play_pause"
-            android:src="@drawable/previous" />
-
-        <ImageView
-            android:id="@+id/iv_notify_play_pause"
-            android:layout_width="@dimen/image_size_32"
-            android:layout_height="@dimen/image_size_32"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/margin_bottom_8"
-            app:srcCompat="@drawable/play" />
-
-        <ImageView
-            android:id="@+id/iv_notify_play_next"
-            android:layout_width="@dimen/image_size_32"
-            android:layout_height="@dimen/image_size_32"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="@dimen/image_margin_32"
-            android:layout_marginBottom="@dimen/margin_bottom_8"
-            android:layout_toEndOf="@+id/iv_notify_play_pause"
-            android:src="@drawable/next" />
-
-        <ImageView
             android:id="@+id/iv_notify_close"
             android:layout_width="@dimen/image_size_24"
             android:layout_height="@dimen/image_size_24"
@@ -57,6 +28,9 @@
             android:layout_marginTop="0dp"
             android:layout_marginEnd="5dp"
             app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
+        <include layout="@layout/layout_song_control" />
+
 
     </RelativeLayout>
 

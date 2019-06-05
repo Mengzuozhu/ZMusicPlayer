@@ -6,9 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.mzz.zandroidcommon.adapter.CheckableAndDraggableAdapter;
-import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -29,26 +29,25 @@ public class SongInfoAdapter extends CheckableAndDraggableAdapter <SongInfo> {
     private LinearLayoutManager layoutManager;
     private List <SongInfo> songInfos;
     private RecyclerView recyclerView;
-    private boolean isShowCheckBox;
-    private int chbSongSelectId;
+//    private boolean isShowCheckBox;
+//    private int chbSongSelectId;
 
     /**
      * Instantiates a new Song info adapter.
      *
-     * @param songInfos      the song infos
-     * @param recyclerView   the recycler view
-     * @param isShowCheckBox the is show check box
+     * @param songInfos    the song infos
+     * @param recyclerView the recycler view
      */
-    SongInfoAdapter(List <SongInfo> songInfos, RecyclerView recyclerView, boolean isShowCheckBox) {
-        super(R.layout.item_song_list, songInfos, recyclerView);
+    SongInfoAdapter(int layoutResId, List <SongInfo> songInfos, RecyclerView recyclerView) {
+        super(layoutResId, songInfos, recyclerView);
         this.songInfos = songInfos;
         this.recyclerView = recyclerView;
         Context context = recyclerView.getContext();
-        this.isShowCheckBox = isShowCheckBox;
-        chbSongSelectId = R.id.chb_item_song_select;
-        if (isShowCheckBox) {
-            ViewerHelper.setOnItemClickWithCheckBox(this, chbSongSelectId);
-        }
+//        this.isShowCheckBox = isShowCheckBox;
+//        chbSongSelectId = R.id.chb_item_song_select;
+//        if (isShowCheckBox) {
+//            ViewerHelper.setOnItemClickWithCheckBox(this, chbSongSelectId);
+//        }
         layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(this);
@@ -60,11 +59,13 @@ public class SongInfoAdapter extends CheckableAndDraggableAdapter <SongInfo> {
         helper.setText(R.id.tv_item_song_artist, songInfo.getArtist());
         helper.setText(R.id.tv_item_song_num, String.valueOf(helper.getAdapterPosition()));
         //是否显示复选框
-        if (isShowCheckBox) {
-            helper.setChecked(chbSongSelectId, songInfo.getIsChecked()).addOnClickListener(chbSongSelectId);
-        } else {
-            helper.setVisible(chbSongSelectId, false);
-        }
+//        if (isShowCheckBox) {
+//            helper.setChecked(chbSongSelectId, songInfo.getIsChecked()).addOnClickListener
+//            (chbSongSelectId);
+//        }
+//        else {
+//            helper.setVisible(chbSongSelectId, false);
+//        }
     }
 
     private void setEmptyDummyHeader(Context context) {
@@ -87,7 +88,7 @@ public class SongInfoAdapter extends CheckableAndDraggableAdapter <SongInfo> {
 
     @Override
     public int getCheckableViewId() {
-        return chbSongSelectId;
+        return -1;
     }
 
     /**

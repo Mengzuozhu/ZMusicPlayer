@@ -1,5 +1,7 @@
 package com.mzz.zmusicplayer.setting;
 
+import com.mzz.zmusicplayer.R;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -34,4 +36,16 @@ public enum PlayedMode {
         return values()[nextId];
     }
 
+    public int getIcon() {
+        switch (id) {
+            case 0:
+                return R.drawable.order;
+            case 1:
+                return R.drawable.single;
+            case 2:
+                return R.drawable.random;
+            default:
+                return R.drawable.order;
+        }
+    }
 }

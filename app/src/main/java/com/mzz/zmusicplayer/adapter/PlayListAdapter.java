@@ -26,14 +26,14 @@ public class PlayListAdapter extends SongInfoAdapter {
     /**
      * Instantiates a new Song info adapter.
      *
-     * @param playList       the play list
-     * @param recyclerView   the recycler view
-     * @param isShowCheckBox the is show check box
+     * @param playList     the play list
+     * @param recyclerView the recycler view
      */
-    public PlayListAdapter(PlayList playList, RecyclerView recyclerView, boolean isShowCheckBox) {
-        super(playList.getSongInfos(), recyclerView, isShowCheckBox);
+    public PlayListAdapter(PlayList playList, RecyclerView recyclerView) {
+        super(R.layout.item_song_local, playList.getSongInfos(), recyclerView);
         this.playList = playList;
         selectColor = recyclerView.getContext().getColor(R.color.colorGreen);
+        recyclerView.setAdapter(this);
     }
 
     @Override

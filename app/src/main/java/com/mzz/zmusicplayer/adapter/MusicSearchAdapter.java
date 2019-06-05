@@ -20,13 +20,11 @@ public class MusicSearchAdapter extends PlayListAdapter {
     /**
      * Instantiates a new Song info adapter.
      *
-     * @param playList       the play list
-     * @param recyclerView   the recycler view
-     * @param isShowCheckBox the is show check box
+     * @param playList     the play list
+     * @param recyclerView the recycler view
      */
-    public MusicSearchAdapter(PlayList playList, RecyclerView recyclerView,
-                              boolean isShowCheckBox) {
-        super(playList, recyclerView, isShowCheckBox);
+    public MusicSearchAdapter(PlayList playList, RecyclerView recyclerView) {
+        super(playList, recyclerView);
         textQueryHandler = new TextQueryHandler(this, recyclerView.getContext(),
                 playList.getSongInfos());
     }

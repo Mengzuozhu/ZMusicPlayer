@@ -20,7 +20,7 @@ import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.adapter.SongQueryAdapter;
+import com.mzz.zmusicplayer.adapter.SongPickerAdapter;
 import com.mzz.zmusicplayer.song.FileManager;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -43,7 +43,7 @@ public class SongPickerActivity extends BaseActivity {
     SearchView svSongFile;
     @BindView(R.id.fab_song_file_scroll_first)
     FloatingActionButton fabSongScrollFirst;
-    private SongQueryAdapter queryAdapter;
+    private SongPickerAdapter queryAdapter;
     private List <SongInfo> songInfos;
 
     @Override
@@ -81,7 +81,7 @@ public class SongPickerActivity extends BaseActivity {
 
     private void initAdapter() {
         songInfos = FileManager.getInstance(SongPickerActivity.this).getSongInfos();
-        queryAdapter = new SongQueryAdapter(songInfos, rvSongFile, true);
+        queryAdapter = new SongPickerAdapter(R.layout.item_song_check,songInfos, rvSongFile);
         queryAdapter.setQueryTextListener(svSongFile);
         ViewerHelper.showOrHideScrollFirst(rvSongFile, queryAdapter.getLayoutManager(),
                 fabSongScrollFirst);
