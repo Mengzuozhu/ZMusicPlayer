@@ -100,8 +100,7 @@ public class PlaybackService extends Service implements PlayObserver {
                 if (isPlaying()) {
                     pause();
                 }
-                stopForeground(true);
-                unregisterCallback(this);
+                stopSelf();
                 MusicApplication.getInstance().exitApp();
                 break;
             case ACTION_PLAY_MODE:
@@ -120,14 +119,9 @@ public class PlaybackService extends Service implements PlayObserver {
     }
 
     @Override
-    public boolean stopService(Intent name) {
+    public void onDestroy() {
         stopForeground(true);
         unregisterCallback(this);
-        return super.stopService(name);
-    }
-
-    @Override
-    public void onDestroy() {
         releasePlayer();
         if (lockScreenReceiver != null) {
             unregisterReceiver(lockScreenReceiver);
@@ -135,8 +129,8 @@ public class PlaybackService extends Service implements PlayObserver {
         super.onDestroy();
     }
 
-    private boolean play() {
-        return mPlayer.play();
+    private void play() {
+        mPlayer.play();
     }
 
     private void switchFavorite() {

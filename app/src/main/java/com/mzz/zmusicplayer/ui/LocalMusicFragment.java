@@ -6,13 +6,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.contract.LocalMusicContract;
 import com.mzz.zmusicplayer.presenter.LocalMusicPresenter;
@@ -61,15 +60,28 @@ public class LocalMusicFragment extends Fragment implements LocalMusicContract.V
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        Log.d("LocalMusicFragment", "onViewCreated" );
         init();
     }
 
     private void init() {
         getListener();
         mainPresenter = new LocalMusicPresenter(this, localMusicListener);
-        ViewerHelper.showOrHideScrollFirst(rvSong, mainPresenter.getLayoutManager(),
-                fabSongScrollFirst);
+        LinearLayoutManager layoutManager = mainPresenter.getLayoutManager();
+        rvSong.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (layoutManager != null) {
+                    int position = layoutManager.findFirstVisibleItemPosition();
+                    if (position > 0) {
+                        View view = fabSongScrollFirst;
+                        view.setVisibility(View.VISIBLE);
+                    } else if (fabSongScrollFirst.isShown()) {
+                        View view = fabSongScrollFirst;
+                        view.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+        });
     }
 
     private void getListener() {

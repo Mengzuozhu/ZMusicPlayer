@@ -44,7 +44,6 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        this.setTitle("");
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         ViewerHelper.displayHomeAsUpOrNot(this.getSupportActionBar(), false);
