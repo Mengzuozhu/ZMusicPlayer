@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    tools:showIn="@layout/item_song_local">
+    tools:showIn="@layout/item_song_list">
 
     <RelativeLayout
         android:id="@+id/layout_song_num"

@@ -227,7 +227,7 @@ public class PlaybackService extends Service implements PlayObserver {
 
     private RemoteViews getSmallContentView() {
         if (mContentViewSmall == null) {
-            mContentViewSmall = new RemoteViews(getPackageName(), R.layout.notify_control);
+            mContentViewSmall = new RemoteViews(getPackageName(), R.layout.content_notify);
             setUpRemoteView(mContentViewSmall);
         }
         updateRemoteViews(mContentViewSmall);

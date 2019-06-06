@@ -7,14 +7,16 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:layout_marginBottom="@dimen/margin_bottom_8"
-    tools:showIn="@layout/notify_control">
+    tools:showIn="@layout/content_notify">
 
     <TextView
         android:id="@+id/tv_song_name"
         style="@style/StyleTextView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginStart="@dimen/song_name_space"
         android:layout_marginTop="2dp"
+        android:layout_marginEnd="@dimen/song_name_space"
         android:text="@string/undefined"
         android:textSize="14sp" />
 
@@ -44,6 +46,7 @@
         android:layout_marginStart="@dimen/image_margin_32"
         android:layout_toEndOf="@+id/iv_play_pause"
         android:src="@drawable/next" />
+
     <ImageView
         android:id="@+id/iv_play_mode"
         style="@style/StyleControlImage"

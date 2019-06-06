@@ -22,8 +22,10 @@
     <dimen name="image_height">100dp</dimen>
     <dimen name="image_size_32">32dp</dimen>
     <dimen name="image_size_24">24dp</dimen>
+    <dimen name="image_size_20">20dp</dimen>
     <dimen name="font_12">12sp</dimen>
     <dimen name="control_height">100dp</dimen>
     <dimen name="image_margin_32">32dp</dimen>
     <dimen name="margin_bottom_8">8dp</dimen>
+    <dimen name="song_name_space">24dp</dimen>
 </resources>
