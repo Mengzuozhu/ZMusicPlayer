@@ -144,7 +144,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     public void onDestroyView() {
         super.onDestroyView();
         EventBusHelper.unregister(this);
-        mHandler.removeCallbacks(mProgressCallback);
+        removeProgressCallback();
         mPlayer.unregisterCallback(this);
         AppSetting.setLastPlaySongId(mPlayer.getPlayingSong().getId());
         mPlayer.releasePlayer();
@@ -169,7 +169,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                mHandler.removeCallbacks(mProgressCallback);
+                removeProgressCallback();
             }
 
             @Override
@@ -185,6 +185,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         });
     }
 
+    @Subscribe
     public void setPlayList(PlayList playList) {
         if (playList == null) {
             playList = new PlayList();
@@ -256,7 +257,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         tvSongName.setText(undefined);
         tvDuration.setText(undefined);
         tvProgress.setText(undefined);
-        mHandler.removeCallbacks(mProgressCallback);
+        removeProgressCallback();
         updatePlayToggle(false);
         seekBarProgress.setProgress(0);
     }
@@ -271,7 +272,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         }
         song.setLastPlayTime(new Date());
         mPlayer.getPlayList().updateRecentSongs(song);
-        //记录播放歌曲位置
+        //记录播放歌曲ID
         AppSetting.setLastPlaySongId(song.getId());
         tvSongName.setText(String.format("%s-%s", song.getName(), song.getArtist()));
         currentSongDuration = song.getDuration();
@@ -310,7 +311,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         if (isPlaying) {
             updateProgressBar();
         } else {
-            mHandler.removeCallbacks(mProgressCallback);
+            removeProgressCallback();
         }
         updatePlayToggle(isPlaying);
     }
@@ -330,8 +331,12 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     }
 
     private void updateProgressBar() {
-        mHandler.removeCallbacks(mProgressCallback);
+        removeProgressCallback();
         mHandler.post(mProgressCallback);
+    }
+
+    private void removeProgressCallback() {
+        mHandler.removeCallbacks(mProgressCallback);
     }
 
     @Override

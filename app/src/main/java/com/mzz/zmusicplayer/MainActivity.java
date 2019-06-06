@@ -11,8 +11,8 @@ import android.view.MenuItem;
 
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zandroidcommon.view.ViewerHelper;
-import com.mzz.zmusicplayer.adapter.MusicPagerAdapter;
 import com.mzz.zmusicplayer.adapter.MusicPage;
+import com.mzz.zmusicplayer.adapter.MusicPagerAdapter;
 import com.mzz.zmusicplayer.edit.EditHandler;
 import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
 import com.mzz.zmusicplayer.song.PlayList;
@@ -92,10 +92,10 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
 
         ViewPager pager = findViewById(R.id.pager);
         pager.setAdapter(adapter);
-
+        //保证播放界面不被销毁
+        pager.setOffscreenPageLimit(4);
         TabPageIndicator indicator = findViewById(R.id.indicator);
         indicator.setViewPager(pager);
-//        indicator.setCurrentItem(1);
     }
 
     @Override

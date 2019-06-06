@@ -94,8 +94,10 @@ public class FavoriteFragment extends Fragment {
         };
         baseAdapter.setOnItemClickListener((adapter, view, position) -> {
             SongInfo song = baseAdapter.getItem(position);
+//            mPlayList.setPlayingIndex(position);
             baseAdapter.updatePlaySongBackgroundColor(song);
             EventBus.getDefault().post(song);
+//            EventBus.getDefault().post(mPlayList);
         });
     }
 
