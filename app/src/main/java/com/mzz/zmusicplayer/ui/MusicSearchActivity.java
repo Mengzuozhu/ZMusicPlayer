@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 
 public class MusicSearchActivity extends BaseActivity {
 
-    public static final String SEARCH_DATA = "SEARCH_DATA";
+    private static final String EXTRA_SEARCH_DATA = "com.mzz.zmusicplayer.EXTRA_SEARCH_DATA";
     @BindView(R.id.rv_search)
     RecyclerView rvSearch;
     SearchView searchView;
@@ -31,7 +31,7 @@ public class MusicSearchActivity extends BaseActivity {
 
     public static void startForResult(FragmentActivity activity,
                                       Parcelable value) {
-        Intent intent = new Intent(activity, MusicSearchActivity.class).putExtra(SEARCH_DATA,
+        Intent intent = new Intent(activity, MusicSearchActivity.class).putExtra(EXTRA_SEARCH_DATA,
                 value);
         activity.startActivity(intent);
     }
@@ -42,7 +42,11 @@ public class MusicSearchActivity extends BaseActivity {
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
 
-        PlayList playList = getIntent().getParcelableExtra(SEARCH_DATA);
+        init();
+    }
+
+    private void init() {
+        PlayList playList = getIntent().getParcelableExtra(EXTRA_SEARCH_DATA);
         //重置选中歌曲的颜色，避免出现多个选中歌曲
         List <SongInfo> songInfos = playList.getSongInfos();
         for (SongInfo songInfo : songInfos) {

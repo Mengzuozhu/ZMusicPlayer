@@ -22,9 +22,9 @@ import butterknife.ButterKnife;
 
 public class SongEditActivity extends BaseActivity {
 
-    public static final String EDIT_DATA = "EDIT_DATA";
-    public static final String DELETE_NUM = "DELETE_NUM";
-    public static final int EDIT_SAVE = 3;
+    public static final String EXTRA_DELETE_IDS = "com.mzz.zmusicplayer.EXTRA_DELETE_IDS";
+    public static final int CODE_EDIT_SAVE = 3;
+    private static final String EXTRA_EDIT_DATA = "com.mzz.zmusicplayer.EXTRA_EDIT_DATA";
     @BindView(R.id.rv_edit)
     RecyclerView rvEdit;
     @BindView(R.id.sv_edit)
@@ -40,8 +40,8 @@ public class SongEditActivity extends BaseActivity {
     public static void startForResult(FragmentActivity activity, ArrayList <?
             extends Parcelable> value) {
         Intent intent =
-                new Intent(activity, SongEditActivity.class).putParcelableArrayListExtra(EDIT_DATA, value);
-        activity.startActivityForResult(intent, EDIT_SAVE);
+                new Intent(activity, SongEditActivity.class).putParcelableArrayListExtra(EXTRA_EDIT_DATA, value);
+        activity.startActivityForResult(intent, CODE_EDIT_SAVE);
     }
 
     @Override
@@ -50,8 +50,7 @@ public class SongEditActivity extends BaseActivity {
         setContentView(R.layout.activity_song_edit);
         ButterKnife.bind(this);
 
-        ArrayList <SongInfo> editData = getParcelableArrayListExtra(EDIT_DATA);
-        init(editData);
+        init();
     }
 
     @Override
@@ -74,16 +73,17 @@ public class SongEditActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void init(ArrayList <SongInfo> editData) {
+    private void init() {
+        ArrayList <SongInfo> editData = getParcelableArrayListExtra(EXTRA_EDIT_DATA);
         SongEditAdapter adapter = new SongEditAdapter(rvEdit, editData);
         adapter.setQueryTextListener(svEdit);
         editHandler = new EditHandler <>(this, editData, adapter).setOnItemChildDeleteListener();
     }
 
     private void save() {
-        Intent intent = getIntent().putIntegerArrayListExtra(DELETE_NUM,
+        Intent intent = getIntent().putIntegerArrayListExtra(EXTRA_DELETE_IDS,
                 editHandler.getDeleteIds());
-        setResult(EDIT_SAVE, intent);
+        setResult(CODE_EDIT_SAVE, intent);
     }
 
 }

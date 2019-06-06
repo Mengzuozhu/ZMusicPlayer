@@ -34,8 +34,8 @@ import butterknife.OnClick;
 
 public class SongPickerActivity extends BaseActivity {
 
-    public static final int ADD_SONG_CODE = 5;
-    public static final String ADD_SONG = "ADD_SONG";
+    public static final int CODE_ADD_SONG = 5;
+    public static final String EXTRA_ADD_SONG = "com.mzz.zmusicplayer.EXTRA_ADD_SONG";
 
     @BindView(R.id.rv_song_file)
     RecyclerView rvSongFile;
@@ -124,8 +124,8 @@ public class SongPickerActivity extends BaseActivity {
 
     private void save() {
         ArrayList <SongInfo> newSongInfos = getCheckedSongInfos();
-        Intent intent = getIntent().putParcelableArrayListExtra(ADD_SONG, newSongInfos);
-        setResult(ADD_SONG_CODE, intent);
+        Intent intent = getIntent().putParcelableArrayListExtra(EXTRA_ADD_SONG, newSongInfos);
+        setResult(CODE_ADD_SONG, intent);
     }
 
     private ArrayList <SongInfo> getCheckedSongInfos() {

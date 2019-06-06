@@ -50,7 +50,7 @@ public class NotificationHandler extends ContextWrapper {
 
     private PendingIntent getPendingIntent() {
         return PendingIntent.getActivity(this, 0, new Intent(this,
-                MainActivity.class), 0);
+                MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     public NotificationCompat.Builder getNotification25Builder() {

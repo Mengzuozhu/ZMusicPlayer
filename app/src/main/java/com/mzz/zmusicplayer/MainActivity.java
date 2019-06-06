@@ -5,7 +5,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,14 +28,11 @@ import com.viewpagerindicator.TabPageIndicator;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements LocalMusicFragment.LocalMusicListener,
         MusicControlFragment.MusicControlListener {
 
-    @BindView(R.id.layout_drawer)
-    DrawerLayout layoutDrawer;
     private LocalMusicFragment localMusicFragment;
     private MusicControlFragment musicControlFragment;
     private HeadsetReceiver headsetReceiver;
@@ -70,7 +66,7 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
         int itemId = item.getItemId();
         if (itemId == R.id.action_add_song) {
             startActivityForResult(new Intent(this, SongPickerActivity.class),
-                    SongPickerActivity.ADD_SONG_CODE);
+                    SongPickerActivity.CODE_ADD_SONG);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -146,18 +142,18 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
         if (data == null) {
             return;
         }
-        if (resultCode == SongPickerActivity.ADD_SONG_CODE) {
+        if (resultCode == SongPickerActivity.CODE_ADD_SONG) {
             ArrayList <SongInfo> newSongInfos =
-                    data.getParcelableArrayListExtra(SongPickerActivity.ADD_SONG);
+                    data.getParcelableArrayListExtra(SongPickerActivity.EXTRA_ADD_SONG);
             localMusicFragment.addSongs(newSongInfos);
-        } else if (resultCode == SongEditActivity.EDIT_SAVE) {
+        } else if (resultCode == SongEditActivity.CODE_EDIT_SAVE) {
             onSaveEditEvent(data);
         }
     }
 
     public void onSaveEditEvent(Intent data) {
         ArrayList <Integer> deleteIds =
-                data.getIntegerArrayListExtra(SongEditActivity.DELETE_NUM);
+                data.getIntegerArrayListExtra(SongEditActivity.EXTRA_DELETE_IDS);
         if (deleteIds == null) {
             return;
         }

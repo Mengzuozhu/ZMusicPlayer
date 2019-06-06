@@ -41,7 +41,8 @@ import butterknife.OnClick;
  */
 public class MusicControlFragment extends Fragment implements MusicPlayerContract.View,
         PlayObserver {
-    private static final String PLAY_LIST = "PLAY_LIST";
+    private static final String ARGUMENT_PLAY_LIST = "ARGUMENT_PLAY_LIST";
+    //更新进度条的间隔，单位：ms
     private static final long UPDATE_PROGRESS_INTERVAL = 1000;
     @BindView(R.id.tv_song_name)
     TextView tvSongName;
@@ -99,7 +100,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     public static MusicControlFragment newInstance(PlayList playList) {
         MusicControlFragment fragment = new MusicControlFragment();
         Bundle args = new Bundle();
-        args.putParcelable(PLAY_LIST, playList);
+        args.putParcelable(ARGUMENT_PLAY_LIST, playList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -122,7 +123,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         Bundle bundle = getArguments();
         PlayList mPlayList = new PlayList();
         if (bundle != null) {
-            mPlayList = bundle.getParcelable(PLAY_LIST);
+            mPlayList = bundle.getParcelable(ARGUMENT_PLAY_LIST);
         }
         mPlayer = Player.getInstance();
         mPlayer.registerCallback(this);

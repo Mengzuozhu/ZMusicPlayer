@@ -22,8 +22,7 @@ public class EditHandler<T extends IEditItem> {
     private BaseQuickAdapter adapter;
     private ExplosionField explosionField;
 
-    public EditHandler(Activity activity, List <T> editData,
-                       BaseQuickAdapter adapter) {
+    public EditHandler(Activity activity, List <T> editData, BaseQuickAdapter adapter) {
         this.editData = editData;
         this.adapter = adapter;
         explosionField = ExplosionField.attach2Window(activity);
