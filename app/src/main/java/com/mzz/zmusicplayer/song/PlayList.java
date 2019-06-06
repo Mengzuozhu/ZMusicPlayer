@@ -55,7 +55,7 @@ public class PlayList implements Parcelable {
         this.playingIndex = playingIndex;
         this.playMode = playMode;
         recentSongs = new LinkedList <>(songInfos);
-        addRecentSongs(songInfos);
+        initRecentSongs(songInfos);
     }
 
     protected PlayList(Parcel in) {
@@ -146,7 +146,6 @@ public class PlayList implements Parcelable {
      */
     public void addAll(Collection <SongInfo> c) {
         songInfos.addAll(c);
-        addRecentSongs(c);
     }
 
     /**
@@ -169,7 +168,7 @@ public class PlayList implements Parcelable {
         removeRecentSong();
     }
 
-    private void addRecentSongs(Collection <SongInfo> songInfos) {
+    private void initRecentSongs(Collection <SongInfo> songInfos) {
         for (SongInfo songInfo : songInfos) {
             if (recentSongs.size() >= RECENT_MAX_COUNT) {
                 break;
