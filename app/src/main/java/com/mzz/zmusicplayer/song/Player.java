@@ -20,7 +20,6 @@ import lombok.Getter;
 public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     private static final String TAG = "Player";
     private static Player sInstance = new Player();
-    private  static  boolean isRelease;
     private MediaPlayer mPlayer;
     private boolean isPaused;
     @Getter

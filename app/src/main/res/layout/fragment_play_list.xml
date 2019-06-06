@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorGrey"
     tools:context=".ui.LocalMusicFragment">
 
     <android.support.v7.widget.RecyclerView
@@ -26,7 +27,7 @@
         android:id="@+id/fab_song_locate"
         style="@style/StyleFab"
         android:layout_marginBottom="30dp"
-        android:src="@drawable/water_locate"
+        android:src="@drawable/song_location"
         app:backgroundTint="@color/colorWhite"
         app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="parent"

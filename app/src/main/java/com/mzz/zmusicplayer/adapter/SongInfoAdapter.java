@@ -6,8 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.mzz.zandroidcommon.adapter.CheckableAndDraggableAdapter;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -22,7 +22,7 @@ import lombok.Getter;
  * date : 2019 2019/5/11 16:26
  * description :
  */
-public class SongInfoAdapter extends CheckableAndDraggableAdapter <SongInfo> {
+public class SongInfoAdapter extends BaseQuickAdapter <SongInfo, BaseViewHolder> {
 
     @Getter
     private LinearLayoutManager layoutManager;
@@ -37,7 +37,7 @@ public class SongInfoAdapter extends CheckableAndDraggableAdapter <SongInfo> {
      * @param recyclerView the recycler view
      */
     SongInfoAdapter(int layoutResId, List <SongInfo> songInfos, RecyclerView recyclerView) {
-        super(layoutResId, songInfos, recyclerView);
+        super(layoutResId, songInfos);
         this.songInfos = songInfos;
         this.recyclerView = recyclerView;
         Context context = recyclerView.getContext();
@@ -69,11 +69,6 @@ public class SongInfoAdapter extends CheckableAndDraggableAdapter <SongInfo> {
         if (position < getItemCount()) {
             recyclerView.scrollToPosition(position);
         }
-    }
-
-    @Override
-    public int getCheckableViewId() {
-        return -1;
     }
 
     /**

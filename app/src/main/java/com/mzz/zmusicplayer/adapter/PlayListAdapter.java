@@ -9,7 +9,6 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -80,22 +79,30 @@ public class PlayListAdapter extends SongInfoAdapter {
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             int itemId = menuItem.getItemId();
             if (itemId == R.id.action_song_delete) {
-                remove(position);
+                removeSongAt(position);
                 return true;
             } else if (itemId == R.id.action_song_detail) {
                 SongInfo songInfo = PlayListAdapter.this.getItem(position);
                 if (songInfo == null) {
                     return true;
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                        .setTitle("歌曲信息")
-                        .setMessage(songInfo.getSongDetail())
-                        .setPositiveButton("确定", (dialog, which) -> dialog.dismiss());
-                builder.create().show();
+                showSongDetail(songInfo);
             }
             return false;
         });
         popupMenu.show();
+    }
+
+    public void removeSongAt(int position) {
+        remove(position);
+    }
+
+    private void showSongDetail(SongInfo songInfo) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                .setTitle("歌曲信息")
+                .setMessage(songInfo.getSongDetail())
+                .setPositiveButton("确定", (dialog, which) -> dialog.dismiss());
+        builder.create().show();
     }
 
     private void resetPlaySongColor(BaseViewHolder helper) {

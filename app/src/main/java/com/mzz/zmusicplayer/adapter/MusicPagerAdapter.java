@@ -13,9 +13,9 @@ import java.util.List;
  */
 public class MusicPagerAdapter extends FragmentPagerAdapter {
 
-    private final List <PageFragment> fragments;
+    private final List <MusicPage> fragments;
 
-    public MusicPagerAdapter(FragmentManager fm, List <PageFragment> fragments) {
+    public MusicPagerAdapter(FragmentManager fm, List <MusicPage> fragments) {
         super(fm);
         this.fragments = fragments;
     }

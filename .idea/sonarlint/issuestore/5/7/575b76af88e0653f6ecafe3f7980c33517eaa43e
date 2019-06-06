@@ -1,5 +1,4 @@
 
-esquid:S00107J"AConstructor has 8 parameters, which is greater than 7 authorized.(…“ñÒûÿÿÿÿ8Âƒ¹€²-
-squid:S1319Ê"yThe type of the "entityProperty" object should be an interface such as "List" rather than the implementation "ArrayList".(šÂÖÜşÿÿÿÿ8È™Ë×±-
-esquid:S00107W"AConstructor has 9 parameters, which is greater than 7 authorized.(…“ñÒûÿÿÿÿ8À©×²-
-”squid:S1319Å"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(®ê´üÿÿÿÿ8È™Ë×±-
+squid:S1319÷"yThe type of the "entityProperty" object should be an interface such as "List" rather than the implementation "ArrayList".(šÂÖÜşÿÿÿÿ8Ö•£Ö²-
+fsquid:S00107V"BConstructor has 12 parameters, which is greater than 7 authorized.(…“ñÒûÿÿÿÿ8øõ¨Ö²-
+”squid:S1319ò"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(®ê´üÿÿÿÿ8Ö•£Ö²-

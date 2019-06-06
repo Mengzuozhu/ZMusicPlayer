@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
+import com.mzz.zmusicplayer.model.SongModel;
 import com.mzz.zmusicplayer.song.IPlayer;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.Player;
@@ -75,7 +76,22 @@ public class FavoriteFragment extends Fragment {
         }
         List <SongInfo> favoriteSongs = getFavoriteSongs();
         mPlayList.setSongInfos(favoriteSongs);
-        PlayListAdapter baseAdapter = new PlayListAdapter(mPlayList, rvFavoriteSong);
+        PlayListAdapter baseAdapter = new PlayListAdapter(mPlayList, rvFavoriteSong) {
+            @Override
+            public void removeSongAt(int position) {
+                SongInfo songInfo = this.getItem(position);
+                if (songInfo == null) {
+                    return;
+                }
+                if (songInfo.isPlayListSelected()) {
+                    player.switchFavorite();
+                } else {
+                    songInfo.setIsFavorite(false);
+                    SongModel.update(songInfo);
+                }
+                super.removeSongAt(position);
+            }
+        };
         baseAdapter.setOnItemClickListener((adapter, view, position) -> {
             SongInfo song = baseAdapter.getItem(position);
             baseAdapter.updatePlaySongBackgroundColor(song);
@@ -87,9 +103,8 @@ public class FavoriteFragment extends Fragment {
         if (player == null) {
             player = Player.getInstance();
         }
-        PlayList playList = player.getPlayList();
         List <SongInfo> favoriteSongs = new ArrayList <>();
-        List <SongInfo> songInfos = playList.getSongInfos();
+        List <SongInfo> songInfos = player.getPlayList().getSongInfos();
         for (SongInfo songInfo : songInfos) {
             if (songInfo.getIsFavorite()) {
                 favoriteSongs.add(songInfo);

@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.adapter.MusicPagerAdapter;
-import com.mzz.zmusicplayer.adapter.PageFragment;
+import com.mzz.zmusicplayer.adapter.MusicPage;
 import com.mzz.zmusicplayer.edit.EditHandler;
 import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
 import com.mzz.zmusicplayer.song.PlayList;
@@ -83,10 +83,10 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
         RecentFragment recentFragment = RecentFragment.newInstance();
         localMusicFragment = LocalMusicFragment.newInstance();
         FavoriteFragment favoriteFragment = FavoriteFragment.newInstance();
-        List <PageFragment> fragments = new ArrayList <>();
-        fragments.add(new PageFragment(recentFragment, "最近"));
-        fragments.add(new PageFragment(localMusicFragment, "本地"));
-        fragments.add(new PageFragment(favoriteFragment, "喜欢"));
+        List <MusicPage> fragments = new ArrayList <>();
+        fragments.add(new MusicPage(localMusicFragment, "播放"));
+        fragments.add(new MusicPage(recentFragment, "最近"));
+        fragments.add(new MusicPage(favoriteFragment, "喜欢"));
         FragmentPagerAdapter adapter =
                 new MusicPagerAdapter(getSupportFragmentManager(), fragments);
 
@@ -95,7 +95,7 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
 
         TabPageIndicator indicator = findViewById(R.id.indicator);
         indicator.setViewPager(pager);
-        indicator.setCurrentItem(1);
+//        indicator.setCurrentItem(1);
     }
 
     @Override

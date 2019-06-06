@@ -11,7 +11,7 @@ import lombok.Getter;
  * description :
  */
 @AllArgsConstructor
-public class PageFragment {
+public class MusicPage {
     @Getter
     Fragment fragment;
     @Getter
