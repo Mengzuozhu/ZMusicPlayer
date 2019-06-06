@@ -31,14 +31,22 @@ public class SongModel {
      */
     public static List <SongInfo> getOrderSongInfos() {
         List <SongInfo> songInfos = loadAll();
+//        List <SongInfo> songInfos;
         switch (AppSetting.getSongSortMode()) {
             case ORDER_ASCEND_BY_NAME:
                 PlayList.sortByChineseName(songInfos, true);
+//                songInfos =
+//                        songInfoDao.queryBuilder().orderAsc(SongInfoDao.Properties.NameSpell)
+//                        .list();
                 break;
             case ORDER_DESCEND_BY_NAME:
                 PlayList.sortByChineseName(songInfos, false);
+//                songInfos =
+//                        songInfoDao.queryBuilder().orderDesc(SongInfoDao.Properties.NameSpell)
+//                        .list();
                 break;
             default:
+//                songInfos = songInfoDao.queryBuilder().orderAsc(SongInfoDao.Properties.Id).list();
                 PlayList.sortById(songInfos);
                 break;
         }

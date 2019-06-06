@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.action_add_song) {
+        if (itemId == R.id.action_song_add) {
             startActivityForResult(new Intent(this, SongPickerActivity.class),
                     SongPickerActivity.CODE_ADD_SONG);
         }

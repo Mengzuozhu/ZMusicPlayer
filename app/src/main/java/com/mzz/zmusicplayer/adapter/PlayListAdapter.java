@@ -1,5 +1,6 @@
 package com.mzz.zmusicplayer.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +9,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -77,9 +79,19 @@ public class PlayListAdapter extends SongInfoAdapter {
         popupMenu.inflate(R.menu.menu_song_more);
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             int itemId = menuItem.getItemId();
-            if (itemId == R.id.action_song_del) {
+            if (itemId == R.id.action_song_delete) {
                 remove(position);
                 return true;
+            } else if (itemId == R.id.action_song_detail) {
+                SongInfo songInfo = PlayListAdapter.this.getItem(position);
+                if (songInfo == null) {
+                    return true;
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                        .setTitle("歌曲信息")
+                        .setMessage(songInfo.getSongDetail())
+                        .setPositiveButton("确定", (dialog, which) -> dialog.dismiss());
+                builder.create().show();
             }
             return false;
         });

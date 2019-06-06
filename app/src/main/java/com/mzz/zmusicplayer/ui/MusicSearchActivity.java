@@ -29,8 +29,7 @@ public class MusicSearchActivity extends BaseActivity {
     SearchView searchView;
     private MusicSearchAdapter queryAdapter;
 
-    public static void startForResult(FragmentActivity activity,
-                                      Parcelable value) {
+    public static void startForResult(FragmentActivity activity, Parcelable value) {
         Intent intent = new Intent(activity, MusicSearchActivity.class).putExtra(EXTRA_SEARCH_DATA,
                 value);
         activity.startActivity(intent);

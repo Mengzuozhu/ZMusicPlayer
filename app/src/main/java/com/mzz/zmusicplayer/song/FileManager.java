@@ -24,8 +24,11 @@ public class FileManager {
             MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.IS_MUSIC,
-            MediaStore.Audio.Media._ID};
-    private static final String MINUS = "-";
+            MediaStore.Audio.Media._ID,
+            MediaStore.Audio.Media.TITLE
+    };
+    //文件名中的歌手和歌名的分隔符
+    private static final String MINUS = " - ";
     private static FileManager mInstance = new FileManager();
     private static ContentResolver mContentResolver;
 
@@ -56,14 +59,13 @@ public class FileManager {
 
                 String name = c.getString(1); // DISPLAY_NAME
                 String artist = c.getString(2);
+                String fileArtist = artist;
                 int duration = c.getInt(3);
                 name = extractName(name);
-                if (name.contains(MINUS)) {
-                    String[] strings = name.split(MINUS);
-                    if (strings.length > 1) {
-                        artist = strings[0];
-                        name = strings[1];
-                    }
+                String[] strings = name.split(MINUS);
+                if (strings.length > 1) {
+                    artist = strings[0];
+                    name = strings[1];
                 }
                 name = name.trim();
                 artist = artist.trim();
@@ -72,6 +74,9 @@ public class FileManager {
                 song.setNameSpell(getUpperSpell(name));
                 song.setPath(path);
                 song.setArtist(artist);
+                song.setFileArtist(fileArtist);
+                song.setFileId(c.getInt(5));
+                song.setTitle(c.getString(6));
                 song.setDuration(duration);
                 song.setIsChecked(true);
                 songs.add(song);
@@ -92,14 +97,15 @@ public class FileManager {
     }
 
     private String extractName(String name) {
-        int dotIndex = name.indexOf('.');
-        if (dotIndex > 0) {
-            name = name.substring(0, dotIndex);
-        }
-
-        int bracketIndex = name.indexOf('[');
+        int bracketIndex = name.lastIndexOf('[');
         if (bracketIndex > 0) {
             name = name.substring(0, bracketIndex);
+        }
+
+        int dotIndex = name.lastIndexOf('.');
+        //去除后缀
+        if (dotIndex > 0) {
+            name = name.substring(0, dotIndex);
         }
         return name;
     }

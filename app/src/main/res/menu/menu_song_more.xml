@@ -3,9 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_song_del"
-        android:orderInCategory="50"
-        android:title="删除"
-        app:showAsAction="ifRoom" />
+        android:id="@+id/action_song_delete"
+        android:orderInCategory="1"
+        android:title="@string/menu_song_del"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_song_detail"
+        android:orderInCategory="2"
+        android:title="@string/menu_song_detail"
+        app:showAsAction="never" />
 
 </menu>
