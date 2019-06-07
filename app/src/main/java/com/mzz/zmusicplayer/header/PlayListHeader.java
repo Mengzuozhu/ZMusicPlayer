@@ -60,7 +60,7 @@ public class PlayListHeader {
      * Show song edit activity.
      */
     public void showSongEditActivity() {
-        SongEditActivity.startForResult(activity, (ArrayList <SongInfo>) playList.getSongs());
+        SongEditActivity.startForResult(activity, (ArrayList <SongInfo>) playList.getPlaySongs());
     }
 
     private void showSearchActivity() {
@@ -102,10 +102,10 @@ public class PlayListHeader {
         String songCountAndMode;
         if (playMode == PlayedMode.SINGLE) {
             songCountAndMode = StringHelper.getLocalFormat("%s", playMode.getDesc(),
-                    playList.getSongs().size());
+                    playList.getPlaySongs().size());
         } else {
             songCountAndMode = StringHelper.getLocalFormat("%s(%d首)", playMode.getDesc(),
-                    playList.getSongs().size());
+                    playList.getPlaySongs().size());
         }
         tcSongCountAndMode.setText(songCountAndMode);
     }

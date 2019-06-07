@@ -5,12 +5,9 @@ import android.content.SharedPreferences;
 
 import com.mzz.zmusicplayer.MusicApplication;
 
-import lombok.Data;
-
 /**
  * The type App setting.
  */
-@Data
 public class AppSetting {
 
     private static final String APP_SETTING = "AppSetting";
@@ -64,25 +61,6 @@ public class AppSetting {
      */
     public static void setSongOrderMode(SongOrderMode songOrderMode) {
         putInt(SONG_ORDER_MODE, songOrderMode.getId());
-    }
-
-    /**
-     * Gets play list type.
-     *
-     * @return the play list type
-     */
-    public static PlayListType getPlayListType() {
-        int playListType = getSharedPreferences().getInt(PLAY_LIST_TYPE, 0);
-        return PlayListType.values()[playListType];
-    }
-
-    /**
-     * Sets play list type.
-     *
-     * @param playListType the play list type
-     */
-    public static void setPlayListType(PlayListType playListType) {
-        putInt(PLAY_LIST_TYPE, playListType.getId());
     }
 
     /**

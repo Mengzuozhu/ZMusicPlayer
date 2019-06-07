@@ -9,7 +9,7 @@ import com.mzz.zmusicplayer.greendao.db.DaoMaster;
 import com.mzz.zmusicplayer.greendao.db.DaoSession;
 import com.mzz.zmusicplayer.greendao.db.SongInfoDao;
 import com.mzz.zmusicplayer.setting.AppSetting;
-import com.mzz.zmusicplayer.song.PlayList;
+import com.mzz.zmusicplayer.song.LocalSongs;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import org.greenrobot.greendao.database.Database;
@@ -27,34 +27,19 @@ public class PlayListModel {
     static {
         Context context = MusicApplication.getContext();
         UpgradeDbHelper helper = new UpgradeDbHelper(context,
-                context.getString(R.string.play_list_db_name));
+                context.getString(R.string.db_name_play_list));
         Database db = helper.getWritableDb();
         DaoSession daoSession = new DaoMaster(db).newSession();
         songInfoDao = daoSession.getSongInfoDao();
     }
 
     /**
-     * Gets order song infos.
+     * Gets order local playSongs.
      *
-     * @return the order song infos
+     * @return the order local playSongs
      */
     public static List <SongInfo> getOrderLocalSongs() {
-        List <SongInfo> songInfos = loadAll();
-        sort(songInfos);
-        return songInfos;
-    }
-
-    public static List <SongInfo> getOrderPlayListSongs() {
-        List <SongInfo> songInfos = loadAll();
-        switch (AppSetting.getPlayListType()) {
-            case RECENT:
-                return PlayList.getRecentSongs(songInfos);
-            case FAVORITE:
-                songInfos = PlayList.getFavoriteSongs(songInfos);
-                break;
-            default:
-                break;
-        }
+        List <SongInfo> songInfos = songInfoDao.loadAll();
         sort(songInfos);
         return songInfos;
     }
@@ -62,19 +47,15 @@ public class PlayListModel {
     private static void sort(List <SongInfo> songInfos) {
         switch (AppSetting.getSongSortMode()) {
             case ORDER_ASCEND_BY_NAME:
-                PlayList.sortByChineseName(songInfos, true);
+                LocalSongs.sortByChineseName(songInfos, true);
                 break;
             case ORDER_DESCEND_BY_NAME:
-                PlayList.sortByChineseName(songInfos, false);
+                LocalSongs.sortByChineseName(songInfos, false);
                 break;
             default:
-                PlayList.sortById(songInfos);
+                LocalSongs.sortById(songInfos);
                 break;
         }
-    }
-
-    private static List <SongInfo> loadAll() {
-        return songInfoDao.loadAll();
     }
 
     /**
@@ -86,6 +67,11 @@ public class PlayListModel {
         songInfoDao.deleteByKeyInTx(keys);
     }
 
+    /**
+     * Delete.
+     *
+     * @param song the song
+     */
     public static void delete(SongInfo song) {
         if (song == null) {
             return;
@@ -93,6 +79,11 @@ public class PlayListModel {
         songInfoDao.delete(song);
     }
 
+    /**
+     * Insert or replace in tx.
+     *
+     * @param songInfos the song infos
+     */
     public static void insertOrReplaceInTx(Iterable <SongInfo> songInfos) {
         if (songInfos == null) {
             return;
@@ -100,11 +91,28 @@ public class PlayListModel {
         songInfoDao.insertOrReplaceInTx(songInfos);
     }
 
+    /**
+     * Update.
+     *
+     * @param songInfo the song info
+     */
     public static void update(SongInfo songInfo) {
         if (songInfo == null) {
             return;
         }
         songInfoDao.update(songInfo);
+    }
+
+    /**
+     * Update in tx.
+     *
+     * @param songs the songs
+     */
+    public static void updateInTx(Iterable <SongInfo> songs) {
+        if (songs == null) {
+            return;
+        }
+        songInfoDao.updateInTx(songs);
     }
 
 }

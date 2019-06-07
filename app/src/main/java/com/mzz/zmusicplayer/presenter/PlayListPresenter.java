@@ -34,15 +34,15 @@ public class PlayListPresenter implements PlayListContract.Presenter {
         activity = mView.getActivity();
         recyclerView = mView.getRecyclerView();
         this.playListListener = playListListener;
-        List <SongInfo> songInfos = PlayListModel.getOrderPlayListSongs();
-        initPlayList(songInfos);
+        List <SongInfo> orderLocalSongs = PlayListModel.getOrderLocalSongs();
+        playList = new PlayList(orderLocalSongs, AppSetting.getPlayMode());
+        updatePlayList();
+        intiAdapter();
     }
 
     @Override
-    public void initPlayList(List <SongInfo> songInfos) {
-        long lastPlaySongId = AppSetting.getLastPlaySongId();
-        int lastPlaySongIndex = PlayList.getSongIndexById(songInfos, lastPlaySongId);
-        playList = new PlayList(songInfos, lastPlaySongIndex, AppSetting.getPlayMode());
+    public void updatePlayListSongs(List <SongInfo> checkedSongs) {
+        playList.updatePlayListSongs(checkedSongs);
         updatePlayList();
         intiAdapter();
     }
@@ -86,9 +86,9 @@ public class PlayListPresenter implements PlayListContract.Presenter {
             return;
         }
         PlayListModel.deleteByKeyInTx(keys);
-        List <SongInfo> songInfos = playList.getSongs();
+        List <SongInfo> songInfos = playList.getPlaySongs();
         songInfos.removeIf(song -> keys.contains(song.getId()));
-        playList.setSongs(songInfos);
+        playList.setPlaySongs(songInfos);
         updatePlayList();
         playListAdapter.setNewData(songInfos);
     }
@@ -106,7 +106,7 @@ public class PlayListPresenter implements PlayListContract.Presenter {
     @Override
     public void addSongs(List <SongInfo> newSongInfos) {
         playList.addAll(newSongInfos);
-        playListAdapter.setNewData(playList.getSongs());
+        playListAdapter.setNewData(playList.getPlaySongs());
         updateSongCountAndMode();
     }
 

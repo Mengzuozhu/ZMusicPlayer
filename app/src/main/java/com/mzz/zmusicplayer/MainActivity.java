@@ -155,8 +155,8 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
     }
 
     @Subscribe
-    public void initPlayList(List <SongInfo> songInfos) {
-        playListFragment.initPlayList(songInfos);
+    public void updatePlayListSongs(List <SongInfo> songInfos) {
+        playListFragment.updatePlayListSongs(songInfos);
     }
 
     @Override

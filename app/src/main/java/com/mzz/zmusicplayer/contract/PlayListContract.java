@@ -29,7 +29,7 @@ public interface PlayListContract {
 
         LinearLayoutManager getLayoutManager();
 
-        void initPlayList(List <SongInfo> songInfos);
+        void updatePlayListSongs(List <SongInfo> songInfos);
 
         void addSongs(List <SongInfo> songInfos);
 

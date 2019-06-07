@@ -11,7 +11,6 @@ import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
 import com.mzz.zmusicplayer.header.SongListHeader;
 import com.mzz.zmusicplayer.model.PlayListModel;
-import com.mzz.zmusicplayer.setting.PlayListType;
 import com.mzz.zmusicplayer.song.IPlayer;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.Player;
@@ -77,9 +76,8 @@ public class FavoriteFragment extends Fragment {
         if (rvFavoriteSong == null) {
             return;
         }
-        List <SongInfo> favoriteSongs =
-                PlayList.getFavoriteSongs(player.getPlayList().getSongs());
-        mPlayList.setSongs(favoriteSongs);
+        List <SongInfo> favoriteSongs = player.getPlayList().getFavoriteSongs();
+        mPlayList.setPlaySongs(favoriteSongs);
         PlayListAdapter playListAdapter = new PlayListAdapter(mPlayList, rvFavoriteSong) {
             @Override
             public void removeSongAt(int position) {
@@ -102,7 +100,7 @@ public class FavoriteFragment extends Fragment {
             playListAdapter.updatePlaySongBackgroundColor(song);
             EventBus.getDefault().post(song);
         });
-        songListHeader = new SongListHeader(getActivity(), playListAdapter, PlayListType.FAVORITE);
+        songListHeader = new SongListHeader(getActivity(), playListAdapter);
     }
 
 }

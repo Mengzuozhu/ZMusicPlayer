@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
 import com.mzz.zmusicplayer.header.SongListHeader;
-import com.mzz.zmusicplayer.setting.PlayListType;
 import com.mzz.zmusicplayer.song.IPlayer;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.Player;
@@ -83,7 +82,7 @@ public class RecentFragment extends Fragment {
             return;
         }
         List <SongInfo> recentSongs = player.getPlayList().getRecentSongs();
-        mPlayList.setSongs(recentSongs);
+        mPlayList.setPlaySongs(recentSongs);
         PlayListAdapter playListAdapter = new PlayListAdapter(mPlayList, rvRecentSong) {
             @Override
             public void removeSongAt(int position) {
@@ -102,7 +101,7 @@ public class RecentFragment extends Fragment {
             EventBus.getDefault().post(song);
             playListAdapter.updatePlaySongBackgroundColor(song);
         });
-        songListHeader = new SongListHeader(getActivity(), playListAdapter, PlayListType.RECENT);
+        songListHeader = new SongListHeader(getActivity(), playListAdapter);
     }
 
 }

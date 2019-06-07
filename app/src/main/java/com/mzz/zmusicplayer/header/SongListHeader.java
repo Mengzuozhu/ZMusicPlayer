@@ -10,8 +10,6 @@ import android.widget.TextView;
 import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
-import com.mzz.zmusicplayer.setting.AppSetting;
-import com.mzz.zmusicplayer.setting.PlayListType;
 import com.mzz.zmusicplayer.song.PlayList;
 
 import org.greenrobot.eventbus.EventBus;
@@ -27,16 +25,13 @@ public class SongListHeader {
     private FragmentActivity activity;
     private RecyclerView recyclerView;
     private PlayList mPlayList;
-    private PlayListType playListType;
     private PlayListAdapter playListAdapter;
 
-    public SongListHeader(FragmentActivity activity, PlayListAdapter playListAdapter,
-                             PlayListType playListType) {
+    public SongListHeader(FragmentActivity activity, PlayListAdapter playListAdapter) {
         this.activity = activity;
         this.recyclerView = playListAdapter.getRecyclerView();
         this.playListAdapter = playListAdapter;
         mPlayList = playListAdapter.getPlayList();
-        this.playListType = playListType;
         initHeader();
     }
 
@@ -50,15 +45,15 @@ public class SongListHeader {
         playListAdapter.setHeaderView(header);
     }
 
-    public void onPlayAllClick() {
+    private void onPlayAllClick() {
+        //先开始播放歌曲，再替换播放列表
         EventBus.getDefault().post(mPlayList.getPlayingSong());
-        EventBus.getDefault().post(mPlayList.getSongs());
-        AppSetting.setPlayListType(playListType);
+        EventBus.getDefault().post(mPlayList.getPlaySongs());
     }
 
     public void updateSongCount() {
         String songCountAndMode = StringHelper.getLocalFormat("播放全部(%d首)",
-                mPlayList.getSongs().size());
+                mPlayList.getPlaySongs().size());
         tvSongCount.setText(songCountAndMode);
     }
 

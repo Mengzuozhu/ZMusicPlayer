@@ -9,7 +9,7 @@ import android.view.View;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.song.PlayList;
+import com.mzz.zmusicplayer.song.LocalSongs;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.List;
@@ -25,10 +25,10 @@ import lombok.Getter;
 public class SongInfoAdapter extends BaseQuickAdapter <SongInfo, BaseViewHolder> {
 
     @Getter
+    protected RecyclerView recyclerView;
+    @Getter
     private LinearLayoutManager layoutManager;
     private List <SongInfo> songInfos;
-    @Getter
-    protected RecyclerView recyclerView;
 
     /**
      * Instantiates a new Song info adapter.
@@ -78,7 +78,7 @@ public class SongInfoAdapter extends BaseQuickAdapter <SongInfo, BaseViewHolder>
      * @param isAscend the is ascend
      */
     public void sortByName(boolean isAscend) {
-        PlayList.sortByChineseName(songInfos, isAscend);
+        LocalSongs.sortByChineseName(songInfos, isAscend);
         notifyDataSetChanged();
     }
 
@@ -86,7 +86,7 @@ public class SongInfoAdapter extends BaseQuickAdapter <SongInfo, BaseViewHolder>
      * Sort by add time.
      */
     public void sortById() {
-        PlayList.sortById(songInfos);
+        LocalSongs.sortById(songInfos);
         notifyDataSetChanged();
     }
 
