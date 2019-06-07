@@ -103,6 +103,7 @@ public class PlayListAdapter extends SongInfoAdapter {
      */
     public void removeSongAt(int position) {
         remove(position);
+        notifyDataSetChanged();
     }
 
     private void showSongDetail(SongInfo songInfo) {

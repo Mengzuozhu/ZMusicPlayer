@@ -141,7 +141,6 @@ public class LocalSongs {
                 }
             }
             sortByLastPlayTime(recentSongs);
-
         }
         return recentSongs;
     }
@@ -173,6 +172,7 @@ public class LocalSongs {
         recentSongs.remove(song);
         recentSongs.addFirst(song);
         removeRecentSong();
+        LocalSongModel.update(song);
     }
 
     private void removeRecentSong() {

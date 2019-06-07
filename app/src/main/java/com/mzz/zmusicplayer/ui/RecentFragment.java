@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
 import com.mzz.zmusicplayer.header.SongListHeader;
+import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.song.IPlayer;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.Player;
@@ -91,6 +92,7 @@ public class RecentFragment extends Fragment {
                     return;
                 }
                 songInfo.setLastPlayTime(null);
+                LocalSongModel.update(songInfo);
                 super.removeSongAt(position);
                 songListHeader.updateSongCount();
             }
