@@ -101,7 +101,7 @@ public class PlaybackService extends Service implements PlayObserver {
                     pause();
                 }
                 stopSelf();
-                MusicApplication.getInstance().exitApp();
+                MusicApplication.exitApp();
                 break;
             case ACTION_PLAY_MODE:
                 changePlayMode();

@@ -4,12 +4,6 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 
-import com.mzz.zmusicplayer.common.UpgradeDbHelper;
-import com.mzz.zmusicplayer.greendao.db.DaoMaster;
-import com.mzz.zmusicplayer.greendao.db.DaoSession;
-
-import org.greenrobot.greendao.database.Database;
-
 import java.util.List;
 
 /**
@@ -18,36 +12,28 @@ import java.util.List;
  * description :
  */
 public class MusicApplication extends Application {
-    private static DaoSession daoSession;
     private static MusicApplication sInstance;
 
-    public static DaoSession getDaoSession() {
-        return daoSession;
+    public static Context getContext() {
+        return sInstance.getApplicationContext();
     }
 
-    public static MusicApplication getInstance() {
-        return sInstance;
+    /**
+     * Exit app.
+     */
+    public static void exitApp() {
+        ActivityManager activityManager =
+                (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
+        List <ActivityManager.AppTask> appTaskList = activityManager.getAppTasks();
+        for (ActivityManager.AppTask appTask : appTaskList) {
+            appTask.finishAndRemoveTask();
+        }
+        System.exit(0);
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         sInstance = this;
-        UpgradeDbHelper helper = new UpgradeDbHelper(this, this.getString(R.string.play_list_db_name));
-        Database db = helper.getWritableDb();
-        daoSession = new DaoMaster(db).newSession();
-    }
-
-    /**
-     * Exit app.
-     */
-    public void exitApp() {
-        ActivityManager activityManager =
-                (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-        List <ActivityManager.AppTask> appTaskList = activityManager.getAppTasks();
-        for (ActivityManager.AppTask appTask : appTaskList) {
-            appTask.finishAndRemoveTask();
-        }
-        System.exit(0);
     }
 }

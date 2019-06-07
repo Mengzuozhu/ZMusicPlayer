@@ -22,8 +22,8 @@ public class AppSetting {
 
     private static SharedPreferences getSharedPreferences() {
         if (sharedPreferences == null) {
-            sharedPreferences =
-                    MusicApplication.getInstance().getApplicationContext().getSharedPreferences(APP_SETTING, Context.MODE_PRIVATE);
+            sharedPreferences = MusicApplication.getContext().getSharedPreferences(APP_SETTING,
+                    Context.MODE_PRIVATE);
         }
         return sharedPreferences;
     }

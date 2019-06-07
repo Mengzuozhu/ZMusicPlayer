@@ -1,11 +1,18 @@
 package com.mzz.zmusicplayer.model;
 
+import android.content.Context;
+
 import com.mzz.zmusicplayer.MusicApplication;
+import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.common.UpgradeDbHelper;
+import com.mzz.zmusicplayer.greendao.db.DaoMaster;
 import com.mzz.zmusicplayer.greendao.db.DaoSession;
 import com.mzz.zmusicplayer.greendao.db.SongInfoDao;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
+
+import org.greenrobot.greendao.database.Database;
 
 import java.util.List;
 
@@ -18,7 +25,11 @@ public class PlayListModel {
     private static SongInfoDao songInfoDao;
 
     static {
-        DaoSession daoSession = MusicApplication.getDaoSession();
+        Context context = MusicApplication.getContext();
+        UpgradeDbHelper helper = new UpgradeDbHelper(context,
+                context.getString(R.string.play_list_db_name));
+        Database db = helper.getWritableDb();
+        DaoSession daoSession = new DaoMaster(db).newSession();
         songInfoDao = daoSession.getSongInfoDao();
     }
 
