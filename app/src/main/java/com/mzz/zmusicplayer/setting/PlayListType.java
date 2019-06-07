@@ -4,16 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
+ * 播放列表选择
  * author : Mzz
- * date : 2019 2019/5/31 19:32
+ * date : 2019 2019/6/7 18:24
  * description :
  */
 @AllArgsConstructor
-public enum SongOrderMode {
+public enum PlayListType {
 
-    ORDER_ASCEND_BY_ADD_TIME(0, "按添加时间排序"),
-    ORDER_ASCEND_BY_NAME(1, "按歌名升序"),
-    ORDER_DESCEND_BY_NAME(2, "按歌名降序");
+    LOCAL(0, "本地"),
+    RECENT(1, "最近"),
+    FAVORITE(2, "喜欢");
 
     @Getter
     private final int id;

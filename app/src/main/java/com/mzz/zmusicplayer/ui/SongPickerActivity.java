@@ -15,7 +15,6 @@ import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.github.promeg.pinyinhelper.Pinyin;
 import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zandroidcommon.view.ViewerHelper;
@@ -97,8 +96,8 @@ public class SongPickerActivity extends BaseActivity {
         CheckBox chbSelectAll = header.findViewById(R.id.chb_picker_select_all);
         chbSelectAll.setOnCheckedChangeListener((buttonView, isChecked) -> queryAdapter.selectAll(isChecked));
 
-        ImageView sortView = header.findViewById(R.id.iv_picker_header_sort);
-        sortView.setOnClickListener(v -> showSongOrderPopupMenu(sortView));
+        ImageView ivSort = header.findViewById(R.id.iv_picker_header_sort);
+        ivSort.setOnClickListener(v -> showSongOrderPopupMenu(ivSort));
         queryAdapter.setHeaderView(header);
     }
 
@@ -132,11 +131,6 @@ public class SongPickerActivity extends BaseActivity {
         ArrayList <SongInfo> checkedSongs = new ArrayList <>();
         for (SongInfo songInfo : songInfos) {
             if (songInfo.getIsChecked()) {
-                String pinyin = Pinyin.toPinyin(songInfo.getName(), "");
-                if (pinyin == null) {
-                    pinyin = songInfo.getName();
-                }
-                songInfo.setNameSpell(pinyin);
                 checkedSongs.add(songInfo);
             }
         }

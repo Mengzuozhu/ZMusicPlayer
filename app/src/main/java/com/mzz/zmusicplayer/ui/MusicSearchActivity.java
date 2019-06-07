@@ -47,7 +47,7 @@ public class MusicSearchActivity extends BaseActivity {
     private void init() {
         PlayList playList = getIntent().getParcelableExtra(EXTRA_SEARCH_DATA);
         //重置选中歌曲的颜色，避免出现多个选中歌曲
-        List <SongInfo> songInfos = playList.getSongInfos();
+        List <SongInfo> songInfos = playList.getSongs();
         for (SongInfo songInfo : songInfos) {
             if (songInfo.isPlayListSelected()) {
                 songInfo.setPlayListSelected(false);

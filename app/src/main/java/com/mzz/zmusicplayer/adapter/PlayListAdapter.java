@@ -37,7 +37,7 @@ public class PlayListAdapter extends SongInfoAdapter {
      * @param recyclerView the recycler view
      */
     public PlayListAdapter(PlayList playList, RecyclerView recyclerView) {
-        super(R.layout.item_song_list, playList.getSongInfos(), recyclerView);
+        super(R.layout.item_song_list, playList.getSongs(), recyclerView);
         this.playList = playList;
         context = recyclerView.getContext();
         selectColor = context.getColor(R.color.colorGreen);

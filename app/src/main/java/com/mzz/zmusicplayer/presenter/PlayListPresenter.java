@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
 import com.mzz.zmusicplayer.contract.PlayListContract;
 import com.mzz.zmusicplayer.header.PlayListHeader;
-import com.mzz.zmusicplayer.model.SongModel;
+import com.mzz.zmusicplayer.model.PlayListModel;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -34,7 +34,7 @@ public class PlayListPresenter implements PlayListContract.Presenter {
         activity = mView.getActivity();
         recyclerView = mView.getRecyclerView();
         this.playListListener = playListListener;
-        List <SongInfo> songInfos = SongModel.getOrderSongInfos();
+        List <SongInfo> songInfos = PlayListModel.getOrderPlayListSongs();
         initPlayList(songInfos);
     }
 
@@ -58,7 +58,7 @@ public class PlayListPresenter implements PlayListContract.Presenter {
             public void removeSongAt(int position) {
                 super.removeSongAt(position);
                 SongInfo song = getItem(position);
-                SongModel.delete(song);
+                PlayListModel.delete(song);
                 updatePlayList();
             }
         };
@@ -85,10 +85,10 @@ public class PlayListPresenter implements PlayListContract.Presenter {
         if (keys == null || keys.isEmpty()) {
             return;
         }
-        SongModel.deleteByKeyInTx(keys);
-        List <SongInfo> songInfos = playList.getSongInfos();
+        PlayListModel.deleteByKeyInTx(keys);
+        List <SongInfo> songInfos = playList.getSongs();
         songInfos.removeIf(song -> keys.contains(song.getId()));
-        playList.setSongInfos(songInfos);
+        playList.setSongs(songInfos);
         updatePlayList();
         playListAdapter.setNewData(songInfos);
     }
@@ -106,8 +106,7 @@ public class PlayListPresenter implements PlayListContract.Presenter {
     @Override
     public void addSongs(List <SongInfo> newSongInfos) {
         playList.addAll(newSongInfos);
-        playListAdapter.setNewData(playList.getSongInfos());
-        SongModel.insertOrReplaceInTx(newSongInfos);
+        playListAdapter.setNewData(playList.getSongs());
         updateSongCountAndMode();
     }
 

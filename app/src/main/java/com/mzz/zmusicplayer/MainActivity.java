@@ -19,8 +19,9 @@ import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.FavoriteFragment;
-import com.mzz.zmusicplayer.ui.PlayListFragment;
+import com.mzz.zmusicplayer.ui.LocalSongFragment;
 import com.mzz.zmusicplayer.ui.MusicControlFragment;
+import com.mzz.zmusicplayer.ui.PlayListFragment;
 import com.mzz.zmusicplayer.ui.RecentFragment;
 import com.mzz.zmusicplayer.ui.SongEditActivity;
 import com.mzz.zmusicplayer.ui.SongPickerActivity;
@@ -89,9 +90,11 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
         RecentFragment recentFragment = RecentFragment.newInstance();
         playListFragment = PlayListFragment.newInstance();
         FavoriteFragment favoriteFragment = FavoriteFragment.newInstance();
+        LocalSongFragment localSongFragment = LocalSongFragment.newInstance();
         List <MusicPage> fragments = new ArrayList <>();
         fragments.add(new MusicPage(playListFragment, "播放"));
         fragments.add(new MusicPage(recentFragment, "最近"));
+        fragments.add(new MusicPage(localSongFragment, "本地"));
         fragments.add(new MusicPage(favoriteFragment, "喜欢"));
         FragmentPagerAdapter adapter =
                 new MusicPagerAdapter(getSupportFragmentManager(), fragments);

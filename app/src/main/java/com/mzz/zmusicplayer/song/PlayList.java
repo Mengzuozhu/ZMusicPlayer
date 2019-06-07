@@ -3,6 +3,7 @@ package com.mzz.zmusicplayer.song;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mzz.zmusicplayer.model.PlayListModel;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 
@@ -37,8 +38,7 @@ public class PlayList implements Parcelable {
     private static final int RECENT_MAX_COUNT = 50;
     @Setter
     @Getter
-    private List <SongInfo> songInfos;
-    @Getter
+    private List <SongInfo> songs;
     private LinkedList <SongInfo> recentSongs;
     @Getter
     @Setter
@@ -49,22 +49,58 @@ public class PlayList implements Parcelable {
     private SongInfo playingSong;
 
     public PlayList() {
-        this.songInfos = new ArrayList <>();
+        this.songs = new ArrayList <>();
     }
 
-    public PlayList(List <SongInfo> songInfos, int playingIndex, PlayedMode playMode) {
-        this.songInfos = songInfos;
+    public PlayList(List <SongInfo> songs, int playingIndex, PlayedMode playMode) {
+        this.songs = songs;
         this.playingIndex = playingIndex;
         this.playMode = playMode;
-        recentSongs = new LinkedList <>(songInfos);
-        initRecentSongs(songInfos);
     }
 
     protected PlayList(Parcel in) {
-        this.songInfos = in.createTypedArrayList(SongInfo.CREATOR);
+        this.songs = in.createTypedArrayList(SongInfo.CREATOR);
         this.playingIndex = in.readInt();
         int tmpPlayMode = in.readInt();
         this.playMode = tmpPlayMode == -1 ? null : PlayedMode.values()[tmpPlayMode];
+        this.playingSong = in.readParcelable(SongInfo.class.getClassLoader());
+    }
+
+    /**
+     * Gets favorite songs.
+     *
+     * @param songInfos the song infos
+     * @return the favorite songs
+     */
+    public static List <SongInfo> getFavoriteSongs(Collection <SongInfo> songInfos) {
+        List <SongInfo> favoriteSongs = new ArrayList <>();
+        for (SongInfo songInfo : songInfos) {
+            if (songInfo.getIsFavorite()) {
+                favoriteSongs.add(songInfo);
+            }
+        }
+        return favoriteSongs;
+    }
+
+    /**
+     * Gets recent songs.
+     *
+     * @param songInfos the song infos
+     * @return the recent songs
+     */
+    public static List <SongInfo> getRecentSongs(Collection <SongInfo> songInfos) {
+        List <SongInfo> recentSongs = new LinkedList <>();
+        for (SongInfo songInfo : songInfos) {
+            if (recentSongs.size() >= RECENT_MAX_COUNT) {
+                break;
+            }
+            //播放时间非空，且保证唯一
+            if (songInfo.getLastPlayTime() != null && !recentSongs.contains(songInfo)) {
+                recentSongs.add(songInfo);
+            }
+        }
+        sortByLastPlayTime(recentSongs);
+        return recentSongs;
     }
 
     /**
@@ -141,6 +177,13 @@ public class PlayList implements Parcelable {
         });
     }
 
+    public List <SongInfo> getRecentSongs() {
+        if (recentSongs == null) {
+            recentSongs = (LinkedList <SongInfo>) getRecentSongs(songs);
+        }
+        return recentSongs;
+    }
+
     /**
      * Update playing index by setting id.
      *
@@ -148,8 +191,8 @@ public class PlayList implements Parcelable {
      */
     public boolean updatePlayingIndexBySettingId() {
         long lastPlaySongId = AppSetting.getLastPlaySongId();
-        playingIndex = PlayList.getSongIndexById(songInfos, lastPlaySongId);
-        SongInfo newSong = songInfos.get(playingIndex);
+        playingIndex = PlayList.getSongIndexById(songs, lastPlaySongId);
+        SongInfo newSong = songs.get(playingIndex);
         boolean isSameLastSong = false;
         if (playingSong != null && newSong != null) {
             isSameLastSong = playingSong.getId().equals(newSong.getId());
@@ -164,16 +207,8 @@ public class PlayList implements Parcelable {
      * @param c the c
      */
     public void addAll(Collection <SongInfo> c) {
-        songInfos.addAll(c);
-    }
-
-    /**
-     * Is empty boolean.
-     *
-     * @return the boolean
-     */
-    boolean isEmpty() {
-        return songInfos.isEmpty();
+        songs.addAll(c);
+        PlayListModel.insertOrReplaceInTx(c);
     }
 
     /**
@@ -182,27 +217,12 @@ public class PlayList implements Parcelable {
      * @param song the song
      */
     public void updateRecentSongs(SongInfo song) {
+        if (recentSongs == null) {
+            getRecentSongs();
+        }
         recentSongs.remove(song);
         recentSongs.addFirst(song);
         removeRecentSong();
-    }
-
-    private void initRecentSongs(Collection <SongInfo> songInfos) {
-        for (SongInfo songInfo : songInfos) {
-            if (recentSongs.size() >= RECENT_MAX_COUNT) {
-                break;
-            }
-            if (!recentSongs.contains(songInfo)) {
-                recentSongs.add(songInfo);
-            }
-        }
-        sortByLastPlayTime(recentSongs);
-    }
-
-    private void removeRecentSong() {
-        while (recentSongs.size() > RECENT_MAX_COUNT) {
-            recentSongs.removeLast();
-        }
     }
 
     /**
@@ -215,11 +235,20 @@ public class PlayList implements Parcelable {
             playingIndex = 0;
         }
 
-        if (playingIndex < songInfos.size()) {
-            playingSong = songInfos.get(playingIndex);
+        if (playingIndex < songs.size()) {
+            playingSong = songs.get(playingIndex);
             return playingSong;
         }
         return null;
+    }
+
+    /**
+     * Is empty boolean.
+     *
+     * @return the boolean
+     */
+    boolean isEmpty() {
+        return songs.isEmpty();
     }
 
     /**
@@ -264,24 +293,30 @@ public class PlayList implements Parcelable {
         return getPlayingSong();
     }
 
+    private void removeRecentSong() {
+        while (recentSongs.size() > RECENT_MAX_COUNT) {
+            recentSongs.removeLast();
+        }
+    }
+
     private int getPreIndex() {
         int newIndex = playingIndex - 1;
         if (newIndex < 0) {
-            newIndex = songInfos.size() - 1;
+            newIndex = songs.size() - 1;
         }
         return newIndex;
     }
 
     private int getNextIndex() {
         int newIndex = playingIndex + 1;
-        if (newIndex >= songInfos.size()) {
+        if (newIndex >= songs.size()) {
             newIndex = 0;
         }
         return newIndex;
     }
 
     private int getRandomPlayIndex() {
-        int size = songInfos.size();
+        int size = songs.size();
         if (size == 0) {
             return -1;
         }
@@ -300,8 +335,9 @@ public class PlayList implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeTypedList(this.songInfos);
+        dest.writeTypedList(this.songs);
         dest.writeInt(this.playingIndex);
         dest.writeInt(this.playMode == null ? -1 : this.playMode.ordinal());
+        dest.writeParcelable(this.playingSong, flags);
     }
 }

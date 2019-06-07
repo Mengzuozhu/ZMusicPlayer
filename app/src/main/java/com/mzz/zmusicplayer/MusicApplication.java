@@ -33,8 +33,7 @@ public class MusicApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
-        UpgradeDbHelper helper = new UpgradeDbHelper(this,
-                this.getString(R.string.song_db_name));
+        UpgradeDbHelper helper = new UpgradeDbHelper(this, this.getString(R.string.play_list_db_name));
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
     }

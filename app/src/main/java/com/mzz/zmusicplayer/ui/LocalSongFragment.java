@@ -30,10 +30,10 @@ import lombok.NoArgsConstructor;
  * A simple {@link Fragment} subclass.
  */
 @NoArgsConstructor
-public class FavoriteFragment extends Fragment {
+public class LocalSongFragment extends Fragment {
 
-    @BindView(R.id.rv_favorite_song)
-    RecyclerView rvFavoriteSong;
+    @BindView(R.id.rv_local_song)
+    RecyclerView rvLocalSong;
     Unbinder unbinder;
     private SongListHeader songListHeader;
     private IPlayer player;
@@ -44,14 +44,14 @@ public class FavoriteFragment extends Fragment {
      *
      * @return the favorite fragment
      */
-    public static FavoriteFragment newInstance() {
-        return new FavoriteFragment();
+    public static LocalSongFragment newInstance() {
+        return new LocalSongFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_favorite, container, false);
+        View view = inflater.inflate(R.layout.fragment_local_song, container, false);
         unbinder = ButterKnife.bind(this, view);
         mPlayList = new PlayList();
         player = Player.getInstance();
@@ -74,13 +74,12 @@ public class FavoriteFragment extends Fragment {
     }
 
     private void initAdapter() {
-        if (rvFavoriteSong == null) {
+        if (rvLocalSong == null) {
             return;
         }
-        List <SongInfo> favoriteSongs =
-                PlayList.getFavoriteSongs(player.getPlayList().getSongs());
+        List <SongInfo> favoriteSongs = PlayListModel.getOrderLocalSongs();
         mPlayList.setSongs(favoriteSongs);
-        PlayListAdapter playListAdapter = new PlayListAdapter(mPlayList, rvFavoriteSong) {
+        PlayListAdapter playListAdapter = new PlayListAdapter(mPlayList, rvLocalSong) {
             @Override
             public void removeSongAt(int position) {
                 SongInfo songInfo = this.getItem(position);
@@ -102,7 +101,7 @@ public class FavoriteFragment extends Fragment {
             playListAdapter.updatePlaySongBackgroundColor(song);
             EventBus.getDefault().post(song);
         });
-        songListHeader = new SongListHeader(getActivity(), playListAdapter, PlayListType.FAVORITE);
+        songListHeader = new SongListHeader(getActivity(), playListAdapter, PlayListType.LOCAL);
     }
 
 }

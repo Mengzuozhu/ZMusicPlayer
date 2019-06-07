@@ -26,7 +26,7 @@ public class MusicSearchAdapter extends PlayListAdapter {
     public MusicSearchAdapter(PlayList playList, RecyclerView recyclerView) {
         super(playList, recyclerView);
         textQueryHandler = new TextQueryHandler(this, recyclerView.getContext(),
-                playList.getSongInfos());
+                playList.getSongs());
     }
 
     @Override

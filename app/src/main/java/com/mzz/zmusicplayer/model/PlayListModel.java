@@ -7,7 +7,6 @@ import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,12 +14,11 @@ import java.util.List;
  * date : 2019 2019/5/29 9:10
  * description :
  */
-public class SongModel {
-    private static DaoSession daoSession;
+public class PlayListModel {
     private static SongInfoDao songInfoDao;
 
     static {
-        daoSession = MusicApplication.getDaoSession();
+        DaoSession daoSession = MusicApplication.getDaoSession();
         songInfoDao = daoSession.getSongInfoDao();
     }
 
@@ -29,28 +27,39 @@ public class SongModel {
      *
      * @return the order song infos
      */
-    public static List <SongInfo> getOrderSongInfos() {
+    public static List <SongInfo> getOrderLocalSongs() {
         List <SongInfo> songInfos = loadAll();
-//        List <SongInfo> songInfos;
+        sort(songInfos);
+        return songInfos;
+    }
+
+    public static List <SongInfo> getOrderPlayListSongs() {
+        List <SongInfo> songInfos = loadAll();
+        switch (AppSetting.getPlayListType()) {
+            case RECENT:
+                return PlayList.getRecentSongs(songInfos);
+            case FAVORITE:
+                songInfos = PlayList.getFavoriteSongs(songInfos);
+                break;
+            default:
+                break;
+        }
+        sort(songInfos);
+        return songInfos;
+    }
+
+    private static void sort(List <SongInfo> songInfos) {
         switch (AppSetting.getSongSortMode()) {
             case ORDER_ASCEND_BY_NAME:
                 PlayList.sortByChineseName(songInfos, true);
-//                songInfos =
-//                        songInfoDao.queryBuilder().orderAsc(SongInfoDao.Properties.NameSpell)
-//                        .list();
                 break;
             case ORDER_DESCEND_BY_NAME:
                 PlayList.sortByChineseName(songInfos, false);
-//                songInfos =
-//                        songInfoDao.queryBuilder().orderDesc(SongInfoDao.Properties.NameSpell)
-//                        .list();
                 break;
             default:
-//                songInfos = songInfoDao.queryBuilder().orderAsc(SongInfoDao.Properties.Id).list();
                 PlayList.sortById(songInfos);
                 break;
         }
-        return songInfos;
     }
 
     private static List <SongInfo> loadAll() {
@@ -85,18 +94,6 @@ public class SongModel {
             return;
         }
         songInfoDao.update(songInfo);
-    }
-
-    public static List <Long> integerToLongList(List <Integer> deleteNum) {
-        ArrayList <Long> ids = new ArrayList <>();
-        for (Integer i : deleteNum) {
-            ids.add(i.longValue());
-        }
-        return ids;
-    }
-
-    public static SongInfo getSongInfoById(Object key) {
-        return daoSession.load(SongInfo.class, key);
     }
 
 }

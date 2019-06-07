@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
+import com.mzz.zmusicplayer.header.SongListHeader;
+import com.mzz.zmusicplayer.setting.PlayListType;
 import com.mzz.zmusicplayer.song.IPlayer;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.Player;
@@ -38,6 +40,7 @@ public class RecentFragment extends Fragment {
     private Unbinder unbinder;
     private IPlayer player;
     private PlayList mPlayList;
+    private SongListHeader songListHeader;
 
     /**
      * Use this factory method to create a new instance of
@@ -55,6 +58,7 @@ public class RecentFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_recent, container, false);
         unbinder = ButterKnife.bind(this, view);
         mPlayList = new PlayList();
+        player = Player.getInstance();
         //需在创建视图后，重新初始化适配器
         initAdapter();
         return view;
@@ -78,21 +82,27 @@ public class RecentFragment extends Fragment {
         if (rvRecentSong == null) {
             return;
         }
-        List <SongInfo> recentSongs = getRecentSongs();
-        mPlayList.setSongInfos(recentSongs);
-        PlayListAdapter baseAdapter = new PlayListAdapter(mPlayList, rvRecentSong);
-        baseAdapter.setOnItemClickListener((adapter, view, position) -> {
-            SongInfo song = baseAdapter.getItem(position);
-            EventBus.getDefault().post(song);
-            baseAdapter.updatePlaySongBackgroundColor(song);
-        });
-    }
+        List <SongInfo> recentSongs = player.getPlayList().getRecentSongs();
+        mPlayList.setSongs(recentSongs);
+        PlayListAdapter playListAdapter = new PlayListAdapter(mPlayList, rvRecentSong) {
+            @Override
+            public void removeSongAt(int position) {
+                SongInfo songInfo = this.getItem(position);
+                if (songInfo == null) {
+                    return;
+                }
+                songInfo.setLastPlayTime(null);
+                super.removeSongAt(position);
+                songListHeader.updateSongCount();
+            }
+        };
 
-    private List <SongInfo> getRecentSongs() {
-        if (player == null) {
-            player = Player.getInstance();
-        }
-        return player.getPlayList().getRecentSongs();
+        playListAdapter.setOnItemClickListener((adapter, view, position) -> {
+            SongInfo song = playListAdapter.getItem(position);
+            EventBus.getDefault().post(song);
+            playListAdapter.updatePlaySongBackgroundColor(song);
+        });
+        songListHeader = new SongListHeader(getActivity(), playListAdapter, PlayListType.RECENT);
     }
 
 }
