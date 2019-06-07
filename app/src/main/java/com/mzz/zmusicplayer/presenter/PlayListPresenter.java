@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
 import com.mzz.zmusicplayer.contract.PlayListContract;
 import com.mzz.zmusicplayer.header.PlayListHeader;
-import com.mzz.zmusicplayer.model.PlayListModel;
+import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -34,7 +34,7 @@ public class PlayListPresenter implements PlayListContract.Presenter {
         activity = mView.getActivity();
         recyclerView = mView.getRecyclerView();
         this.playListListener = playListListener;
-        List <SongInfo> orderLocalSongs = PlayListModel.getOrderLocalSongs();
+        List <SongInfo> orderLocalSongs = LocalSongModel.getOrderLocalSongs();
         playList = new PlayList(orderLocalSongs, AppSetting.getPlayMode());
         updatePlayList();
         intiAdapter();
@@ -57,8 +57,7 @@ public class PlayListPresenter implements PlayListContract.Presenter {
             @Override
             public void removeSongAt(int position) {
                 super.removeSongAt(position);
-                SongInfo song = getItem(position);
-                PlayListModel.delete(song);
+                playList.remove(getItem(position));
                 updatePlayList();
             }
         };
@@ -81,16 +80,13 @@ public class PlayListPresenter implements PlayListContract.Presenter {
     }
 
     @Override
-    public void deleteByKeyInTx(List <Long> keys) {
+    public void remove(List <Long> keys) {
         if (keys == null || keys.isEmpty()) {
             return;
         }
-        PlayListModel.deleteByKeyInTx(keys);
-        List <SongInfo> songInfos = playList.getPlaySongs();
-        songInfos.removeIf(song -> keys.contains(song.getId()));
-        playList.setPlaySongs(songInfos);
+        playList.remove(keys);
         updatePlayList();
-        playListAdapter.setNewData(songInfos);
+        playListAdapter.setNewData(playList.getPlaySongs());
     }
 
     @Override

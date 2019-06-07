@@ -3,6 +3,7 @@ package com.mzz.zmusicplayer.song;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 
@@ -72,7 +73,7 @@ public class PlayList implements Parcelable {
      * @param songId    the song id
      * @return the song index by id
      */
-    public static int getSongIndexById(List <SongInfo> songInfos, long songId) {
+    static int getSongIndexById(List <SongInfo> songInfos, long songId) {
         int songIndex = 0;
         //根据ID获取歌曲在列表中的位置
         for (int i = 0; i < songInfos.size(); i++) {
@@ -150,6 +151,34 @@ public class PlayList implements Parcelable {
     public void addAll(Collection <SongInfo> c) {
         playSongs.addAll(c);
         localSongs.addAll(c);
+    }
+
+    /**
+     * Remove.
+     *
+     * @param keys the keys
+     */
+    public void remove(List <Long> keys) {
+        for (int i = playSongs.size() - 1; i >= 0; i--) {
+            SongInfo song = playSongs.get(i);
+            if (keys.contains(song.getId())) {
+                song.setIsChecked(false);
+                playSongs.remove(i);
+                LocalSongModel.update(song);
+            }
+        }
+    }
+
+    /**
+     * Remove.
+     *
+     * @param song the song
+     */
+    public void remove(SongInfo song) {
+        if (song != null) {
+            song.setIsChecked(false);
+            LocalSongModel.update(song);
+        }
     }
 
     /**

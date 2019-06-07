@@ -21,7 +21,7 @@ import java.util.List;
  * date : 2019 2019/5/29 9:10
  * description :
  */
-public class PlayListModel {
+public class LocalSongModel {
     private static SongInfoDao songInfoDao;
 
     static {

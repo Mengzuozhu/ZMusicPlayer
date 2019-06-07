@@ -3,7 +3,7 @@ package com.mzz.zmusicplayer.song;
 import android.media.MediaPlayer;
 import android.util.Log;
 
-import com.mzz.zmusicplayer.model.PlayListModel;
+import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 
 import java.io.IOException;
@@ -120,7 +120,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         }
         boolean isFavorite = !playingSong.getIsFavorite();
         playingSong.setIsFavorite(isFavorite);
-        PlayListModel.update(playingSong);
+        LocalSongModel.update(playingSong);
         notifyFavoriteChanged(isFavorite);
     }
 

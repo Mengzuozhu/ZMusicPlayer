@@ -91,7 +91,7 @@ public class PlayListFragment extends Fragment implements PlayListContract.View 
         }
     }
 
-    public void updatePlayListSongs(List <SongInfo> checkedSongs){
+    public void updatePlayListSongs(List <SongInfo> checkedSongs) {
         mainPresenter.updatePlayListSongs(checkedSongs);
     }
 
@@ -99,8 +99,8 @@ public class PlayListFragment extends Fragment implements PlayListContract.View 
         mainPresenter.addSongs(newSongInfos);
     }
 
-    public void deleteByKeyInTx(List <Long> keys) {
-        mainPresenter.deleteByKeyInTx(keys);
+    public void remove(List <Long> keys) {
+        mainPresenter.remove(keys);
     }
 
     public void updateSongCountAndMode() {

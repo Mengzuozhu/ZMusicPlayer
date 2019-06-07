@@ -1,6 +1,6 @@
 package com.mzz.zmusicplayer.song;
 
-import com.mzz.zmusicplayer.model.PlayListModel;
+import com.mzz.zmusicplayer.model.LocalSongModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -94,7 +94,7 @@ public class LocalSongs {
             }
             localSong.setIsChecked(isChecked);
         }
-        PlayListModel.updateInTx(this.allSongs);
+        LocalSongModel.updateInTx(this.allSongs);
         return songs;
     }
 
@@ -105,7 +105,7 @@ public class LocalSongs {
      */
     void addAll(Collection <SongInfo> c) {
         allSongs.addAll(c);
-        PlayListModel.insertOrReplaceInTx(c);
+        LocalSongModel.insertOrReplaceInTx(c);
     }
 
     /**

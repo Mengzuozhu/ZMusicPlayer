@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
 import com.mzz.zmusicplayer.header.SongListHeader;
-import com.mzz.zmusicplayer.model.PlayListModel;
+import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.song.IPlayer;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.Player;
@@ -81,16 +81,8 @@ public class LocalSongFragment extends Fragment {
         PlayListAdapter playListAdapter = new PlayListAdapter(mPlayList, rvLocalSong) {
             @Override
             public void removeSongAt(int position) {
-                SongInfo songInfo = this.getItem(position);
-                if (songInfo == null) {
-                    return;
-                }
-                if (songInfo.isPlayListSelected()) {
-                    player.switchFavorite();
-                } else {
-                    songInfo.setIsFavorite(false);
-                    PlayListModel.update(songInfo);
-                }
+                SongInfo song = getItem(position);
+                LocalSongModel.delete(song);
                 super.removeSongAt(position);
                 songListHeader.updateSongCount();
             }

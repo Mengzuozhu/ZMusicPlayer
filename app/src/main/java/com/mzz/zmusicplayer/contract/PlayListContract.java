@@ -39,7 +39,7 @@ public interface PlayListContract {
 
         void updateSongCountAndMode();
 
-        void deleteByKeyInTx(List <Long> keys);
+        void remove(List <Long> keys);
 
     }
 }

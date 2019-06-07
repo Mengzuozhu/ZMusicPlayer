@@ -128,6 +128,7 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         SongInfo playingSong = mPlayer.getPlayingSong();
         if (playingSong != null) {
             currentSongDuration = playingSong.getDuration();
+            onSongUpdated(playingSong);
         }
         musicPresenter = new MusicControlPresenter(getActivity(), this);
         musicPresenter.subscribe();
@@ -180,7 +181,7 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         });
     }
 
-    public void setPlayList(PlayList playList) {
+    public void updateControlPlayList(PlayList playList) {
         if (playList == null) {
             playList = new PlayList();
         }
@@ -198,13 +199,13 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         }
     }
 
-    public void setPlayingIndex(int playingIndex) {
+    public void updatePlayingIndex(int playingIndex) {
         mPlayer.play(playingIndex);
         onSongUpdated(mPlayer.getPlayingSong());
     }
 
-    public void setPlayingSong(SongInfo songInfo) {
-        mPlayer.play(songInfo);
+    public void updatePlayingSong(SongInfo song) {
+        mPlayer.play(song);
         onSongUpdated(mPlayer.getPlayingSong());
     }
 

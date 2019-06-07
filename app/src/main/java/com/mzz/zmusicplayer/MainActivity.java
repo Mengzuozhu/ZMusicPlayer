@@ -132,14 +132,14 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
             getSupportFragmentManager().beginTransaction().replace(R.id.layout_control,
                     musicControlFragment).commit();
         } else {
-            musicControlFragment.setPlayList(playList);
+            musicControlFragment.updateControlPlayList(playList);
         }
     }
 
     @Override
     public void setPlayingIndex(int playingIndex) {
         if (musicControlFragment != null) {
-            musicControlFragment.setPlayingIndex(playingIndex);
+            musicControlFragment.updatePlayingIndex(playingIndex);
         } else {
             setPlayList(new PlayList());
         }
@@ -148,7 +148,7 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
     @Subscribe
     public void setPlayingSong(SongInfo songInfo) {
         if (musicControlFragment != null) {
-            musicControlFragment.setPlayingSong(songInfo);
+            musicControlFragment.updatePlayingSong(songInfo);
         } else {
             setPlayList(new PlayList());
         }
@@ -181,7 +181,7 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
             return;
         }
         List <Long> ids = EditHandler.integerToLongList(deleteIds);
-        playListFragment.deleteByKeyInTx(ids);
+        playListFragment.remove(ids);
     }
 
     @Override

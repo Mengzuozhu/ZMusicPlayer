@@ -19,7 +19,6 @@ public class MusicControlPresenter implements MusicControlContract.Presenter {
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mPlaybackService = ((PlaybackService.LocalBinder) service).getService();
-            mView.onSongUpdated(mPlaybackService.getPlayingSong());
         }
 
         public void onServiceDisconnected(ComponentName className) {

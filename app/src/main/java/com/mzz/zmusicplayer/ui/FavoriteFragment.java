@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
 import com.mzz.zmusicplayer.header.SongListHeader;
-import com.mzz.zmusicplayer.model.PlayListModel;
+import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.song.IPlayer;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.Player;
@@ -89,7 +89,7 @@ public class FavoriteFragment extends Fragment {
                     player.switchFavorite();
                 } else {
                     songInfo.setIsFavorite(false);
-                    PlayListModel.update(songInfo);
+                    LocalSongModel.update(songInfo);
                 }
                 super.removeSongAt(position);
                 songListHeader.updateSongCount();
