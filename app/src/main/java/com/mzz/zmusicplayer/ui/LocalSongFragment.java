@@ -18,6 +18,7 @@ import com.mzz.zmusicplayer.song.SongInfo;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Collection;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,6 +35,7 @@ public class LocalSongFragment extends Fragment {
     @BindView(R.id.rv_local_song)
     RecyclerView rvLocalSong;
     Unbinder unbinder;
+    PlayListAdapter playListAdapter;
     private SongListHeader songListHeader;
     private IPlayer player;
     private PlayList mPlayList;
@@ -76,9 +78,9 @@ public class LocalSongFragment extends Fragment {
         if (rvLocalSong == null) {
             return;
         }
-        List <SongInfo> favoriteSongs = player.getPlayList().getLocalSongs();
-        mPlayList.setPlaySongs(favoriteSongs);
-        PlayListAdapter playListAdapter = new PlayListAdapter(mPlayList, rvLocalSong) {
+        List <SongInfo> localSongs = player.getPlayList().getLocalAllSongs();
+        mPlayList.setPlaySongs(localSongs);
+        playListAdapter = new PlayListAdapter(mPlayList, rvLocalSong) {
             @Override
             public void removeSongAt(int position) {
                 SongInfo song = getItem(position);
@@ -93,6 +95,17 @@ public class LocalSongFragment extends Fragment {
             EventBus.getDefault().post(song);
         });
         songListHeader = new SongListHeader(getActivity(), playListAdapter);
+    }
+
+    /**
+     * Add to local.
+     *
+     * @param songs the songs
+     */
+    public void addToLocalSongs(Collection <SongInfo> songs) {
+        List <SongInfo> localSongs = player.getPlayList().addToLocalSongs(songs);
+        playListAdapter.setNewData(localSongs);
+        songListHeader.updateSongCount();
     }
 
 }

@@ -103,9 +103,10 @@ public class LocalSongs {
      *
      * @param c the c
      */
-    void addAll(Collection <SongInfo> c) {
+    List <SongInfo> addAll(Collection <SongInfo> c) {
         allSongs.addAll(c);
         LocalSongModel.insertOrReplaceInTx(c);
+        return allSongs;
     }
 
     /**

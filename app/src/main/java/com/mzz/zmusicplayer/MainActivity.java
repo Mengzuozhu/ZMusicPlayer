@@ -37,6 +37,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends BaseActivity implements PlayListFragment.PlayListListener,
         MusicControlFragment.MusicControlListener {
 
+    LocalSongFragment localSongFragment;
     private PlayListFragment playListFragment;
     private MusicControlFragment musicControlFragment;
     private HeadsetReceiver headsetReceiver;
@@ -90,7 +91,7 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
         RecentFragment recentFragment = RecentFragment.newInstance();
         playListFragment = PlayListFragment.newInstance();
         FavoriteFragment favoriteFragment = FavoriteFragment.newInstance();
-        LocalSongFragment localSongFragment = LocalSongFragment.newInstance();
+        localSongFragment = LocalSongFragment.newInstance();
         List <MusicPage> fragments = new ArrayList <>();
         fragments.add(new MusicPage(playListFragment, "播放"));
         fragments.add(new MusicPage(recentFragment, "最近"));
@@ -169,6 +170,7 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
             ArrayList <SongInfo> newSongInfos =
                     data.getParcelableArrayListExtra(SongPickerActivity.EXTRA_ADD_SONG);
             playListFragment.addSongs(newSongInfos);
+            localSongFragment.addToLocalSongs(newSongInfos);
         } else if (resultCode == SongEditActivity.CODE_EDIT_SAVE) {
             onSaveEditEvent(data);
         }

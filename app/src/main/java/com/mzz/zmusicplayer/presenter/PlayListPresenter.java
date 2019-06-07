@@ -101,7 +101,7 @@ public class PlayListPresenter implements PlayListContract.Presenter {
 
     @Override
     public void addSongs(List <SongInfo> newSongInfos) {
-        playList.addAll(newSongInfos);
+        playList.addSongs(newSongInfos);
         playListAdapter.setNewData(playList.getPlaySongs());
         updateSongCountAndMode();
     }

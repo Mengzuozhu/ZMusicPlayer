@@ -95,7 +95,7 @@ public class PlayList implements Parcelable {
      *
      * @return the local playSongs
      */
-    public List <SongInfo> getLocalSongs() {
+    public List <SongInfo> getLocalAllSongs() {
         return localSongs.getAllSongs();
     }
 
@@ -144,13 +144,21 @@ public class PlayList implements Parcelable {
     }
 
     /**
-     * Add all.
+     * Add songs.
      *
      * @param c the c
      */
-    public void addAll(Collection <SongInfo> c) {
+    public void addSongs(Collection <SongInfo> c) {
         playSongs.addAll(c);
-        localSongs.addAll(c);
+    }
+
+    /**
+     * Add to local.
+     *
+     * @param c the c
+     */
+    public List <SongInfo> addToLocalSongs(Collection <SongInfo> c) {
+        return localSongs.addAll(c);
     }
 
     /**
