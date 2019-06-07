@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">梦音乐</string>
-    <string name="db_name_play_list">T_PLAY_LIST</string>
     <string name="db_name_local_song">T_LOCAL_SONG</string>
     <string name="undefined">未知</string>
     <string name="complete">完成</string>

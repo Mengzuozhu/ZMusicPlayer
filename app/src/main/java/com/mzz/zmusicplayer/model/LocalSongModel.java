@@ -27,7 +27,7 @@ public class LocalSongModel {
     static {
         Context context = MusicApplication.getContext();
         UpgradeDbHelper helper = new UpgradeDbHelper(context,
-                context.getString(R.string.db_name_play_list));
+                context.getString(R.string.db_name_local_song));
         Database db = helper.getWritableDb();
         DaoSession daoSession = new DaoMaster(db).newSession();
         songInfoDao = daoSession.getSongInfoDao();

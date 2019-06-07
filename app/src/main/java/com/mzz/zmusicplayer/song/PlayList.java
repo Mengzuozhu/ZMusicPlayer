@@ -132,6 +132,10 @@ public class PlayList implements Parcelable {
      * @return is Same with last song
      */
     public boolean updatePlayingIndexBySettingId() {
+        if (playSongs.isEmpty()) {
+            this.playingIndex = 0;
+            return false;
+        }
         long lastPlaySongId = AppSetting.getLastPlaySongId();
         this.playingIndex = getSongIndexById(playSongs, lastPlaySongId);
         SongInfo newSong = playSongs.get(playingIndex);
@@ -153,12 +157,13 @@ public class PlayList implements Parcelable {
     }
 
     /**
-     * Add to local.
+     * Add to local songs list .
      *
-     * @param c the c
+     * @param songs the songs
+     * @return the list
      */
-    public List <SongInfo> addToLocalSongs(Collection <SongInfo> c) {
-        return localSongs.addAll(c);
+    public List <SongInfo> addToLocalSongs(Collection <SongInfo> songs) {
+        return localSongs.addAll(songs);
     }
 
     /**
