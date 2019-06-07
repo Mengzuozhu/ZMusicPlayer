@@ -3,27 +3,16 @@ package com.mzz.zmusicplayer.presenter;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.PopupMenu;
-import android.widget.TextView;
 
-import com.mzz.zandroidcommon.common.StringHelper;
-import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
 import com.mzz.zmusicplayer.contract.PlayListContract;
+import com.mzz.zmusicplayer.header.PlayListHeader;
 import com.mzz.zmusicplayer.model.SongModel;
 import com.mzz.zmusicplayer.setting.AppSetting;
-import com.mzz.zmusicplayer.setting.PlayedMode;
-import com.mzz.zmusicplayer.setting.SongOrderMode;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
-import com.mzz.zmusicplayer.ui.MusicSearchActivity;
 import com.mzz.zmusicplayer.ui.PlayListFragment;
-import com.mzz.zmusicplayer.ui.SongEditActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +22,7 @@ import java.util.List;
  */
 public class PlayListPresenter implements PlayListContract.Presenter {
 
-    private TextView tcSongCountAndMode;
+    private PlayListHeader playListHeader;
     private RecyclerView recyclerView;
     private PlayListFragment.PlayListListener playListListener;
     private PlayList playList;
@@ -60,6 +49,7 @@ public class PlayListPresenter implements PlayListContract.Presenter {
 
     private void updatePlayList() {
         playListListener.setPlayList(playList);
+        updateSongCountAndMode();
     }
 
     private void intiAdapter() {
@@ -72,41 +62,22 @@ public class PlayListPresenter implements PlayListContract.Presenter {
                 updatePlayList();
             }
         };
+        playListHeader = new PlayListHeader(activity, playListAdapter);
         playListAdapter.setOnItemClickListener((adapter, view, position) -> playListListener.setPlayingIndex(position));
         playListAdapter.setOnItemLongClickListener((adapter, view, position) -> {
-            showSongEditActivity();
+            if (playListHeader != null) {
+                playListHeader.showSongEditActivity();
+            }
             return false;
         });
-        initHeader();
         updatePlaySongBackgroundColor(playList.getPlayingSong());
-    }
-
-    private void initHeader() {
-        View header = LayoutInflater.from(activity).inflate(R.layout.content_song_header,
-                recyclerView, false);
-        tcSongCountAndMode = header.findViewById(R.id.tv_song_count_mode);
-        updateSongCountAndMode();
-        ImageView searchView = header.findViewById(R.id.iv_header_search);
-        searchView.setOnClickListener(v -> showSearchActivity());
-        ImageView sortView = header.findViewById(R.id.iv_header_sort);
-        sortView.setOnClickListener(v -> showSongOrderPopupMenu(sortView));
-        ImageView editView = header.findViewById(R.id.iv_header_edit);
-        editView.setOnClickListener(v -> showSongEditActivity());
-        playListAdapter.setHeaderView(header);
     }
 
     @Override
     public void updateSongCountAndMode() {
-        PlayedMode playMode = playList.getPlayMode();
-        String songCountAndMode;
-        if (playMode == PlayedMode.SINGLE) {
-            songCountAndMode = StringHelper.getLocalFormat("%s", playMode.getDesc(),
-                    playList.getSongInfos().size());
-        } else {
-            songCountAndMode = StringHelper.getLocalFormat("%s(%d首)", playMode.getDesc(),
-                    playList.getSongInfos().size());
+        if (playListHeader != null) {
+            playListHeader.updateSongCountAndMode();
         }
-        tcSongCountAndMode.setText(songCountAndMode);
     }
 
     @Override
@@ -120,42 +91,6 @@ public class PlayListPresenter implements PlayListContract.Presenter {
         playList.setSongInfos(songInfos);
         updatePlayList();
         playListAdapter.setNewData(songInfos);
-        updateSongCountAndMode();
-    }
-
-    private void showSongEditActivity() {
-        SongEditActivity.startForResult(activity, (ArrayList <SongInfo>) playList.getSongInfos());
-    }
-
-    private void showSearchActivity() {
-        MusicSearchActivity.startForResult(activity, playList);
-    }
-
-    private void showSongOrderPopupMenu(View view) {
-        PopupMenu popupMenu = new PopupMenu(activity, view);
-        popupMenu.inflate(R.menu.menu_song_sort_by_time);
-        popupMenu.inflate(R.menu.menu_sort_by_name);
-        popupMenu.setOnMenuItemClickListener(menuItem -> {
-            int itemId = menuItem.getItemId();
-            switch (itemId) {
-                case R.id.action_sort_ascend_by_name:
-                    playListAdapter.sortByName(true);
-                    AppSetting.setSongOrderMode(SongOrderMode.ORDER_ASCEND_BY_NAME);
-                    return true;
-                case R.id.action_sort_descend_by_name:
-                    playListAdapter.sortByName(false);
-                    AppSetting.setSongOrderMode(SongOrderMode.ORDER_DESCEND_BY_NAME);
-                    return true;
-                case R.id.action_sort_by_add_time:
-                    playListAdapter.sortById();
-                    AppSetting.setSongOrderMode(SongOrderMode.ORDER_ASCEND_BY_ADD_TIME);
-                    return true;
-                default:
-                    break;
-            }
-            return false;
-        });
-        popupMenu.show();
     }
 
     @Override

@@ -27,7 +27,7 @@ public class MusicSearchActivity extends BaseActivity {
     @BindView(R.id.rv_search)
     RecyclerView rvSearch;
     SearchView searchView;
-    private MusicSearchAdapter queryAdapter;
+    private MusicSearchAdapter musicSearchAdapter;
 
     public static void startForResult(FragmentActivity activity, Parcelable value) {
         Intent intent = new Intent(activity, MusicSearchActivity.class).putExtra(EXTRA_SEARCH_DATA,
@@ -54,11 +54,11 @@ public class MusicSearchActivity extends BaseActivity {
                 break;
             }
         }
-        queryAdapter = new MusicSearchAdapter(playList, rvSearch);
-        queryAdapter.setOnItemClickListener((adapter, view, position) -> {
-            SongInfo song = queryAdapter.getItem(position);
+        musicSearchAdapter = new MusicSearchAdapter(playList, rvSearch);
+        musicSearchAdapter.setOnItemClickListener((adapter, view, position) -> {
+            SongInfo song = musicSearchAdapter.getItem(position);
             EventBus.getDefault().post(song);
-            queryAdapter.updatePlaySongBackgroundColor(song);
+            musicSearchAdapter.updatePlaySongBackgroundColor(song);
         });
     }
 
@@ -69,7 +69,7 @@ public class MusicSearchActivity extends BaseActivity {
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.onActionViewExpanded();
         searchView.setQueryHint("搜索");
-        queryAdapter.setQueryTextListener(searchView);
+        musicSearchAdapter.setQueryTextListener(searchView);
         return super.onCreateOptionsMenu(menu);
     }
 }

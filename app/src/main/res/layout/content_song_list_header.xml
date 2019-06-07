@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorGrey">
+
+    <TextView
+        android:id="@+id/tv_header_song_count"
+        style="@style/StyleTextView"
+        android:layout_marginTop="0dp"
+        android:layout_marginStart="14dp"
+        android:text="@string/undefined"
+        android:textSize="@dimen/sp_14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_header_play_all"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_header_play_all"
+        android:layout_width="@dimen/image_size_24"
+        android:layout_height="@dimen/image_size_24"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/play" />
+
+</android.support.constraint.ConstraintLayout>

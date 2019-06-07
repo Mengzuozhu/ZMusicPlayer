@@ -6,7 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
 import com.mzz.zmusicplayer.model.SongModel;
@@ -36,6 +39,7 @@ public class FavoriteFragment extends Fragment {
     Unbinder unbinder;
     private IPlayer player;
     private PlayList mPlayList;
+    private TextView tvSongCount;
 
     /**
      * New instance favorite fragment.
@@ -90,15 +94,31 @@ public class FavoriteFragment extends Fragment {
                     SongModel.update(songInfo);
                 }
                 super.removeSongAt(position);
+                updateSongCount();
             }
         };
         baseAdapter.setOnItemClickListener((adapter, view, position) -> {
             SongInfo song = baseAdapter.getItem(position);
-//            mPlayList.setPlayingIndex(position);
             baseAdapter.updatePlaySongBackgroundColor(song);
-//            EventBus.getDefault().post(mPlayList.getSongInfos());
             EventBus.getDefault().post(song);
         });
+        baseAdapter.setHeaderView(getHeader());
+    }
+
+    private View getHeader() {
+        View header = LayoutInflater.from(getActivity()).inflate(R.layout.content_song_list_header,
+                rvFavoriteSong, false);
+        tvSongCount = header.findViewById(R.id.tv_header_song_count);
+        updateSongCount();
+        ImageView searchView = header.findViewById(R.id.iv_header_play_all);
+        searchView.setOnClickListener(v -> EventBus.getDefault().post(mPlayList.getSongInfos()));
+        return header;
+    }
+
+    private void updateSongCount() {
+        String songCountAndMode = StringHelper.getLocalFormat("播放全部(%d首)",
+                mPlayList.getSongInfos().size());
+        tvSongCount.setText(songCountAndMode);
     }
 
     private List <SongInfo> getFavoriteSongs() {

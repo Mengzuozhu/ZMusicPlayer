@@ -13,6 +13,8 @@ import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
+import lombok.Getter;
+
 /**
  * author : Mzz
  * date : 2019 2019/6/1 15:56
@@ -23,6 +25,7 @@ public class PlayListAdapter extends SongInfoAdapter {
     private int[] textViewIds = new int[]{itemSongNameId, R.id.tv_item_song_artist,
             R.id.tv_item_song_num};
     private int selectColor;
+    @Getter
     private PlayList playList;
     private SongInfo currentColorSong;
     private Context context;

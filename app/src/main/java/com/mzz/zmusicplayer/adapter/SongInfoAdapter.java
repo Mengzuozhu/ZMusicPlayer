@@ -27,7 +27,8 @@ public class SongInfoAdapter extends BaseQuickAdapter <SongInfo, BaseViewHolder>
     @Getter
     private LinearLayoutManager layoutManager;
     private List <SongInfo> songInfos;
-    private RecyclerView recyclerView;
+    @Getter
+    protected RecyclerView recyclerView;
 
     /**
      * Instantiates a new Song info adapter.
