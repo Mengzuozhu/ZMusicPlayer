@@ -12,18 +12,16 @@ import android.widget.TextView;
 import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
-import com.mzz.zmusicplayer.contract.LocalMusicContract;
+import com.mzz.zmusicplayer.contract.PlayListContract;
 import com.mzz.zmusicplayer.model.SongModel;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.setting.SongOrderMode;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
-import com.mzz.zmusicplayer.ui.LocalMusicFragment;
 import com.mzz.zmusicplayer.ui.MusicSearchActivity;
+import com.mzz.zmusicplayer.ui.PlayListFragment;
 import com.mzz.zmusicplayer.ui.SongEditActivity;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,34 +31,35 @@ import java.util.List;
  * date : 2019 2019/5/28 17:50
  * description :
  */
-public class LocalMusicPresenter implements LocalMusicContract.Presenter {
+public class PlayListPresenter implements PlayListContract.Presenter {
 
     private TextView tcSongCountAndMode;
     private RecyclerView recyclerView;
-    private LocalMusicFragment.LocalMusicListener localMusicListener;
+    private PlayListFragment.PlayListListener playListListener;
     private PlayList playList;
     private PlayListAdapter playListAdapter;
     private FragmentActivity activity;
 
-    public LocalMusicPresenter(LocalMusicContract.View mView,
-                               LocalMusicFragment.LocalMusicListener localMusicListener) {
+    public PlayListPresenter(PlayListContract.View mView,
+                             PlayListFragment.PlayListListener playListListener) {
         activity = mView.getActivity();
         recyclerView = mView.getRecyclerView();
-        this.localMusicListener = localMusicListener;
-        init();
-    }
-
-    private void init() {
+        this.playListListener = playListListener;
         List <SongInfo> songInfos = SongModel.getOrderSongInfos();
         initPlayList(songInfos);
-        intiAdapter();
     }
 
-    private void initPlayList(List <SongInfo> songInfos) {
+    @Override
+    public void initPlayList(List <SongInfo> songInfos) {
         long lastPlaySongId = AppSetting.getLastPlaySongId();
         int lastPlaySongIndex = PlayList.getSongIndexById(songInfos, lastPlaySongId);
         playList = new PlayList(songInfos, lastPlaySongIndex, AppSetting.getPlayMode());
-        localMusicListener.setPlayList(playList);
+        updatePlayList();
+        intiAdapter();
+    }
+
+    private void updatePlayList() {
+        playListListener.setPlayList(playList);
     }
 
     private void intiAdapter() {
@@ -70,10 +69,10 @@ public class LocalMusicPresenter implements LocalMusicContract.Presenter {
                 super.removeSongAt(position);
                 SongInfo song = getItem(position);
                 SongModel.delete(song);
-                localMusicListener.setPlayList(playList);
+                updatePlayList();
             }
         };
-        playListAdapter.setOnItemClickListener((adapter, view, position) -> localMusicListener.setPlayingIndex(position));
+        playListAdapter.setOnItemClickListener((adapter, view, position) -> playListListener.setPlayingIndex(position));
         playListAdapter.setOnItemLongClickListener((adapter, view, position) -> {
             showSongEditActivity();
             return false;
@@ -119,16 +118,9 @@ public class LocalMusicPresenter implements LocalMusicContract.Presenter {
         List <SongInfo> songInfos = playList.getSongInfos();
         songInfos.removeIf(song -> keys.contains(song.getId()));
         playList.setSongInfos(songInfos);
-        localMusicListener.setPlayList(playList);
+        updatePlayList();
         playListAdapter.setNewData(songInfos);
         updateSongCountAndMode();
-    }
-
-    @Override
-    public void finishMainActivity() {
-        if (activity != null) {
-            activity.finish();
-        }
     }
 
     private void showSongEditActivity() {

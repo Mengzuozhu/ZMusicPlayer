@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.contract.LocalMusicContract;
-import com.mzz.zmusicplayer.presenter.LocalMusicPresenter;
+import com.mzz.zmusicplayer.contract.PlayListContract;
+import com.mzz.zmusicplayer.presenter.PlayListPresenter;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
@@ -27,27 +27,27 @@ import lombok.NoArgsConstructor;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link LocalMusicFragment#newInstance} factory method to
+ * Use the {@link PlayListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 @NoArgsConstructor
-public class LocalMusicFragment extends Fragment implements LocalMusicContract.View {
+public class PlayListFragment extends Fragment implements PlayListContract.View {
 
     @BindView(R.id.rv_song)
     RecyclerView rvSong;
     @BindView(R.id.fab_song_scroll_first)
     FloatingActionButton fabSongScrollFirst;
-    private LocalMusicListener localMusicListener;
-    private LocalMusicContract.Presenter mainPresenter;
+    private PlayListListener playListListener;
+    private PlayListContract.Presenter mainPresenter;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment LocalMusicFragment.
+     * @return A new instance of fragment PlayListFragment.
      */
-    public static LocalMusicFragment newInstance() {
-        return new LocalMusicFragment();
+    public static PlayListFragment newInstance() {
+        return new PlayListFragment();
     }
 
     @Override
@@ -65,7 +65,7 @@ public class LocalMusicFragment extends Fragment implements LocalMusicContract.V
 
     private void init() {
         getListener();
-        mainPresenter = new LocalMusicPresenter(this, localMusicListener);
+        mainPresenter = new PlayListPresenter(this, playListListener);
         LinearLayoutManager layoutManager = mainPresenter.getLayoutManager();
         rvSong.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -86,9 +86,13 @@ public class LocalMusicFragment extends Fragment implements LocalMusicContract.V
 
     private void getListener() {
         FragmentActivity activity = getActivity();
-        if (activity instanceof LocalMusicListener) {
-            localMusicListener = (LocalMusicListener) activity;
+        if (activity instanceof PlayListListener) {
+            playListListener = (PlayListListener) activity;
         }
+    }
+
+    public void initPlayList(List <SongInfo> songInfos){
+        mainPresenter.initPlayList(songInfos);
     }
 
     public void addSongs(List <SongInfo> newSongInfos) {
@@ -122,7 +126,7 @@ public class LocalMusicFragment extends Fragment implements LocalMusicContract.V
         mainPresenter.locateToSelectedSong();
     }
 
-    public interface LocalMusicListener {
+    public interface PlayListListener {
 
         void setPlayList(PlayList playList);
 

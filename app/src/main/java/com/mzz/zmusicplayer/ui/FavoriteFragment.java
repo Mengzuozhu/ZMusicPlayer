@@ -96,8 +96,8 @@ public class FavoriteFragment extends Fragment {
             SongInfo song = baseAdapter.getItem(position);
 //            mPlayList.setPlayingIndex(position);
             baseAdapter.updatePlaySongBackgroundColor(song);
+//            EventBus.getDefault().post(mPlayList.getSongInfos());
             EventBus.getDefault().post(song);
-//            EventBus.getDefault().post(mPlayList);
         });
     }
 

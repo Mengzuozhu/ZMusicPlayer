@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
-import com.mzz.zmusicplayer.contract.MusicPlayerContract;
+import com.mzz.zmusicplayer.contract.MusicControlContract;
 import com.mzz.zmusicplayer.song.PlaybackService;
 
-public class MusicPlayerPresenter implements MusicPlayerContract.Presenter {
+public class MusicControlPresenter implements MusicControlContract.Presenter {
 
     private Context mContext;
-    private MusicPlayerContract.View mView;
+    private MusicControlContract.View mView;
     private PlaybackService mPlaybackService;
     private boolean mIsServiceBound;
 
@@ -27,7 +27,7 @@ public class MusicPlayerPresenter implements MusicPlayerContract.Presenter {
         }
     };
 
-    public MusicPlayerPresenter(Context context, MusicPlayerContract.View view) {
+    public MusicControlPresenter(Context context, MusicControlContract.View view) {
         mContext = context;
         mView = view;
     }

@@ -13,7 +13,7 @@ import java.util.List;
  * date : 2019 2019/5/28 17:50
  * description :
  */
-public interface LocalMusicContract {
+public interface PlayListContract {
 
     interface View {
 
@@ -29,6 +29,8 @@ public interface LocalMusicContract {
 
         LinearLayoutManager getLayoutManager();
 
+        void initPlayList(List <SongInfo> songInfos);
+
         void addSongs(List <SongInfo> songInfos);
 
         void scrollToFirst();
@@ -39,6 +41,5 @@ public interface LocalMusicContract {
 
         void deleteByKeyInTx(List <Long> keys);
 
-        void finishMainActivity();
     }
 }

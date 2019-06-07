@@ -14,12 +14,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mzz.zandroidcommon.common.EventBusHelper;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.TimeHelper;
-import com.mzz.zmusicplayer.contract.MusicPlayerContract;
-import com.mzz.zmusicplayer.presenter.MusicPlayerPresenter;
+import com.mzz.zmusicplayer.contract.MusicControlContract;
+import com.mzz.zmusicplayer.presenter.MusicControlPresenter;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.IPlayer;
@@ -27,8 +26,6 @@ import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.PlayObserver;
 import com.mzz.zmusicplayer.song.Player;
 import com.mzz.zmusicplayer.song.SongInfo;
-
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
 
@@ -39,7 +36,7 @@ import butterknife.OnClick;
 /**
  * The type Control fragment.
  */
-public class MusicControlFragment extends Fragment implements MusicPlayerContract.View,
+public class MusicControlFragment extends Fragment implements MusicControlContract.View,
         PlayObserver {
     private static final String ARGUMENT_PLAY_LIST = "ARGUMENT_PLAY_LIST";
     //更新进度条的间隔，单位：ms
@@ -63,7 +60,7 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
     //与后台服务共用同一个播放器
     private IPlayer mPlayer;
     private Handler mHandler = new Handler();
-    private MusicPlayerContract.Presenter musicPresenter;
+    private MusicControlContract.Presenter musicPresenter;
     private Runnable mProgressCallback = new Runnable() {
         @Override
         public void run() {
@@ -132,18 +129,16 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         if (playingSong != null) {
             currentSongDuration = playingSong.getDuration();
         }
-        musicPresenter = new MusicPlayerPresenter(getActivity(), this);
+        musicPresenter = new MusicControlPresenter(getActivity(), this);
         musicPresenter.subscribe();
         ivPlayMode.setImageResource(AppSetting.getPlayMode().getIcon());
         setSeekBarListener();
         getListener();
-        EventBusHelper.register(this);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        EventBusHelper.unregister(this);
         removeProgressCallback();
         mPlayer.unregisterCallback(this);
         AppSetting.setLastPlaySongId(mPlayer.getPlayingSong().getId());
@@ -185,7 +180,6 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         });
     }
 
-    @Subscribe
     public void setPlayList(PlayList playList) {
         if (playList == null) {
             playList = new PlayList();
@@ -209,7 +203,6 @@ public class MusicControlFragment extends Fragment implements MusicPlayerContrac
         onSongUpdated(mPlayer.getPlayingSong());
     }
 
-    @Subscribe
     public void setPlayingSong(SongInfo songInfo) {
         mPlayer.play(songInfo);
         onSongUpdated(mPlayer.getPlayingSong());

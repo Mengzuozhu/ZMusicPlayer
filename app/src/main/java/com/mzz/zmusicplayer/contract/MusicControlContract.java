@@ -4,7 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.mzz.zmusicplayer.song.SongInfo;
 
-public interface MusicPlayerContract {
+public interface MusicControlContract {
 
     interface View {
 

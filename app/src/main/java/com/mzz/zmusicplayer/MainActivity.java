@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.mzz.zandroidcommon.common.EventBusHelper;
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.adapter.MusicPage;
@@ -18,22 +19,24 @@ import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.FavoriteFragment;
-import com.mzz.zmusicplayer.ui.LocalMusicFragment;
+import com.mzz.zmusicplayer.ui.PlayListFragment;
 import com.mzz.zmusicplayer.ui.MusicControlFragment;
 import com.mzz.zmusicplayer.ui.RecentFragment;
 import com.mzz.zmusicplayer.ui.SongEditActivity;
 import com.mzz.zmusicplayer.ui.SongPickerActivity;
 import com.viewpagerindicator.TabPageIndicator;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity implements LocalMusicFragment.LocalMusicListener,
+public class MainActivity extends BaseActivity implements PlayListFragment.PlayListListener,
         MusicControlFragment.MusicControlListener {
 
-    private LocalMusicFragment localMusicFragment;
+    private PlayListFragment playListFragment;
     private MusicControlFragment musicControlFragment;
     private HeadsetReceiver headsetReceiver;
 
@@ -45,11 +48,14 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
         ViewerHelper.displayHomeAsUpOrNot(this.getSupportActionBar(), false);
 
         init();
+        EventBusHelper.register(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBusHelper.unregister(this);
+
         if (headsetReceiver != null) {
             unregisterReceiver(headsetReceiver);
         }
@@ -81,10 +87,10 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
 
     private void initTabPage() {
         RecentFragment recentFragment = RecentFragment.newInstance();
-        localMusicFragment = LocalMusicFragment.newInstance();
+        playListFragment = PlayListFragment.newInstance();
         FavoriteFragment favoriteFragment = FavoriteFragment.newInstance();
         List <MusicPage> fragments = new ArrayList <>();
-        fragments.add(new MusicPage(localMusicFragment, "播放"));
+        fragments.add(new MusicPage(playListFragment, "播放"));
         fragments.add(new MusicPage(recentFragment, "最近"));
         fragments.add(new MusicPage(favoriteFragment, "喜欢"));
         FragmentPagerAdapter adapter =
@@ -136,6 +142,20 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
         }
     }
 
+    @Subscribe
+    public void setPlayingSong(SongInfo songInfo) {
+        if (musicControlFragment != null) {
+            musicControlFragment.setPlayingSong(songInfo);
+        } else {
+            setPlayList(new PlayList());
+        }
+    }
+
+    @Subscribe
+    public void initPlayList(List <SongInfo> songInfos) {
+        playListFragment.initPlayList(songInfos);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -145,7 +165,7 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
         if (resultCode == SongPickerActivity.CODE_ADD_SONG) {
             ArrayList <SongInfo> newSongInfos =
                     data.getParcelableArrayListExtra(SongPickerActivity.EXTRA_ADD_SONG);
-            localMusicFragment.addSongs(newSongInfos);
+            playListFragment.addSongs(newSongInfos);
         } else if (resultCode == SongEditActivity.CODE_EDIT_SAVE) {
             onSaveEditEvent(data);
         }
@@ -158,17 +178,17 @@ public class MainActivity extends BaseActivity implements LocalMusicFragment.Loc
             return;
         }
         List <Long> ids = EditHandler.integerToLongList(deleteIds);
-        localMusicFragment.deleteByKeyInTx(ids);
+        playListFragment.deleteByKeyInTx(ids);
     }
 
     @Override
     public void updatePlaySongBackgroundColor(SongInfo song) {
-        localMusicFragment.updatePlaySongBackgroundColor(song);
+        playListFragment.updatePlaySongBackgroundColor(song);
     }
 
     @Override
     public void updateSongCountAndMode() {
-        localMusicFragment.updateSongCountAndMode();
+        playListFragment.updateSongCountAndMode();
     }
 
 }
