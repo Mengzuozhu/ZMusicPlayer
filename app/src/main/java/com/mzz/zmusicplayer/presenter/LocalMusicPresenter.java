@@ -23,6 +23,8 @@ import com.mzz.zmusicplayer.ui.LocalMusicFragment;
 import com.mzz.zmusicplayer.ui.MusicSearchActivity;
 import com.mzz.zmusicplayer.ui.SongEditActivity;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +64,15 @@ public class LocalMusicPresenter implements LocalMusicContract.Presenter {
     }
 
     private void intiAdapter() {
-        playListAdapter = new PlayListAdapter(playList, recyclerView);
+        playListAdapter = new PlayListAdapter(playList, recyclerView) {
+            @Override
+            public void removeSongAt(int position) {
+                super.removeSongAt(position);
+                SongInfo song = getItem(position);
+                SongModel.delete(song);
+                localMusicListener.setPlayList(playList);
+            }
+        };
         playListAdapter.setOnItemClickListener((adapter, view, position) -> localMusicListener.setPlayingIndex(position));
         playListAdapter.setOnItemLongClickListener((adapter, view, position) -> {
             showSongEditActivity();
@@ -108,9 +118,9 @@ public class LocalMusicPresenter implements LocalMusicContract.Presenter {
         SongModel.deleteByKeyInTx(keys);
         List <SongInfo> songInfos = playList.getSongInfos();
         songInfos.removeIf(song -> keys.contains(song.getId()));
-        initPlayList(songInfos);
+        playList.setSongInfos(songInfos);
+        localMusicListener.setPlayList(playList);
         playListAdapter.setNewData(songInfos);
-        updatePlaySongBackgroundColor(playList.getPlayingSong());
         updateSongCountAndMode();
     }
 

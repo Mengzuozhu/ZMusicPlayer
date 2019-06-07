@@ -93,6 +93,11 @@ public class PlayListAdapter extends SongInfoAdapter {
         popupMenu.show();
     }
 
+    /**
+     * Remove song at.
+     *
+     * @param position the position
+     */
     public void removeSongAt(int position) {
         remove(position);
     }

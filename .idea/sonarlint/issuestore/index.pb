@@ -126,8 +126,6 @@ m
 =app/src/main/java/com/mzz/zmusicplayer/ui/RecentFragment.java,a\1\a183ebe729f46e37c35e72d0c59392738ae49514
 s
 Capp/src/main/java/com/mzz/zmusicplayer/adapter/PlayListAdapter.java,4\3\43274a2e86f326449611a48cdf5b71723d74e307
-p
-@app/src/main/java/com/mzz/zmusicplayer/adapter/PageFragment.java,0\5\05d242c0f758bee073a40520652d834c7c10ad77
 u
 Eapp/src/main/java/com/mzz/zmusicplayer/adapter/MusicPagerAdapter.java,8\6\8698d43dd40bf653434c15a58b0d36375134d5f0
 s
@@ -140,3 +138,5 @@ s
 Capp/src/main/java/com/mzz/zmusicplayer/common/TextQueryHandler.java,e\e\eef8cd70079884f6974e21fb6279b15c7f7987d3
 o
 ?app/src/main/java/com/mzz/zmusicplayer/common/TimeRecorder.java,3\f\3f44970ef7e06d506f63b91d774909fb578d4a78
+m
+=app/src/main/java/com/mzz/zmusicplayer/adapter/MusicPage.java,f\0\f0eab98c5e28e1d469d77af4b30557de79136aac

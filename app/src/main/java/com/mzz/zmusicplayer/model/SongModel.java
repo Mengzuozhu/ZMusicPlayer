@@ -66,6 +66,13 @@ public class SongModel {
         songInfoDao.deleteByKeyInTx(keys);
     }
 
+    public static void delete(SongInfo song) {
+        if (song == null) {
+            return;
+        }
+        songInfoDao.delete(song);
+    }
+
     public static void insertOrReplaceInTx(Iterable <SongInfo> songInfos) {
         if (songInfos == null) {
             return;

@@ -56,11 +56,11 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
             notifyPlayStatusChanged(true);
             return true;
         }
-        SongInfo currentSong = getPlayingSong();
-        if (currentSong != null) {
+        SongInfo playingSong = getPlayingSong();
+        if (playingSong != null) {
             try {
                 mPlayer.reset();
-                mPlayer.setDataSource(currentSong.getPath());
+                mPlayer.setDataSource(playingSong.getPath());
                 mPlayer.prepare();
                 mPlayer.start();
                 notifyPlayStatusChanged(true);

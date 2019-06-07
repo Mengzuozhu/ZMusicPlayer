@@ -3,6 +3,7 @@ package com.mzz.zmusicplayer.song;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class PlayList implements Parcelable {
     @Getter
     @Setter
     private PlayedMode playMode = PlayedMode.ORDER;
+    private SongInfo playingSong;
 
     public PlayList() {
         this.songInfos = new ArrayList <>();
@@ -140,6 +142,23 @@ public class PlayList implements Parcelable {
     }
 
     /**
+     * Update playing index by setting id.
+     *
+     * @return is Same with last song
+     */
+    public boolean updatePlayingIndexBySettingId() {
+        long lastPlaySongId = AppSetting.getLastPlaySongId();
+        playingIndex = PlayList.getSongIndexById(songInfos, lastPlaySongId);
+        SongInfo newSong = songInfos.get(playingIndex);
+        boolean isSameLastSong = false;
+        if (playingSong != null && newSong != null) {
+            isSameLastSong = playingSong.getId().equals(newSong.getId());
+        }
+        //新的播放歌曲是否和上一次一样
+        return isSameLastSong;
+    }
+
+    /**
      * Add all.
      *
      * @param c the c
@@ -197,7 +216,8 @@ public class PlayList implements Parcelable {
         }
 
         if (playingIndex < songInfos.size()) {
-            return songInfos.get(playingIndex);
+            playingSong = songInfos.get(playingIndex);
+            return playingSong;
         }
         return null;
     }
