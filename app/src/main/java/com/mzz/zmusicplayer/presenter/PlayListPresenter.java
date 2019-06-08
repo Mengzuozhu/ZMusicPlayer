@@ -20,7 +20,7 @@ import java.util.List;
  * date : 2019 2019/5/28 17:50
  * description :
  */
-public class PlayListPresenter implements PlayListContract.Presenter {
+public class PlayListPresenter implements PlayListContract.Presenter, PlayList.PlayListObserver {
 
     private PlayListHeader playListHeader;
     private RecyclerView recyclerView;
@@ -36,6 +36,7 @@ public class PlayListPresenter implements PlayListContract.Presenter {
         this.playListListener = playListListener;
         List <SongInfo> orderLocalSongs = LocalSongModel.getOrderLocalSongs();
         playList = new PlayList(orderLocalSongs, AppSetting.getPlayMode());
+        playList.setPlayListObserver(this);
         updatePlayList();
         intiAdapter();
     }
@@ -72,8 +73,7 @@ public class PlayListPresenter implements PlayListContract.Presenter {
         updatePlaySongBackgroundColor(playList.getPlayingSong());
     }
 
-    @Override
-    public void updateSongCountAndMode() {
+    private void updateSongCountAndMode() {
         if (playListHeader != null) {
             playListHeader.updateSongCountAndMode();
         }
@@ -86,7 +86,6 @@ public class PlayListPresenter implements PlayListContract.Presenter {
         }
         playList.remove(keys);
         updatePlayList();
-        playListAdapter.setNewData(playList.getPlaySongs());
     }
 
     @Override
@@ -103,7 +102,6 @@ public class PlayListPresenter implements PlayListContract.Presenter {
     public void addSongs(List <SongInfo> newSongInfos) {
         playList.addSongs(newSongInfos);
         playListAdapter.setNewData(playList.getPlaySongs());
-        updateSongCountAndMode();
     }
 
     @Override
@@ -118,5 +116,10 @@ public class PlayListPresenter implements PlayListContract.Presenter {
     public void locateToSelectedSong() {
         int adapterPosition = playList.getPlayingIndex() + 1;
         playListAdapter.scrollToPosition(adapterPosition);
+    }
+
+    @Override
+    public void onSongCountOrModeChange() {
+        updateSongCountAndMode();
     }
 }

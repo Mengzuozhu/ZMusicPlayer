@@ -3,6 +3,8 @@ package com.mzz.zmusicplayer.song;
 import android.media.MediaPlayer;
 import android.util.Log;
 
+import com.mzz.zandroidcommon.view.ViewerHelper;
+import com.mzz.zmusicplayer.MusicApplication;
 import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 
@@ -66,7 +68,9 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
                 notifyPlayStatusChanged(true);
             } catch (IOException e) {
                 Log.e(TAG, "play: ", e);
-                notifyPlayStatusChanged(false);
+                ViewerHelper.showToast(MusicApplication.getContext(), String.format("歌曲(%s)播放失败！"
+                        , playingSong.getName()));
+                playNext();
                 return false;
             }
             return true;
@@ -112,7 +116,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         int songIndexById = PlayList.getSongIndexById(playSongs, songInfo.getId());
         if (songIndexById == -1) {
             songInfo.setIsChecked(true);
-            playSongs.add(songInfo);
+            playList.addSong(songInfo);
             songIndexById = playSongs.size() - 1;
         }
         return play(songIndexById);

@@ -25,8 +25,6 @@ public interface PlayListContract {
 
     interface Presenter {
 
-        void updatePlaySongBackgroundColor(SongInfo song);
-
         LinearLayoutManager getLayoutManager();
 
         void updatePlayListSongs(List <SongInfo> songInfos);
@@ -36,8 +34,6 @@ public interface PlayListContract {
         void scrollToFirst();
 
         void locateToSelectedSong();
-
-        void updateSongCountAndMode();
 
         void remove(List <Long> keys);
 

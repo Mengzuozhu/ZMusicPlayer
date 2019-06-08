@@ -13,6 +13,8 @@ import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
+import java.util.List;
+
 import lombok.Getter;
 
 /**
@@ -26,7 +28,7 @@ public class PlayListAdapter extends SongInfoAdapter {
             R.id.tv_item_song_num};
     private int selectColor;
     @Getter
-    private PlayList playList;
+    private PlayList mPlayList;
     private SongInfo currentColorSong;
     private Context context;
 
@@ -38,7 +40,7 @@ public class PlayListAdapter extends SongInfoAdapter {
      */
     public PlayListAdapter(PlayList playList, RecyclerView recyclerView) {
         super(R.layout.item_song_list, playList.getPlaySongs(), recyclerView);
-        this.playList = playList;
+        this.mPlayList = playList;
         context = recyclerView.getContext();
         selectColor = context.getColor(R.color.colorGreen);
         setOnItemChildClickListener((adapter, view, position) -> showSongMoreMenu(view, position));
@@ -51,7 +53,7 @@ public class PlayListAdapter extends SongInfoAdapter {
             changePlaySongColor(helper);
             int adapterPosition = helper.getAdapterPosition();
             //排序后，播放位置可能变化，因此重新设置播放位置
-            playList.setPlayingIndex(adapterPosition - 1);
+            mPlayList.setPlayingIndex(adapterPosition - 1);
         } else {
             resetPlaySongColor(helper);
         }
@@ -74,6 +76,11 @@ public class PlayListAdapter extends SongInfoAdapter {
             currentColorSong = song;
             notifyDataSetChanged();
         }
+    }
+
+    public void updatePlaySongs(List <SongInfo> songs) {
+        mPlayList.setPlaySongs(songs);
+        setNewData(songs);
     }
 
     private void showSongMoreMenu(View view, int position) {

@@ -3,6 +3,7 @@ package com.mzz.zmusicplayer.ui;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.mzz.zmusicplayer.song.SongInfo;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -56,7 +58,7 @@ public class LocalSongFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         mPlayList = new PlayList();
         player = Player.getInstance();
-        initAdapter();
+        init();
         return view;
     }
 
@@ -70,7 +72,17 @@ public class LocalSongFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
+            init();
+        }
+    }
+
+    private void init() {
+        if (playListAdapter == null) {
             initAdapter();
+        } else {
+            List <SongInfo> localSongs = player.getPlayList().getLocalAllSongs();
+            playListAdapter.updatePlaySongs(localSongs);
+            songListHeader.updateSongCount();
         }
     }
 
@@ -78,8 +90,7 @@ public class LocalSongFragment extends Fragment {
         if (rvLocalSong == null) {
             return;
         }
-        List <SongInfo> localSongs = player.getPlayList().getLocalAllSongs();
-        mPlayList.setPlaySongs(localSongs);
+        mPlayList.setPlaySongs(new ArrayList <>());
         playListAdapter = new PlayListAdapter(mPlayList, rvLocalSong) {
             @Override
             public void removeSongAt(int position) {

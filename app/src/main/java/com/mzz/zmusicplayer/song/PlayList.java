@@ -44,7 +44,8 @@ public class PlayList implements Parcelable {
     @Getter
     @Setter
     private PlayedMode playMode = PlayedMode.ORDER;
-    private SongInfo playingSong;
+    @Setter
+    private PlayListObserver playListObserver;
 
     public PlayList() {
         localSongs = new LocalSong(new ArrayList <>());
@@ -63,7 +64,6 @@ public class PlayList implements Parcelable {
         this.playingIndex = in.readInt();
         int tmpPlayMode = in.readInt();
         this.playMode = tmpPlayMode == -1 ? null : PlayedMode.values()[tmpPlayMode];
-        this.playingSong = in.readParcelable(SongInfo.class.getClassLoader());
     }
 
     /**
@@ -148,6 +148,17 @@ public class PlayList implements Parcelable {
      */
     public void addSongs(Collection <SongInfo> c) {
         playSongs.addAll(c);
+        notifySongCountOrModeChange();
+    }
+
+    /**
+     * Add song.
+     *
+     * @param song the song
+     */
+    public void addSong(SongInfo song) {
+        playSongs.add(song);
+        notifySongCountOrModeChange();
     }
 
     /**
@@ -174,6 +185,7 @@ public class PlayList implements Parcelable {
                 LocalSongModel.update(song);
             }
         }
+        notifySongCountOrModeChange();
     }
 
     /**
@@ -185,6 +197,7 @@ public class PlayList implements Parcelable {
         if (song != null) {
             song.setIsChecked(false);
             LocalSongModel.update(song);
+            notifySongCountOrModeChange();
         }
     }
 
@@ -208,8 +221,7 @@ public class PlayList implements Parcelable {
         }
 
         if (playingIndex < playSongs.size()) {
-            playingSong = playSongs.get(playingIndex);
-            return playingSong;
+            return playSongs.get(playingIndex);
         }
         return null;
     }
@@ -294,6 +306,18 @@ public class PlayList implements Parcelable {
         return randomIndex;
     }
 
+    public void notifySongCountOrModeChange() {
+        if (playListObserver != null) {
+            playListObserver.onSongCountOrModeChange();
+        }
+    }
+
+    public void updatePlaySongBackgroundColor(SongInfo song) {
+        if (playListObserver != null) {
+            playListObserver.updatePlaySongBackgroundColor(song);
+        }
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -304,6 +328,11 @@ public class PlayList implements Parcelable {
         dest.writeTypedList(this.playSongs);
         dest.writeInt(this.playingIndex);
         dest.writeInt(this.playMode == null ? -1 : this.playMode.ordinal());
-        dest.writeParcelable(this.playingSong, flags);
+    }
+
+    public interface PlayListObserver {
+        void onSongCountOrModeChange();
+
+        void updatePlaySongBackgroundColor(SongInfo song);
     }
 }

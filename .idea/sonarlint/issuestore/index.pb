@@ -9,8 +9,6 @@ P
  app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
 i
 9app/src/main/java/com/mzz/zmusicplayer/song/SongInfo.java,5\7\575b76af88e0653f6ecafe3f7980c33517eaa43e
-l
-<app/src/main/java/com/mzz/zmusicplayer/song/FileManager.java,6\2\6288555ae46d990cbcc072d3b22665b83bac1e38
 m
 =app/src/main/java/com/mzz/zmusicplayer/common/TimeHelper.java,7\7\77dd994d2bd20bdff286708f6d8f0a49a7241e7f
 g
@@ -142,9 +140,13 @@ o
 ?app/src/main/java/com/mzz/zmusicplayer/ui/PlayListFragment.java,9\d\9d95ae40080e64a96955a7fea086bba16f49b67f
 u
 Eapp/src/main/java/com/mzz/zmusicplayer/contract/PlayListContract.java,6\0\60bd15b25f71d0f386f0cf8a912500debdbc5c94
-k
-;app/src/main/java/com/mzz/zmusicplayer/song/LocalSongs.java,e\e\ee257c5252ef7c6f26042c9fc12ea7d3548b6101
 p
 @app/src/main/java/com/mzz/zmusicplayer/ui/LocalSongFragment.java,0\2\0238a2837323cd6260de9c4b77234dbf24ea3639
 w
 Gapp/src/main/java/com/mzz/zmusicplayer/presenter/PlayListPresenter.java,5\2\523bdc44d643dcecf263b31ada5d3c0eb0024a9d
+l
+<app/src/main/java/com/mzz/zmusicplayer/file/FileManager.java,1\e\1e1c80bd6169ee8b89734f8bc88bae91335e1eaa
+k
+;app/src/main/java/com/mzz/zmusicplayer/song/RecentSong.java,4\1\41d9dd2b29d38c8bcb3ec98a7ef38ece80cd59b4
+j
+:app/src/main/java/com/mzz/zmusicplayer/song/LocalSong.java,0\3\031ae1087c28ebd0a7d0b311e50bb2b9e1e3e3aa

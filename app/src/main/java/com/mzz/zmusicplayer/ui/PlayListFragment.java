@@ -103,14 +103,6 @@ public class PlayListFragment extends Fragment implements PlayListContract.View 
         mainPresenter.remove(keys);
     }
 
-    public void updateSongCountAndMode() {
-        mainPresenter.updateSongCountAndMode();
-    }
-
-    public void updatePlaySongBackgroundColor(SongInfo song) {
-        mainPresenter.updatePlaySongBackgroundColor(song);
-    }
-
     @Override
     public RecyclerView getRecyclerView() {
         return rvSong;

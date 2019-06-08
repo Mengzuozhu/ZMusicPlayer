@@ -34,8 +34,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity implements PlayListFragment.PlayListListener,
-        MusicControlFragment.MusicControlListener {
+public class MainActivity extends BaseActivity implements PlayListFragment.PlayListListener{
 
     LocalSongFragment localSongFragment;
     private PlayListFragment playListFragment;
@@ -184,16 +183,6 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
         }
         List <Long> ids = EditHandler.integerToLongList(deleteIds);
         playListFragment.remove(ids);
-    }
-
-    @Override
-    public void updatePlaySongBackgroundColor(SongInfo song) {
-        playListFragment.updatePlaySongBackgroundColor(song);
-    }
-
-    @Override
-    public void updateSongCountAndMode() {
-        playListFragment.updateSongCountAndMode();
     }
 
 }

@@ -55,7 +55,6 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     ImageView ivFavorite;
     @BindView(R.id.iv_play_mode)
     ImageView ivPlayMode;
-    private MusicControlListener controlListener;
     private int currentSongDuration;
     //与后台服务共用同一个播放器
     private IPlayer mPlayer;
@@ -134,7 +133,6 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         musicPresenter.subscribe();
         ivPlayMode.setImageResource(AppSetting.getPlayMode().getIcon());
         setSeekBarListener();
-        getListener();
     }
 
     @Override
@@ -145,13 +143,6 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         AppSetting.setLastPlaySongId(mPlayer.getPlayingSong().getId());
         mPlayer.releasePlayer();
         musicPresenter.unsubscribe();
-    }
-
-    private void getListener() {
-        FragmentActivity activity = getActivity();
-        if (activity instanceof MusicControlListener) {
-            controlListener = (MusicControlListener) activity;
-        }
     }
 
     private void setSeekBarListener() {
@@ -192,6 +183,7 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         } else {
             mPlayer.setPlayList(playList);
         }
+        onSongUpdated(playList.getPlayingSong());
     }
 
     public void updatePlayingIndex(int playingIndex) {
@@ -261,11 +253,10 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         if (song == null) {
             return;
         }
-        if (controlListener != null) {
-            controlListener.updatePlaySongBackgroundColor(song);
-        }
+        PlayList playList = mPlayer.getPlayList();
+        playList.updatePlaySongBackgroundColor(song);
         song.setLastPlayTime(new Date());
-        mPlayer.getPlayList().updateRecentSongs(song);
+        playList.updateRecentSongs(song);
         //记录播放歌曲ID
         AppSetting.setLastPlaySongId(song.getId());
         tvSongName.setText(String.format("%s-%s", song.getName(), song.getArtist()));
@@ -292,12 +283,10 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
 
     @Override
     public void onSwitchPlayMode(PlayedMode playedMode) {
+        ViewerHelper.showToast(getContext(), playedMode.getDesc());
         ivPlayMode.setImageResource(playedMode.getIcon());
         AppSetting.setPlayMode(playedMode);
-        if (controlListener != null) {
-            controlListener.updateSongCountAndMode();
-        }
-        ViewerHelper.showToast(getContext(), playedMode.getDesc());
+        mPlayer.getPlayList().notifySongCountOrModeChange();
     }
 
     @Override
@@ -338,9 +327,4 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
-    public interface MusicControlListener {
-        void updatePlaySongBackgroundColor(SongInfo song);
-
-        void updateSongCountAndMode();
-    }
 }
