@@ -1,7 +1,5 @@
 package com.mzz.zmusicplayer.song;
 
-import com.mzz.zmusicplayer.setting.PlayedMode;
-
 /**
  * author : Mzz
  * date : 2019 2019/5/29 16:08
@@ -32,6 +30,8 @@ public interface IPlayer {
     boolean isPlaying();
 
     boolean seekTo(int progress);
+
+    void continuePlay();
 
     int getCurrentPosition();
 

@@ -49,6 +49,8 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
             list = new PlayList();
         }
         playList = list;
+        //保证更新播放列表后，可以重新开始播放新歌
+        isPaused = false;
     }
 
     @Override
@@ -56,6 +58,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         if (isPaused) {
             mPlayer.start();
             notifyPlayStatusChanged(true);
+            isPaused = false;
             return true;
         }
         SongInfo playingSong = getPlayingSong();
@@ -189,6 +192,13 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void continuePlay() {
+        mPlayer.start();
+        notifyPlayStatusChanged(true);
+        isPaused = false;
     }
 
     @Override

@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,10 +41,10 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     private static final String ARGUMENT_PLAY_LIST = "ARGUMENT_PLAY_LIST";
     //更新进度条的间隔，单位：ms
     private static final long UPDATE_PROGRESS_INTERVAL = 1000;
-    @BindView(R.id.tv_song_name)
-    TextView tvSongName;
     @BindView(R.id.progress_song)
     SeekBar seekBarProgress;
+    @BindView(R.id.tv_song_name)
+    TextView tvSongName;
     @BindView(R.id.tv_progress)
     TextView tvProgress;
     @BindView(R.id.tv_duration)
@@ -253,10 +253,8 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         if (song == null) {
             return;
         }
-        PlayList playList = mPlayer.getPlayList();
-        playList.updatePlaySongBackgroundColor(song);
         song.setLastPlayTime(new Date());
-        playList.updateRecentSongs(song);
+        mPlayer.getPlayList().updateRecentSongs(song);
         //记录播放歌曲ID
         AppSetting.setLastPlaySongId(song.getId());
         tvSongName.setText(String.format("%s-%s", song.getName(), song.getArtist()));
@@ -264,6 +262,7 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         tvDuration.setText(TimeHelper.formatDuration(currentSongDuration));
         updateProgressTextWithDuration(0);
         onSwitchFavorite(song.getIsFavorite());
+        seekBarProgress.setProgress(0);
     }
 
     @Override

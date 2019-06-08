@@ -207,6 +207,7 @@ public class PlayList implements Parcelable {
      * @param song the song
      */
     public void updateRecentSongs(SongInfo song) {
+        updatePlaySongBackgroundColor(song);
         localSongs.updateRecentSong(song);
     }
 
@@ -312,7 +313,7 @@ public class PlayList implements Parcelable {
         }
     }
 
-    public void updatePlaySongBackgroundColor(SongInfo song) {
+    private void updatePlaySongBackgroundColor(SongInfo song) {
         if (playListObserver != null) {
             playListObserver.updatePlaySongBackgroundColor(song);
         }
