@@ -28,8 +28,8 @@ class RecentSong {
         initMinHeap();
         buildMinHeap();
         LinkedList <SongInfo> recentSongs = new LinkedList <>();
-        for (SongInfo songInfo : minHeap) {
-            recentSongs.addFirst(songInfo);
+        while (!minHeap.isEmpty()) {
+            recentSongs.addFirst(minHeap.poll());
         }
         return recentSongs;
     }
