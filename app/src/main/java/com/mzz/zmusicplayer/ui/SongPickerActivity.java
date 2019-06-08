@@ -20,7 +20,7 @@ import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongPickerAdapter;
-import com.mzz.zmusicplayer.song.FileManager;
+import com.mzz.zmusicplayer.file.FileManager;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 

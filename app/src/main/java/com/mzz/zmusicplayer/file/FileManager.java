@@ -1,4 +1,4 @@
-package com.mzz.zmusicplayer.song;
+package com.mzz.zmusicplayer.file;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.github.promeg.pinyinhelper.Pinyin;
+import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.io.File;
 import java.util.ArrayList;

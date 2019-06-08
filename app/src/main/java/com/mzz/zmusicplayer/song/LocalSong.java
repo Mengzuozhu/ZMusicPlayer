@@ -4,7 +4,6 @@ import com.mzz.zmusicplayer.model.LocalSongModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,13 +14,13 @@ import lombok.Getter;
  * date : 2019 2019/6/7 20:01
  * description :
  */
-public class LocalSongs {
+public class LocalSong {
     private static final int RECENT_MAX_COUNT = 50;
     @Getter
     private List <SongInfo> allSongs;
     private LinkedList <SongInfo> recentSongs;
 
-    LocalSongs(List <SongInfo> allSongs) {
+    LocalSong(List <SongInfo> allSongs) {
         this.allSongs = allSongs;
     }
 
@@ -58,25 +57,6 @@ public class LocalSongs {
      */
     public static void sortById(List <SongInfo> songInfos) {
         songInfos.sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
-    }
-
-    /**
-     * Sort by last play time.
-     *
-     * @param songInfos the song infos
-     */
-    private static void sortByLastPlayTime(List <SongInfo> songInfos) {
-        songInfos.sort((o1, o2) -> {
-            Date lastPlayTime = o2.getLastPlayTime();
-            if (lastPlayTime == null) {
-                return -1;
-            }
-            Date lastPlayTime2 = o1.getLastPlayTime();
-            if (lastPlayTime2 == null) {
-                return 1;
-            }
-            return lastPlayTime.compareTo(lastPlayTime2);
-        });
     }
 
     /**
@@ -131,17 +111,7 @@ public class LocalSongs {
      */
     List <SongInfo> getRecentSongs() {
         if (recentSongs == null) {
-            recentSongs = new LinkedList <>();
-            for (SongInfo localSong : allSongs) {
-                if (recentSongs.size() >= RECENT_MAX_COUNT) {
-                    break;
-                }
-                //播放时间非空，且保证唯一
-                if (localSong.getLastPlayTime() != null && !recentSongs.contains(localSong)) {
-                    recentSongs.add(localSong);
-                }
-            }
-            sortByLastPlayTime(recentSongs);
+            recentSongs = new RecentSong(allSongs).sortRecentSongs();
         }
         return recentSongs;
     }
