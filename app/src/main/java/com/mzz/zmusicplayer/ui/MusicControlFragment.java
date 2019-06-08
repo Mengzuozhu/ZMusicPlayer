@@ -186,16 +186,11 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
             playList = new PlayList();
         }
 
-        boolean isNotSameLastSong = !playList.updatePlayingIndexBySettingId();
-        //当前播放的歌曲有变化，则播放新的歌曲
-        if (mPlayer.isPlaying() && isNotSameLastSong) {
+        playList.updatePlayingIndexBySettingId();
+        if (mPlayer.isPlaying()) {
             mPlayer.play(playList);
         } else {
             mPlayer.setPlayList(playList);
-        }
-        //播放的歌曲有变化
-        if (isNotSameLastSong) {
-            onSongUpdated(mPlayer.getPlayingSong());
         }
     }
 

@@ -6,7 +6,7 @@
     android:background="@color/colorGrey">
 
     <TextView
-        android:id="@+id/tv_song_count_mode"
+        android:id="@+id/tv_play_song_count_mode"
         style="@style/StyleTextView"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
@@ -17,23 +17,23 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/iv_header_search"
+        android:id="@+id/iv_play_header_search"
         style="@style/StyleHeaderImage"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/iv_header_sort"
+        app:layout_constraintEnd_toStartOf="@+id/iv_play_header_sort"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_search" />
 
     <ImageView
-        android:id="@+id/iv_header_sort"
+        android:id="@+id/iv_play_header_sort"
         style="@style/StyleHeaderImage"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/iv_header_edit"
+        app:layout_constraintEnd_toStartOf="@+id/iv_play_header_edit"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/sort_white" />
 
     <ImageView
-        android:id="@+id/iv_header_edit"
+        android:id="@+id/iv_play_header_edit"
         style="@style/StyleHeaderImage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -6,24 +6,31 @@
     android:background="@color/colorGrey">
 
     <TextView
-        android:id="@+id/tv_header_song_count"
+        android:id="@+id/tv_song_header_count"
         style="@style/StyleTextView"
-        android:layout_marginTop="0dp"
         android:layout_marginStart="14dp"
+        android:layout_marginTop="0dp"
         android:text="@string/undefined"
         android:textSize="@dimen/sp_14"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/iv_header_play_all"
+        app:layout_constraintStart_toEndOf="@+id/iv_song_header_play_all"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/iv_header_play_all"
-        android:layout_width="@dimen/image_size_24"
-        android:layout_height="@dimen/image_size_24"
+        android:id="@+id/iv_song_header_play_all"
+        style="@style/StyleHeaderImage"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/play" />
+
+    <ImageView
+        android:id="@+id/iv_song_header_edit"
+        style="@style/StyleHeaderImage"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/edit" />
 
 </android.support.constraint.ConstraintLayout>

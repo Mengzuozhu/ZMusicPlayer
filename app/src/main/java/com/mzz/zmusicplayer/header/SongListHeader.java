@@ -11,6 +11,7 @@ import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
 import com.mzz.zmusicplayer.song.PlayList;
+import com.mzz.zmusicplayer.song.SongInfo;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -38,19 +39,24 @@ public class SongListHeader {
     private void initHeader() {
         View header = LayoutInflater.from(activity).inflate(R.layout.content_song_list_header,
                 recyclerView, false);
-        tvSongCount = header.findViewById(R.id.tv_header_song_count);
+        tvSongCount = header.findViewById(R.id.tv_song_header_count);
         updateSongCount();
-        ImageView ivPlayAll = header.findViewById(R.id.iv_header_play_all);
+        ImageView ivPlayAll = header.findViewById(R.id.iv_song_header_play_all);
         ivPlayAll.setOnClickListener(v -> onPlayAllClick());
         playListAdapter.setHeaderView(header);
     }
 
     private void onPlayAllClick() {
         //先开始播放歌曲，再替换播放列表
-        EventBus.getDefault().post(mPlayList.getPlayingSong());
+        SongInfo playingSong = mPlayList.getPlayingSong();
+        playListAdapter.updatePlaySongBackgroundColor(playingSong);
+        EventBus.getDefault().post(playingSong);
         EventBus.getDefault().post(mPlayList.getPlaySongs());
     }
 
+    /**
+     * Update song count.
+     */
     public void updateSongCount() {
         String songCountAndMode = StringHelper.getLocalFormat("播放全部(%d首)",
                 mPlayList.getPlaySongs().size());

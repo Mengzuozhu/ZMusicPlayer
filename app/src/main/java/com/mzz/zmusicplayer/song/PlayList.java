@@ -74,7 +74,7 @@ public class PlayList implements Parcelable {
      * @return the song index by id
      */
     static int getSongIndexById(List <SongInfo> songInfos, long songId) {
-        int songIndex = 0;
+        int songIndex = -1;
         //根据ID获取歌曲在列表中的位置
         for (int i = 0; i < songInfos.size(); i++) {
             SongInfo songInfo = songInfos.get(i);
@@ -128,23 +128,17 @@ public class PlayList implements Parcelable {
 
     /**
      * Update playing index by setting id.
-     *
-     * @return is Same with last song
      */
-    public boolean updatePlayingIndexBySettingId() {
+    public void updatePlayingIndexBySettingId() {
         if (playSongs.isEmpty()) {
-            this.playingIndex = 0;
-            return false;
+            playingIndex = 0;
+            return;
         }
         long lastPlaySongId = AppSetting.getLastPlaySongId();
-        this.playingIndex = getSongIndexById(playSongs, lastPlaySongId);
-        SongInfo newSong = playSongs.get(playingIndex);
-        boolean isSameLastSong = false;
-        if (playingSong != null && newSong != null) {
-            isSameLastSong = playingSong.getId().equals(newSong.getId());
+        playingIndex = getSongIndexById(playSongs, lastPlaySongId);
+        if (playingIndex == -1) {
+            playingIndex = 0;
         }
-        //新的播放歌曲是否和上一次一样
-        return isSameLastSong;
     }
 
     /**

@@ -108,7 +108,13 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
 
     @Override
     public boolean play(SongInfo songInfo) {
-        int songIndexById = PlayList.getSongIndexById(playList.getPlaySongs(), songInfo.getId());
+        List <SongInfo> playSongs = playList.getPlaySongs();
+        int songIndexById = PlayList.getSongIndexById(playSongs, songInfo.getId());
+        if (songIndexById == -1) {
+            songInfo.setIsChecked(true);
+            playSongs.add(songInfo);
+            songIndexById = playSongs.size() - 1;
+        }
         return play(songIndexById);
     }
 

@@ -45,13 +45,13 @@ public class PlayListHeader {
     private void initHeader() {
         View header = LayoutInflater.from(activity).inflate(R.layout.content_play_list_header,
                 recyclerView, false);
-        tcSongCountAndMode = header.findViewById(R.id.tv_song_count_mode);
+        tcSongCountAndMode = header.findViewById(R.id.tv_play_song_count_mode);
         updateSongCountAndMode();
-        ImageView searchView = header.findViewById(R.id.iv_header_search);
+        ImageView searchView = header.findViewById(R.id.iv_play_header_search);
         searchView.setOnClickListener(v -> showSearchActivity());
-        ImageView sortView = header.findViewById(R.id.iv_header_sort);
+        ImageView sortView = header.findViewById(R.id.iv_play_header_sort);
         sortView.setOnClickListener(v -> showSongOrderPopupMenu(sortView));
-        ImageView editView = header.findViewById(R.id.iv_header_edit);
+        ImageView editView = header.findViewById(R.id.iv_play_header_edit);
         editView.setOnClickListener(v -> showSongEditActivity());
         playListAdapter.setHeaderView(header);
     }
