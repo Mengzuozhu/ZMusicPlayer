@@ -8,6 +8,8 @@ import com.mzz.zmusicplayer.common.TextQueryHandler;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
+import org.greenrobot.eventbus.EventBus;
+
 /**
  * author : Mzz
  * date : 2019 2019/6/3 10:52
@@ -27,6 +29,11 @@ public class MusicSearchAdapter extends PlayListAdapter {
         super(playList, recyclerView);
         textQueryHandler = new TextQueryHandler(this, recyclerView.getContext(),
                 playList.getPlaySongs());
+        this.setOnItemClickListener((adapter, view, position) -> {
+            SongInfo song = getItem(position);
+            updatePlaySongBackgroundColor(song);
+            EventBus.getDefault().post(song);
+        });
     }
 
     @Override

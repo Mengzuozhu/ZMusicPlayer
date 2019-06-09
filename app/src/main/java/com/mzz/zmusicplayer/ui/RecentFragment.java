@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongListAdapter;
 import com.mzz.zmusicplayer.edit.EditType;
+import com.mzz.zmusicplayer.song.ISongChangeListener;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.RecentSong;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -30,13 +31,14 @@ import lombok.NoArgsConstructor;
  * create an instance of this fragment.
  */
 @NoArgsConstructor
-public class RecentFragment extends Fragment {
+public class RecentFragment extends Fragment implements ISongChangeListener {
 
     @BindView(R.id.rv_recent_song)
     RecyclerView rvRecentSong;
     private Unbinder unbinder;
     private SongListAdapter songListAdapter;
     private RecentSong recentSong;
+    private boolean isVisibleToUser;
 
     /**
      * Use this factory method to create a new instance of
@@ -68,6 +70,7 @@ public class RecentFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        this.isVisibleToUser = isVisibleToUser;
         if (isVisibleToUser) {
             init();
         }
@@ -99,6 +102,14 @@ public class RecentFragment extends Fragment {
 
     public void remove(List <Long> keys) {
         songListAdapter.updateData(recentSong.remove(keys));
+    }
+
+    @Override
+    public void updatePlaySongBackgroundColor(SongInfo song) {
+        if (!isVisibleToUser) {
+            return;
+        }
+        songListAdapter.updatePlaySongBackgroundColor(song);
     }
 
 }

@@ -13,6 +13,7 @@ import com.mzz.zmusicplayer.adapter.PlayListAdapter;
 import com.mzz.zmusicplayer.edit.EditType;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
+import com.mzz.zmusicplayer.ui.MusicSearchActivity;
 import com.mzz.zmusicplayer.ui.SongEditActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -31,7 +32,7 @@ public class SongListHeader {
     private TextView tvSongCount;
     private FragmentActivity activity;
     private RecyclerView recyclerView;
-    private PlayList mPlayList;
+    private PlayList playList;
     private EditType editType;
     private PlayListAdapter playListAdapter;
 
@@ -40,7 +41,7 @@ public class SongListHeader {
         this.activity = activity;
         this.recyclerView = playListAdapter.getRecyclerView();
         this.playListAdapter = playListAdapter;
-        mPlayList = playListAdapter.getMPlayList();
+        playList = playListAdapter.getMPlayList();
         this.editType = editType;
         initHeader();
     }
@@ -50,6 +51,8 @@ public class SongListHeader {
                 recyclerView, false);
         tvSongCount = header.findViewById(R.id.tv_song_header_count);
         updateSongCount();
+        ImageView searchView = header.findViewById(R.id.iv_song_header_search);
+        searchView.setOnClickListener(v -> showSearchActivity());
         ImageView ivPlayAll = header.findViewById(R.id.iv_song_header_play_all);
         ivPlayAll.setOnClickListener(v -> onPlayAllClick());
         ImageView editView = header.findViewById(R.id.iv_song_header_edit);
@@ -61,30 +64,34 @@ public class SongListHeader {
      * Show song edit activity.
      */
     public void showSongEditActivity() {
-        List <SongInfo> songs = mPlayList.getPlaySongs();
+        List <SongInfo> songs = playList.getPlaySongs();
         if (songs instanceof LinkedList) {
             songs = new ArrayList <>(songs);
         }
         SongEditActivity.startForResult(activity, songs, editType);
     }
 
+    private void showSearchActivity() {
+        MusicSearchActivity.startForResult(activity, playList);
+    }
+
     private void onPlayAllClick() {
-        SongInfo playingSong = mPlayList.getPlayingSong();
+        SongInfo playingSong = playList.getPlayingSong();
         if (playingSong == null) {
             return;
         }
         playListAdapter.updatePlaySongBackgroundColor(playingSong);
         //先开始播放歌曲，再替换播放列表
         EventBus.getDefault().post(playingSong);
-        EventBus.getDefault().post(mPlayList.getPlaySongs());
+        EventBus.getDefault().post(playList.getPlaySongs());
     }
 
     /**
      * Update song count.
      */
     public void updateSongCount() {
-        String songCountAndMode = StringHelper.getLocalFormat("播放全部(%d首)",
-                mPlayList.getPlaySongs().size());
+        int size = playList.getPlaySongs().size();
+        String songCountAndMode = StringHelper.getLocalFormat("播放全部(%d首)", size);
         tvSongCount.setText(songCountAndMode);
     }
 

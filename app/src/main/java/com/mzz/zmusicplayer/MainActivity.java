@@ -17,6 +17,7 @@ import com.mzz.zmusicplayer.adapter.MusicPagerAdapter;
 import com.mzz.zmusicplayer.edit.EditHandler;
 import com.mzz.zmusicplayer.edit.EditType;
 import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
+import com.mzz.zmusicplayer.song.ISongChangeListener;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.FavoriteFragment;
@@ -37,6 +38,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements PlayListFragment.PlayListListener {
 
+    List <ISongChangeListener> songChangeListeners;
     private RecentFragment recentFragment;
     private LocalSongFragment localSongFragment;
     private PlayListFragment playListFragment;
@@ -83,10 +85,18 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
 
     private void init() {
         initTabPage();
+        initSongChangeListeners();
         headsetReceiver = new HeadsetReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_HEADSET_PLUG);
         registerReceiver(headsetReceiver, intentFilter);
+    }
+
+    private void initSongChangeListeners() {
+        songChangeListeners = new ArrayList <>();
+        songChangeListeners.add(recentFragment);
+        songChangeListeners.add(localSongFragment);
+        songChangeListeners.add(favoriteFragment);
     }
 
     private void initTabPage() {
@@ -149,9 +159,14 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
     }
 
     @Subscribe
-    public void setPlayingSong(SongInfo songInfo) {
+    public void updatePlayingSong(SongInfo songInfo) {
         if (musicControlFragment != null) {
             musicControlFragment.updatePlayingSong(songInfo);
+            if (songChangeListeners != null) {
+                for (ISongChangeListener songChangeListener : songChangeListeners) {
+                    songChangeListener.updatePlaySongBackgroundColor(songInfo);
+                }
+            }
         } else {
             setPlayList(new PlayList());
         }

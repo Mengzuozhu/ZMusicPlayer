@@ -14,8 +14,6 @@ import com.mzz.zmusicplayer.adapter.MusicSearchAdapter;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.List;
 
 import butterknife.BindView;
@@ -55,11 +53,6 @@ public class MusicSearchActivity extends BaseActivity {
             }
         }
         musicSearchAdapter = new MusicSearchAdapter(playList, rvSearch);
-        musicSearchAdapter.setOnItemClickListener((adapter, view, position) -> {
-            SongInfo song = musicSearchAdapter.getItem(position);
-            EventBus.getDefault().post(song);
-            musicSearchAdapter.updatePlaySongBackgroundColor(song);
-        });
     }
 
     @Override

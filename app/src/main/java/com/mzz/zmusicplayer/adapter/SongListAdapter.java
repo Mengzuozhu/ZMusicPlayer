@@ -8,7 +8,7 @@ import com.mzz.zmusicplayer.header.SongListHeader;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
-import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -30,7 +30,6 @@ public class SongListAdapter extends PlayListAdapter {
     public SongListAdapter(PlayList playList, RecyclerView recyclerView, FragmentActivity activity,
                            EditType editType) {
         super(playList, recyclerView);
-        setPlaySongClickListener();
         setOnItemLongClick();
         songListHeader = new SongListHeader(activity, this, editType);
     }
@@ -39,6 +38,11 @@ public class SongListAdapter extends PlayListAdapter {
         songListHeader.updateSongCount();
     }
 
+    /**
+     * Update data.
+     *
+     * @param songs the songs
+     */
     public void updateData(List <SongInfo> songs) {
         updatePlaySongs(songs);
         setNewData(songs);
@@ -54,11 +58,4 @@ public class SongListAdapter extends PlayListAdapter {
         });
     }
 
-    private void setPlaySongClickListener() {
-        this.setOnItemClickListener((adapter, view, position) -> {
-            SongInfo song = getItem(position);
-            updatePlaySongBackgroundColor(song);
-            EventBus.getDefault().post(song);
-        });
-    }
 }

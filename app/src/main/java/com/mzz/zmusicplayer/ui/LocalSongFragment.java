@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongListAdapter;
 import com.mzz.zmusicplayer.edit.EditType;
+import com.mzz.zmusicplayer.song.ISongChangeListener;
 import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -27,13 +28,14 @@ import lombok.NoArgsConstructor;
  * A simple {@link Fragment} subclass.
  */
 @NoArgsConstructor
-public class LocalSongFragment extends Fragment {
+public class LocalSongFragment extends Fragment implements ISongChangeListener {
 
     @BindView(R.id.rv_local_song)
     RecyclerView rvLocalSong;
     Unbinder unbinder;
     private SongListAdapter songListAdapter;
     private LocalSong localSongs;
+    private boolean isVisibleToUser;
 
     /**
      * New instance favorite fragment.
@@ -63,6 +65,7 @@ public class LocalSongFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        this.isVisibleToUser = isVisibleToUser;
         if (isVisibleToUser) {
             init();
         }
@@ -108,5 +111,13 @@ public class LocalSongFragment extends Fragment {
      */
     public void remove(List <Long> keys) {
         songListAdapter.updateData(localSongs.remove(keys));
+    }
+
+    @Override
+    public void updatePlaySongBackgroundColor(SongInfo song) {
+        if (!isVisibleToUser) {
+            return;
+        }
+        songListAdapter.updatePlaySongBackgroundColor(song);
     }
 }

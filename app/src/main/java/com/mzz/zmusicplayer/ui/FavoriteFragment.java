@@ -12,6 +12,7 @@ import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongListAdapter;
 import com.mzz.zmusicplayer.edit.EditType;
 import com.mzz.zmusicplayer.song.FavoriteSong;
+import com.mzz.zmusicplayer.song.ISongChangeListener;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
@@ -26,13 +27,14 @@ import lombok.NoArgsConstructor;
  * A simple {@link Fragment} subclass.
  */
 @NoArgsConstructor
-public class FavoriteFragment extends Fragment {
+public class FavoriteFragment extends Fragment implements ISongChangeListener {
 
     @BindView(R.id.rv_favorite_song)
     RecyclerView rvFavoriteSong;
     Unbinder unbinder;
     FavoriteSong favoriteSong;
     private SongListAdapter songListAdapter;
+    private boolean isVisibleToUser;
 
     /**
      * New instance favorite fragment.
@@ -62,6 +64,7 @@ public class FavoriteFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        this.isVisibleToUser = isVisibleToUser;
         if (isVisibleToUser) {
             init();
         }
@@ -93,6 +96,14 @@ public class FavoriteFragment extends Fragment {
 
     public void remove(List <Long> keys) {
         songListAdapter.updateData(favoriteSong.remove(keys));
+    }
+
+    @Override
+    public void updatePlaySongBackgroundColor(SongInfo song) {
+        if (!isVisibleToUser) {
+            return;
+        }
+        songListAdapter.updatePlaySongBackgroundColor(song);
     }
 
 }

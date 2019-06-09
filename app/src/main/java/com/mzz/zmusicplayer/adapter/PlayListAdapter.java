@@ -13,6 +13,8 @@ import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import lombok.Getter;
@@ -44,6 +46,7 @@ public class PlayListAdapter extends SongInfoAdapter {
         context = recyclerView.getContext();
         selectColor = context.getColor(R.color.colorGreen);
         setOnItemChildClickListener((adapter, view, position) -> showSongMoreMenu(view, position));
+        setPlaySongClickListener();
     }
 
     @Override
@@ -81,6 +84,13 @@ public class PlayListAdapter extends SongInfoAdapter {
     void updatePlaySongs(List <SongInfo> songs) {
         mPlayList.setPlaySongs(songs);
         setNewData(songs);
+    }
+
+    private void setPlaySongClickListener() {
+        this.setOnItemClickListener((adapter, view, position) -> {
+            SongInfo song = getItem(position);
+            EventBus.getDefault().post(song);
+        });
     }
 
     private void showSongMoreMenu(View view, int position) {
