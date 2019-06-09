@@ -35,7 +35,7 @@ public class SongListAdapter extends PlayListAdapter {
         songListHeader = new SongListHeader(activity, this, editType);
     }
 
-    public void updateSongCount() {
+    protected void updateSongCount() {
         songListHeader.updateSongCount();
     }
 

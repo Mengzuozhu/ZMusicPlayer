@@ -69,7 +69,13 @@ public class LocalSongClass {
         songInfos.sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
     }
 
-    public List <SongInfo> remove(List <Long> keys) {
+    /**
+     * Remove list .
+     *
+     * @param keys the keys
+     * @return the list
+     */
+    public List <SongInfo> remove(Collection <Long> keys) {
         LocalSongModel.deleteByKeyInTx(keys);
         for (int i = allLocalSongs.size() - 1; i >= 0 && !keys.isEmpty(); i--) {
             SongInfo song = allLocalSongs.get(i);
@@ -79,6 +85,17 @@ public class LocalSongClass {
                 keys.remove(id);
             }
         }
+        return allLocalSongs;
+    }
+
+    /**
+     * Add all.
+     *
+     * @param c the c
+     */
+    public List <SongInfo> addToLocalSongs(Collection <SongInfo> c) {
+        allLocalSongs.addAll(c);
+        LocalSongModel.insertOrReplaceInTx(c);
         return allLocalSongs;
     }
 
@@ -105,17 +122,6 @@ public class LocalSongClass {
     }
 
     /**
-     * Add all.
-     *
-     * @param c the c
-     */
-    public List <SongInfo> addToLocalSongs(Collection <SongInfo> c) {
-        allLocalSongs.addAll(c);
-        LocalSongModel.insertOrReplaceInTx(c);
-        return allLocalSongs;
-    }
-
-    /**
      * Gets play list playSongs.
      *
      * @return the play list playSongs
@@ -135,7 +141,7 @@ public class LocalSongClass {
      *
      * @return the recent playSongs
      */
-    List <SongInfo> getRecentSongs() {
+    public List <SongInfo> getRecentSongs() {
         if (recentSongs == null) {
             recentSongs = new RecentSong(allLocalSongs).sortRecentSongs();
         }
@@ -147,7 +153,7 @@ public class LocalSongClass {
      *
      * @return the favorite playSongs
      */
-    List <SongInfo> getFavoriteSongs() {
+    public List <SongInfo> getFavoriteSongs() {
         List <SongInfo> favoriteSongs = new ArrayList <>();
         for (SongInfo song : allLocalSongs) {
             if (song.getIsFavorite()) {

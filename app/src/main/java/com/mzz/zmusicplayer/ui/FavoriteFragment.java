@@ -8,16 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.adapter.PlayListAdapter;
+import com.mzz.zmusicplayer.adapter.SongListAdapter;
 import com.mzz.zmusicplayer.edit.EditType;
-import com.mzz.zmusicplayer.header.SongListHeader;
 import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.song.IPlayer;
+import com.mzz.zmusicplayer.song.LocalSongClass;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.Player;
 import com.mzz.zmusicplayer.song.SongInfo;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -35,9 +33,9 @@ public class FavoriteFragment extends Fragment {
     @BindView(R.id.rv_favorite_song)
     RecyclerView rvFavoriteSong;
     Unbinder unbinder;
-    private SongListHeader songListHeader;
+    private SongListAdapter songListAdapter;
+    private LocalSongClass localSongs;
     private IPlayer player;
-    private PlayList mPlayList;
 
     /**
      * New instance favorite fragment.
@@ -53,9 +51,9 @@ public class FavoriteFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
         unbinder = ButterKnife.bind(this, view);
-        mPlayList = new PlayList();
         player = Player.getInstance();
-        initAdapter();
+        localSongs = LocalSongClass.getInstance();
+        init();
         return view;
     }
 
@@ -69,7 +67,16 @@ public class FavoriteFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
+            init();
+        }
+    }
+
+    private void init() {
+        if (songListAdapter == null) {
             initAdapter();
+        } else {
+            List <SongInfo> favoriteSongs = localSongs.getFavoriteSongs();
+            songListAdapter.updateData(favoriteSongs);
         }
     }
 
@@ -77,31 +84,24 @@ public class FavoriteFragment extends Fragment {
         if (rvFavoriteSong == null) {
             return;
         }
-        List <SongInfo> favoriteSongs = player.getPlayList().getFavoriteSongs();
-        mPlayList.setPlaySongs(favoriteSongs);
-        PlayListAdapter playListAdapter = new PlayListAdapter(mPlayList, rvFavoriteSong) {
+        songListAdapter = new SongListAdapter(new PlayList(), rvFavoriteSong, getActivity(),
+                EditType.FAVORITE) {
             @Override
             public void removeSongAt(int position) {
-                SongInfo songInfo = this.getItem(position);
-                if (songInfo == null) {
+                SongInfo song = this.getItem(position);
+                if (song == null) {
                     return;
                 }
-                if (songInfo.isPlayListSelected()) {
+                if (song.isPlayListSelected()) {
                     player.switchFavorite();
                 } else {
-                    songInfo.setIsFavorite(false);
-                    LocalSongModel.update(songInfo);
+                    song.setIsFavorite(false);
+                    LocalSongModel.update(song);
                 }
                 super.removeSongAt(position);
-                songListHeader.updateSongCount();
+                updateSongCount();
             }
         };
-        playListAdapter.setOnItemClickListener((adapter, view, position) -> {
-            SongInfo song = playListAdapter.getItem(position);
-            playListAdapter.updatePlaySongBackgroundColor(song);
-            EventBus.getDefault().post(song);
-        });
-        songListHeader = new SongListHeader(getActivity(), playListAdapter, EditType.FAVORITE);
     }
 
 }

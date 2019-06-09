@@ -17,6 +17,10 @@ import com.mzz.zmusicplayer.ui.SongEditActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * author : Mzz
  * date : 2019 2019/6/7 18:10
@@ -53,8 +57,15 @@ public class SongListHeader {
         playListAdapter.setHeaderView(header);
     }
 
+    /**
+     * Show song edit activity.
+     */
     public void showSongEditActivity() {
-        SongEditActivity.startForResult(activity, mPlayList.getPlaySongs(), editType);
+        List <SongInfo> songs = mPlayList.getPlaySongs();
+        if (songs instanceof LinkedList) {
+            songs = new ArrayList <>(songs);
+        }
+        SongEditActivity.startForResult(activity, songs, editType);
     }
 
     private void onPlayAllClick() {

@@ -1,6 +1,7 @@
 package com.mzz.zmusicplayer.ui;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -45,7 +46,7 @@ public class LocalSongFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_local_song, container, false);
         unbinder = ButterKnife.bind(this, view);
@@ -72,13 +73,9 @@ public class LocalSongFragment extends Fragment {
         if (songListAdapter == null) {
             initAdapter();
         } else {
-            updateSongs();
+            List <SongInfo> allLocalSongs = localSongs.getAllLocalSongs();
+            songListAdapter.updateData(allLocalSongs);
         }
-    }
-
-    private void updateSongs() {
-        List <SongInfo> allLocalSongs = localSongs.getAllLocalSongs();
-        songListAdapter.updateData(allLocalSongs);
     }
 
     private void initAdapter() {
