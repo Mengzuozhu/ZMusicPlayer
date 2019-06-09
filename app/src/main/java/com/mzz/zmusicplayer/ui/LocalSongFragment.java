@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongListAdapter;
 import com.mzz.zmusicplayer.edit.EditType;
-import com.mzz.zmusicplayer.song.LocalSongClass;
+import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
@@ -33,7 +33,7 @@ public class LocalSongFragment extends Fragment {
     RecyclerView rvLocalSong;
     Unbinder unbinder;
     private SongListAdapter songListAdapter;
-    private LocalSongClass localSongs;
+    private LocalSong localSongs;
 
     /**
      * New instance favorite fragment.
@@ -49,7 +49,7 @@ public class LocalSongFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_local_song, container, false);
         unbinder = ButterKnife.bind(this, view);
-        localSongs = LocalSongClass.getInstance();
+        localSongs = LocalSong.getInstance();
         init();
         return view;
     }
@@ -106,7 +106,7 @@ public class LocalSongFragment extends Fragment {
      *
      * @param keys the keys
      */
-    public void delete(List <Long> keys) {
+    public void remove(List <Long> keys) {
         songListAdapter.updateData(localSongs.remove(keys));
     }
 }

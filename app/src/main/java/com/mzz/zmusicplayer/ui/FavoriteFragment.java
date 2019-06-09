@@ -11,11 +11,8 @@ import android.view.ViewGroup;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongListAdapter;
 import com.mzz.zmusicplayer.edit.EditType;
-import com.mzz.zmusicplayer.model.LocalSongModel;
-import com.mzz.zmusicplayer.song.IPlayer;
-import com.mzz.zmusicplayer.song.LocalSongClass;
+import com.mzz.zmusicplayer.song.FavoriteSong;
 import com.mzz.zmusicplayer.song.PlayList;
-import com.mzz.zmusicplayer.song.Player;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.List;
@@ -34,9 +31,8 @@ public class FavoriteFragment extends Fragment {
     @BindView(R.id.rv_favorite_song)
     RecyclerView rvFavoriteSong;
     Unbinder unbinder;
+    FavoriteSong favoriteSong;
     private SongListAdapter songListAdapter;
-    private LocalSongClass localSongs;
-    private IPlayer player;
 
     /**
      * New instance favorite fragment.
@@ -52,8 +48,7 @@ public class FavoriteFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
         unbinder = ButterKnife.bind(this, view);
-        player = Player.getInstance();
-        localSongs = LocalSongClass.getInstance();
+        favoriteSong = FavoriteSong.getInstance();
         init();
         return view;
     }
@@ -76,7 +71,7 @@ public class FavoriteFragment extends Fragment {
         if (songListAdapter == null) {
             initAdapter();
         } else {
-            List <SongInfo> favoriteSongs = localSongs.getFavoriteSongs();
+            List <SongInfo> favoriteSongs = favoriteSong.getFavoriteSongs();
             songListAdapter.updateData(favoriteSongs);
         }
     }
@@ -89,20 +84,15 @@ public class FavoriteFragment extends Fragment {
                 EditType.FAVORITE) {
             @Override
             public void removeSongAt(int position) {
-                SongInfo song = this.getItem(position);
-                if (song == null) {
-                    return;
-                }
-                if (song.isPlayListSelected()) {
-                    player.switchFavorite();
-                } else {
-                    song.setIsFavorite(false);
-                    LocalSongModel.update(song);
-                }
+                favoriteSong.remove(getItem(position));
                 super.removeSongAt(position);
                 updateSongCount();
             }
         };
+    }
+
+    public void remove(List <Long> keys) {
+        songListAdapter.updateData(favoriteSong.remove(keys));
     }
 
 }

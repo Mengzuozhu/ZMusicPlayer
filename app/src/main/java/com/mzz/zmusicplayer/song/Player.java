@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.MusicApplication;
-import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 
 import java.io.IOException;
@@ -131,9 +130,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         if (playingSong == null) {
             return;
         }
-        boolean isFavorite = !playingSong.getIsFavorite();
-        playingSong.setIsFavorite(isFavorite);
-        LocalSongModel.update(playingSong);
+        boolean isFavorite = FavoriteSong.getInstance().switchFavorite(playingSong);
         notifyFavoriteChanged(isFavorite);
     }
 

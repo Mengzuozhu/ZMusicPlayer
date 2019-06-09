@@ -35,7 +35,7 @@ public class PlayList implements Parcelable {
     };
 
     @Getter
-    private LocalSongClass localSongs;
+    private LocalSong localSongs;
     @Getter
     @Setter
     private List <SongInfo> playSongs;
@@ -49,7 +49,7 @@ public class PlayList implements Parcelable {
     private PlayListObserver playListObserver;
 
     public PlayList() {
-        this.localSongs = LocalSongClass.getInstance();
+        this.localSongs = LocalSong.getInstance();
         this.playMode = AppSetting.getPlayMode();
         initPlayListSongs();
         updatePlayingIndexBySettingId();

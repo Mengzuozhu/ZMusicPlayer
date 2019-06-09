@@ -53,8 +53,14 @@ public class RecentSong {
         LocalSongModel.update(song);
     }
 
+    /**
+     * Remove list .
+     *
+     * @param keys the keys
+     * @return the list
+     */
     public List <SongInfo> remove(Collection <Long> keys) {
-        List <SongInfo> deleteSongs = new ArrayList <>();
+        List <SongInfo> removeSongs = new ArrayList <>();
         for (int i = recentSongs.size() - 1; i >= 0 && !keys.isEmpty(); i--) {
             SongInfo song = recentSongs.get(i);
             Long id = song.getId();
@@ -62,10 +68,10 @@ public class RecentSong {
                 song.setLastPlayTime(null);
                 recentSongs.remove(i);
                 keys.remove(id);
-                deleteSongs.add(song);
+                removeSongs.add(song);
             }
         }
-        LocalSongModel.updateInTx(deleteSongs);
+        LocalSongModel.updateInTx(removeSongs);
         return recentSongs;
     }
 
@@ -98,7 +104,7 @@ public class RecentSong {
     }
 
     private void buildMinHeap() {
-        List <SongInfo> allSongs = LocalSongClass.getInstance().getAllLocalSongs();
+        List <SongInfo> allSongs = LocalSong.getInstance().getAllLocalSongs();
         //构建最小堆，获取前n个最近播放的歌曲
         for (SongInfo localSong : allSongs) {
             Date lastPlayTime = localSong.getLastPlayTime();

@@ -14,12 +14,12 @@ import lombok.Getter;
  * date : 2019 2019/6/7 20:01
  * description :
  */
-public class LocalSongClass {
-    private static LocalSongClass localSong = new LocalSongClass();
+public class LocalSong {
+    private static LocalSong localSong = new LocalSong();
     @Getter
     private List <SongInfo> allLocalSongs;
 
-    private LocalSongClass() {
+    private LocalSong() {
         this.allLocalSongs = LocalSongModel.getOrderLocalSongs();
     }
 
@@ -28,7 +28,7 @@ public class LocalSongClass {
      *
      * @return the instance
      */
-    public static LocalSongClass getInstance() {
+    public static LocalSong getInstance() {
         return localSong;
     }
 
@@ -141,21 +141,6 @@ public class LocalSongClass {
             }
         }
         return playListSongs;
-    }
-
-    /**
-     * Gets favorite playSongs.
-     *
-     * @return the favorite playSongs
-     */
-    public List <SongInfo> getFavoriteSongs() {
-        List <SongInfo> favoriteSongs = new ArrayList <>();
-        for (SongInfo song : allLocalSongs) {
-            if (song.getIsFavorite()) {
-                favoriteSongs.add(song);
-            }
-        }
-        return favoriteSongs;
     }
 
     /**

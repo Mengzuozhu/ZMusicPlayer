@@ -37,11 +37,12 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements PlayListFragment.PlayListListener {
 
-    RecentFragment recentFragment;
+    private RecentFragment recentFragment;
     private LocalSongFragment localSongFragment;
     private PlayListFragment playListFragment;
     private MusicControlFragment musicControlFragment;
     private HeadsetReceiver headsetReceiver;
+    private FavoriteFragment favoriteFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +92,7 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
     private void initTabPage() {
         recentFragment = RecentFragment.newInstance();
         playListFragment = PlayListFragment.newInstance();
-        FavoriteFragment favoriteFragment = FavoriteFragment.newInstance();
+        favoriteFragment = FavoriteFragment.newInstance();
         localSongFragment = LocalSongFragment.newInstance();
         List <MusicPage> fragments = new ArrayList <>();
         fragments.add(new MusicPage(playListFragment, "播放"));
@@ -180,7 +181,10 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
             recentFragment.remove(deleteIds);
         } else if (resultCode == EditType.LOCAL.getCode()) {
             List <Long> deleteIds = geiDeleteIds(data);
-            localSongFragment.delete(deleteIds);
+            localSongFragment.remove(deleteIds);
+        } else if (resultCode == EditType.FAVORITE.getCode()) {
+            List <Long> deleteIds = geiDeleteIds(data);
+            favoriteFragment.remove(deleteIds);
         }
     }
 
