@@ -1,5 +1,7 @@
 package com.mzz.zmusicplayer.song;
 
+import com.mzz.zmusicplayer.model.LocalSongModel;
+
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,24 +16,50 @@ class RecentSong {
     private static final int RECENT_MAX_COUNT = 50;
     private PriorityQueue <SongInfo> minHeap;
     private List <SongInfo> allSongs;
+    private LinkedList <SongInfo> recentSongs;
 
     RecentSong(List <SongInfo> allSongs) {
         this.allSongs = allSongs;
     }
 
     /**
-     * Sort recent songs linked list .
+     * Gets recent songs.
      *
-     * @return the linked list
+     * @return the recent songs
      */
-    LinkedList <SongInfo> sortRecentSongs() {
+    LinkedList <SongInfo> getRecentSongs() {
+        if (recentSongs == null) {
+            initRecentSongs();
+        }
+        return recentSongs;
+    }
+
+    /**
+     * Update recent song.
+     *
+     * @param song the song
+     */
+    void updateRecentSong(SongInfo song) {
+        recentSongs = getRecentSongs();
+        recentSongs.remove(song);
+        recentSongs.addFirst(song);
+        removeRecentSong();
+        LocalSongModel.update(song);
+    }
+
+    private void initRecentSongs() {
         initMinHeap();
         buildMinHeap();
-        LinkedList <SongInfo> recentSongs = new LinkedList <>();
+        recentSongs = new LinkedList <>();
         while (!minHeap.isEmpty()) {
             recentSongs.addFirst(minHeap.poll());
         }
-        return recentSongs;
+    }
+
+    private void removeRecentSong() {
+        while (recentSongs.size() > RECENT_MAX_COUNT) {
+            recentSongs.removeLast();
+        }
     }
 
     private void buildMinHeap() {

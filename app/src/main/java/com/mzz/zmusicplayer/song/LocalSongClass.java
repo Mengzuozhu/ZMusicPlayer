@@ -4,7 +4,6 @@ import com.mzz.zmusicplayer.model.LocalSongModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import lombok.Getter;
@@ -15,14 +14,14 @@ import lombok.Getter;
  * description :
  */
 public class LocalSongClass {
-    private static final int RECENT_MAX_COUNT = 50;
     private static LocalSongClass localSong = new LocalSongClass();
     @Getter
     private List <SongInfo> allLocalSongs;
-    private LinkedList <SongInfo> recentSongs;
+    private RecentSong recentSong;
 
     private LocalSongClass() {
         this.allLocalSongs = LocalSongModel.getOrderLocalSongs();
+        recentSong = new RecentSong(allLocalSongs);
     }
 
     /**
@@ -142,10 +141,7 @@ public class LocalSongClass {
      * @return the recent playSongs
      */
     public List <SongInfo> getRecentSongs() {
-        if (recentSongs == null) {
-            recentSongs = new RecentSong(allLocalSongs).sortRecentSongs();
-        }
-        return recentSongs;
+        return recentSong.getRecentSongs();
     }
 
     /**
@@ -169,19 +165,7 @@ public class LocalSongClass {
      * @param song the song
      */
     void updateRecentSong(SongInfo song) {
-        if (recentSongs == null) {
-            getRecentSongs();
-        }
-        recentSongs.remove(song);
-        recentSongs.addFirst(song);
-        removeRecentSong();
-        LocalSongModel.update(song);
-    }
-
-    private void removeRecentSong() {
-        while (recentSongs.size() > RECENT_MAX_COUNT) {
-            recentSongs.removeLast();
-        }
+        recentSong.updateRecentSong(song);
     }
 
 }

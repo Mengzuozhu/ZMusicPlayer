@@ -78,7 +78,7 @@ public class PlayListAdapter extends SongInfoAdapter {
         }
     }
 
-    public void updatePlaySongs(List <SongInfo> songs) {
+    void updatePlaySongs(List <SongInfo> songs) {
         mPlayList.setPlaySongs(songs);
         setNewData(songs);
     }

@@ -35,26 +35,21 @@ public class PlayList implements Parcelable {
 
     @Getter
     private LocalSongClass localSongs;
-    @Setter
     @Getter
+    @Setter
     private List <SongInfo> playSongs;
     @Getter
     @Setter
     private int playingIndex = 0;
     @Getter
     @Setter
-    private PlayedMode playMode = PlayedMode.ORDER;
+    private PlayedMode playMode;
     @Setter
     private PlayListObserver playListObserver;
 
     public PlayList() {
         this.localSongs = LocalSongClass.getInstance();
-        initPlayListSongs();
-    }
-
-    public PlayList(PlayedMode playMode) {
-        this.localSongs = LocalSongClass.getInstance();
-        this.playMode = playMode;
+        this.playMode = AppSetting.getPlayMode();
         initPlayListSongs();
         updatePlayingIndexBySettingId();
     }
@@ -84,28 +79,6 @@ public class PlayList implements Parcelable {
             }
         }
         return songIndex;
-    }
-
-    private void initPlayListSongs() {
-        this.playSongs = localSongs.getPlayListSongs();
-    }
-
-    /**
-     * Gets recent playSongs.
-     *
-     * @return the recent playSongs
-     */
-    public List <SongInfo> getRecentSongs() {
-        return localSongs.getRecentSongs();
-    }
-
-    /**
-     * Gets favorite playSongs.
-     *
-     * @return the favorite playSongs
-     */
-    public List <SongInfo> getFavoriteSongs() {
-        return localSongs.getFavoriteSongs();
     }
 
     /**
@@ -140,6 +113,10 @@ public class PlayList implements Parcelable {
     public void addSongs(Collection <SongInfo> c) {
         playSongs.addAll(c);
         notifySongCountOrModeChange();
+    }
+
+    private void initPlayListSongs() {
+        this.playSongs = localSongs.getPlayListSongs();
     }
 
     /**
@@ -201,14 +178,16 @@ public class PlayList implements Parcelable {
      * @return the playing song
      */
     public SongInfo getPlayingSong() {
-        if (playingIndex < 0) {
+        if (playSongs.isEmpty()) {
+            return null;
+        }
+
+        //超出范围，则取第一个
+        if (playingIndex < 0 || playingIndex >= playSongs.size()) {
             playingIndex = 0;
         }
 
-        if (playingIndex < playSongs.size()) {
-            return playSongs.get(playingIndex);
-        }
-        return null;
+        return playSongs.get(playingIndex);
     }
 
     /**

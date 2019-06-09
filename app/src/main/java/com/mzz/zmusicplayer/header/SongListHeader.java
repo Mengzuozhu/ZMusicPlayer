@@ -70,6 +70,9 @@ public class SongListHeader {
 
     private void onPlayAllClick() {
         SongInfo playingSong = mPlayList.getPlayingSong();
+        if (playingSong == null) {
+            return;
+        }
         playListAdapter.updatePlaySongBackgroundColor(playingSong);
         //先开始播放歌曲，再替换播放列表
         EventBus.getDefault().post(playingSong);
