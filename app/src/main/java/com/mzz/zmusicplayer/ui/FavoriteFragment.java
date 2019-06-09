@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
+import com.mzz.zmusicplayer.edit.EditType;
 import com.mzz.zmusicplayer.header.SongListHeader;
 import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.song.IPlayer;
@@ -100,7 +101,7 @@ public class FavoriteFragment extends Fragment {
             playListAdapter.updatePlaySongBackgroundColor(song);
             EventBus.getDefault().post(song);
         });
-        songListHeader = new SongListHeader(getActivity(), playListAdapter);
+        songListHeader = new SongListHeader(getActivity(), playListAdapter, EditType.FAVORITE);
     }
 
 }

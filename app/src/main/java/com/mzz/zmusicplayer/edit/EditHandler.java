@@ -3,6 +3,7 @@ package com.mzz.zmusicplayer.edit;
 import android.app.Activity;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +20,11 @@ public class EditHandler<T extends IEditItem> {
     @Getter
     private ArrayList <Integer> deleteIds = new ArrayList <>();
     private List <T> editData;
-    private BaseQuickAdapter adapter;
+    private BaseQuickAdapter <T, BaseViewHolder> adapter;
     private ExplosionField explosionField;
 
-    public EditHandler(Activity activity, List <T> editData, BaseQuickAdapter adapter) {
+    public EditHandler(Activity activity, List <T> editData,
+                       BaseQuickAdapter <T, BaseViewHolder> adapter) {
         this.editData = editData;
         this.adapter = adapter;
         explosionField = ExplosionField.attach2Window(activity);
@@ -31,7 +33,7 @@ public class EditHandler<T extends IEditItem> {
     /**
      * Integer to long list list .
      *
-     * @param integers the delete num
+     * @param integers the integers
      * @return the list
      */
     public static List <Long> integerToLongList(List <Integer> integers) {
@@ -49,7 +51,7 @@ public class EditHandler<T extends IEditItem> {
         for (T editItem : editData) {
             deleteIds.add(editItem.getId().intValue());
         }
-        adapter.setNewData(new ArrayList());
+        adapter.setNewData(new ArrayList <T>());
     }
 
     /**
@@ -64,7 +66,8 @@ public class EditHandler<T extends IEditItem> {
             explosionField.explode(view);
             view.setOnClickListener(null);
             deleteIds.add(item.getId().intValue());
-            adapter1.remove(position);
+            adapter.remove(position);
+//            adapter.notifyDataSetChanged();
         });
         return this;
     }

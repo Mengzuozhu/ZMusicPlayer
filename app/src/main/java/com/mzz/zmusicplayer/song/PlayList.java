@@ -34,6 +34,7 @@ public class PlayList implements Parcelable {
         }
     };
 
+    @Getter
     private LocalSong localSongs;
     @Setter
     @Getter
@@ -156,7 +157,7 @@ public class PlayList implements Parcelable {
      *
      * @param song the song
      */
-    public void addSong(SongInfo song) {
+    void addSong(SongInfo song) {
         playSongs.add(song);
         notifySongCountOrModeChange();
     }
@@ -177,13 +178,16 @@ public class PlayList implements Parcelable {
      * @param keys the keys
      */
     public void remove(List <Long> keys) {
-        for (int i = playSongs.size() - 1; i >= 0; i--) {
+        for (int i = playSongs.size() - 1; i >= 0 && !keys.isEmpty(); i--) {
             SongInfo song = playSongs.get(i);
-            if (keys.contains(song.getId())) {
-                song.setIsChecked(false);
-                playSongs.remove(i);
-                LocalSongModel.update(song);
+            Long id = song.getId();
+            if (!keys.contains(id)) {
+                continue;
             }
+            song.setIsChecked(false);
+            playSongs.remove(i);
+            keys.remove(id);
+            LocalSongModel.update(song);
         }
         notifySongCountOrModeChange();
     }

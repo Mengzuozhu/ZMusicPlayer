@@ -59,6 +59,18 @@ public class LocalSong {
         songInfos.sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
     }
 
+    public void remove(List <Long> keys) {
+        LocalSongModel.deleteByKeyInTx(keys);
+        for (int i = allSongs.size() - 1; i >= 0 && !keys.isEmpty(); i--) {
+            SongInfo song = allSongs.get(i);
+            Long id = song.getId();
+            if (keys.contains(id)) {
+                allSongs.remove(i);
+                keys.remove(id);
+            }
+        }
+    }
+
     /**
      * Update play list playSongs list .
      *

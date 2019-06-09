@@ -15,6 +15,7 @@ import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.adapter.MusicPage;
 import com.mzz.zmusicplayer.adapter.MusicPagerAdapter;
 import com.mzz.zmusicplayer.edit.EditHandler;
+import com.mzz.zmusicplayer.edit.EditType;
 import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -34,9 +35,10 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity implements PlayListFragment.PlayListListener{
+public class MainActivity extends BaseActivity implements PlayListFragment.PlayListListener {
 
-    LocalSongFragment localSongFragment;
+    RecentFragment recentFragment;
+    private LocalSongFragment localSongFragment;
     private PlayListFragment playListFragment;
     private MusicControlFragment musicControlFragment;
     private HeadsetReceiver headsetReceiver;
@@ -87,7 +89,7 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
     }
 
     private void initTabPage() {
-        RecentFragment recentFragment = RecentFragment.newInstance();
+        recentFragment = RecentFragment.newInstance();
         playListFragment = PlayListFragment.newInstance();
         FavoriteFragment favoriteFragment = FavoriteFragment.newInstance();
         localSongFragment = LocalSongFragment.newInstance();
@@ -170,19 +172,25 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
                     data.getParcelableArrayListExtra(SongPickerActivity.EXTRA_ADD_SONG);
             playListFragment.addSongs(newSongInfos);
             localSongFragment.addToLocalSongs(newSongInfos);
-        } else if (resultCode == SongEditActivity.CODE_EDIT_SAVE) {
-            onSaveEditEvent(data);
+        } else if (resultCode == EditType.PLAYLIST.getCode()) {
+            List <Long> deleteIds = geiDeleteIds(data);
+            playListFragment.remove(deleteIds);
+        } else if (resultCode == EditType.RECENT.getCode()) {
+            List <Long> deleteIds = geiDeleteIds(data);
+            recentFragment.remove(deleteIds);
+        } else if (resultCode == EditType.LOCAL.getCode()) {
+            List <Long> deleteIds = geiDeleteIds(data);
+            localSongFragment.remove(deleteIds);
         }
     }
 
-    public void onSaveEditEvent(Intent data) {
+    private List <Long> geiDeleteIds(Intent data) {
         ArrayList <Integer> deleteIds =
-                data.getIntegerArrayListExtra(SongEditActivity.EXTRA_DELETE_IDS);
+                data.getIntegerArrayListExtra(SongEditActivity.EXTRA_DELETE_ID);
         if (deleteIds == null) {
-            return;
+            return new ArrayList <>();
         }
-        List <Long> ids = EditHandler.integerToLongList(deleteIds);
-        playListFragment.remove(ids);
+        return EditHandler.integerToLongList(deleteIds);
     }
 
 }

@@ -2,7 +2,6 @@ package com.mzz.zmusicplayer.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -13,18 +12,20 @@ import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongEditAdapter;
 import com.mzz.zmusicplayer.edit.EditHandler;
+import com.mzz.zmusicplayer.edit.EditType;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SongEditActivity extends BaseActivity {
 
-    public static final String EXTRA_DELETE_IDS = "com.mzz.zmusicplayer.EXTRA_DELETE_IDS";
-    public static final int CODE_EDIT_SAVE = 3;
+    public static final String EXTRA_DELETE_ID = "com.mzz.zmusicplayer.EXTRA_DELETE_ID";
     private static final String EXTRA_EDIT_DATA = "com.mzz.zmusicplayer.EXTRA_EDIT_DATA";
+    private static final String EXTRA_RESULT_CODE = "com.mzz.zmusicplayer.EXTRA_RESULT_CODE";
     @BindView(R.id.rv_edit)
     RecyclerView rvEdit;
     @BindView(R.id.sv_edit)
@@ -37,11 +38,13 @@ public class SongEditActivity extends BaseActivity {
      * @param activity the activity
      * @param value    the value
      */
-    public static void startForResult(FragmentActivity activity, ArrayList <?
-            extends Parcelable> value) {
+    public static void startForResult(FragmentActivity activity, List <SongInfo> value,
+                                      EditType editType) {
         Intent intent =
-                new Intent(activity, SongEditActivity.class).putParcelableArrayListExtra(EXTRA_EDIT_DATA, value);
-        activity.startActivityForResult(intent, CODE_EDIT_SAVE);
+                new Intent(activity, SongEditActivity.class).putParcelableArrayListExtra(EXTRA_EDIT_DATA, (ArrayList <SongInfo>) value);
+        int code = editType.getCode();
+        intent.putExtra(EXTRA_RESULT_CODE, code);
+        activity.startActivityForResult(intent, code);
     }
 
     @Override
@@ -81,9 +84,10 @@ public class SongEditActivity extends BaseActivity {
     }
 
     private void save() {
-        Intent intent = getIntent().putIntegerArrayListExtra(EXTRA_DELETE_IDS,
-                editHandler.getDeleteIds());
-        setResult(CODE_EDIT_SAVE, intent);
+        Intent intent = getIntent();
+        intent.putIntegerArrayListExtra(EXTRA_DELETE_ID, editHandler.getDeleteIds());
+        int resultCode = intent.getIntExtra(EXTRA_RESULT_CODE, 0);
+        setResult(resultCode, intent);
     }
 
 }

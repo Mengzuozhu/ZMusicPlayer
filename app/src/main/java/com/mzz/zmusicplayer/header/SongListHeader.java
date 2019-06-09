@@ -10,8 +10,10 @@ import android.widget.TextView;
 import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
+import com.mzz.zmusicplayer.edit.EditType;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
+import com.mzz.zmusicplayer.ui.SongEditActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -26,13 +28,16 @@ public class SongListHeader {
     private FragmentActivity activity;
     private RecyclerView recyclerView;
     private PlayList mPlayList;
+    private EditType editType;
     private PlayListAdapter playListAdapter;
 
-    public SongListHeader(FragmentActivity activity, PlayListAdapter playListAdapter) {
+    public SongListHeader(FragmentActivity activity, PlayListAdapter playListAdapter,
+                          EditType editType) {
         this.activity = activity;
         this.recyclerView = playListAdapter.getRecyclerView();
         this.playListAdapter = playListAdapter;
         mPlayList = playListAdapter.getMPlayList();
+        this.editType = editType;
         initHeader();
     }
 
@@ -43,13 +48,19 @@ public class SongListHeader {
         updateSongCount();
         ImageView ivPlayAll = header.findViewById(R.id.iv_song_header_play_all);
         ivPlayAll.setOnClickListener(v -> onPlayAllClick());
+        ImageView editView = header.findViewById(R.id.iv_song_header_edit);
+        editView.setOnClickListener(v -> showSongEditActivity());
         playListAdapter.setHeaderView(header);
     }
 
+    public void showSongEditActivity() {
+        SongEditActivity.startForResult(activity, mPlayList.getPlaySongs(), editType);
+    }
+
     private void onPlayAllClick() {
-        //先开始播放歌曲，再替换播放列表
         SongInfo playingSong = mPlayList.getPlayingSong();
         playListAdapter.updatePlaySongBackgroundColor(playingSong);
+        //先开始播放歌曲，再替换播放列表
         EventBus.getDefault().post(playingSong);
         EventBus.getDefault().post(mPlayList.getPlaySongs());
     }
