@@ -7,8 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
 import com.mzz.zmusicplayer.contract.PlayListContract;
 import com.mzz.zmusicplayer.header.PlayListHeader;
-import com.mzz.zmusicplayer.model.LocalSongModel;
-import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.PlayListFragment;
@@ -56,8 +54,8 @@ public class PlayListPresenter implements PlayListContract.Presenter, PlayList.P
         playListAdapter = new PlayListAdapter(playList, recyclerView) {
             @Override
             public void removeSongAt(int position) {
-                super.removeSongAt(position);
                 playList.remove(getItem(position));
+                super.removeSongAt(position);
                 updatePlayList();
             }
         };

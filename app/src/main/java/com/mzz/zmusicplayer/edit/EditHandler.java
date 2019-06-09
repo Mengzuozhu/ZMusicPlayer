@@ -55,7 +55,7 @@ public class EditHandler<T extends IEditItem> {
     }
 
     /**
-     * Sets delete listener.
+     * Sets remove listener.
      */
     public EditHandler <T> setOnItemChildDeleteListener() {
         adapter.setOnItemChildClickListener((adapter1, view, position) -> {

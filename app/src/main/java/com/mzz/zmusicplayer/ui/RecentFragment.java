@@ -11,9 +11,8 @@ import android.view.ViewGroup;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongListAdapter;
 import com.mzz.zmusicplayer.edit.EditType;
-import com.mzz.zmusicplayer.model.LocalSongModel;
-import com.mzz.zmusicplayer.song.LocalSongClass;
 import com.mzz.zmusicplayer.song.PlayList;
+import com.mzz.zmusicplayer.song.RecentSong;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.List;
@@ -36,8 +35,8 @@ public class RecentFragment extends Fragment {
     @BindView(R.id.rv_recent_song)
     RecyclerView rvRecentSong;
     private Unbinder unbinder;
-    private LocalSongClass localSongs;
     private SongListAdapter songListAdapter;
+    private RecentSong recentSong;
 
     /**
      * Use this factory method to create a new instance of
@@ -54,7 +53,7 @@ public class RecentFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recent, container, false);
         unbinder = ButterKnife.bind(this, view);
-        localSongs = LocalSongClass.getInstance();
+        recentSong = RecentSong.getInstance();
         //需在创建视图后，重新初始化适配器
         init();
         return view;
@@ -78,7 +77,7 @@ public class RecentFragment extends Fragment {
         if (songListAdapter == null) {
             initAdapter();
         } else {
-            List <SongInfo> recentSongs = localSongs.getRecentSongs();
+            List <SongInfo> recentSongs = recentSong.getRecentSongs();
             songListAdapter.updateData(recentSongs);
         }
     }
@@ -91,12 +90,7 @@ public class RecentFragment extends Fragment {
                 EditType.RECENT) {
             @Override
             public void removeSongAt(int position) {
-                SongInfo song = this.getItem(position);
-                if (song == null) {
-                    return;
-                }
-                song.setLastPlayTime(null);
-                LocalSongModel.update(song);
+                recentSong.remove(this.getItem(position));
                 super.removeSongAt(position);
                 updateSongCount();
             }
@@ -104,8 +98,7 @@ public class RecentFragment extends Fragment {
     }
 
     public void remove(List <Long> keys) {
-//        player.getPlayList().getLocalSongs().remove(keys);
-//        updateSongs();
+        songListAdapter.updateData(recentSong.remove(keys));
     }
 
 }

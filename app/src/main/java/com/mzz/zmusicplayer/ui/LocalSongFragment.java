@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongListAdapter;
 import com.mzz.zmusicplayer.edit.EditType;
-import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.song.LocalSongClass;
 import com.mzz.zmusicplayer.song.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -86,8 +85,7 @@ public class LocalSongFragment extends Fragment {
                 EditType.LOCAL) {
             @Override
             public void removeSongAt(int position) {
-                SongInfo song = getItem(position);
-                LocalSongModel.delete(song);
+                localSongs.remove(getItem(position));
                 super.removeSongAt(position);
                 updateSongCount();
             }
@@ -108,7 +106,7 @@ public class LocalSongFragment extends Fragment {
      *
      * @param keys the keys
      */
-    public void remove(List <Long> keys) {
+    public void delete(List <Long> keys) {
         songListAdapter.updateData(localSongs.remove(keys));
     }
 }

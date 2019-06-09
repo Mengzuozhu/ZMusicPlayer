@@ -2,24 +2,30 @@ package com.mzz.zmusicplayer.song;
 
 import com.mzz.zmusicplayer.model.LocalSongModel;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
 /**
+ * 最近播放的歌曲
  * author : Mzz
  * date : 2019 2019/6/8 15:37
  * description :
  */
-class RecentSong {
+public class RecentSong {
     private static final int RECENT_MAX_COUNT = 50;
+    private static RecentSong recentSong = new RecentSong();
     private PriorityQueue <SongInfo> minHeap;
-    private List <SongInfo> allSongs;
     private LinkedList <SongInfo> recentSongs;
 
-    RecentSong(List <SongInfo> allSongs) {
-        this.allSongs = allSongs;
+    private RecentSong() {
+    }
+
+    public static RecentSong getInstance() {
+        return recentSong;
     }
 
     /**
@@ -27,7 +33,7 @@ class RecentSong {
      *
      * @return the recent songs
      */
-    LinkedList <SongInfo> getRecentSongs() {
+    public LinkedList <SongInfo> getRecentSongs() {
         if (recentSongs == null) {
             initRecentSongs();
         }
@@ -47,6 +53,35 @@ class RecentSong {
         LocalSongModel.update(song);
     }
 
+    public List <SongInfo> remove(Collection <Long> keys) {
+        List <SongInfo> deleteSongs = new ArrayList <>();
+        for (int i = recentSongs.size() - 1; i >= 0 && !keys.isEmpty(); i--) {
+            SongInfo song = recentSongs.get(i);
+            Long id = song.getId();
+            if (keys.contains(id)) {
+                song.setLastPlayTime(null);
+                recentSongs.remove(i);
+                keys.remove(id);
+                deleteSongs.add(song);
+            }
+        }
+        LocalSongModel.updateInTx(deleteSongs);
+        return recentSongs;
+    }
+
+    /**
+     * Remove.
+     *
+     * @param song the song
+     */
+    public void remove(SongInfo song) {
+        if (song == null) {
+            return;
+        }
+        song.setLastPlayTime(null);
+        LocalSongModel.update(song);
+    }
+
     private void initRecentSongs() {
         initMinHeap();
         buildMinHeap();
@@ -63,6 +98,7 @@ class RecentSong {
     }
 
     private void buildMinHeap() {
+        List <SongInfo> allSongs = LocalSongClass.getInstance().getAllLocalSongs();
         //构建最小堆，获取前n个最近播放的歌曲
         for (SongInfo localSong : allSongs) {
             Date lastPlayTime = localSong.getLastPlayTime();

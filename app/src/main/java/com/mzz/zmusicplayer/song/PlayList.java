@@ -7,6 +7,7 @@ import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
@@ -135,6 +136,7 @@ public class PlayList implements Parcelable {
      * @param keys the keys
      */
     public void remove(List <Long> keys) {
+        List <SongInfo> deleteSongs = new ArrayList <>();
         for (int i = playSongs.size() - 1; i >= 0 && !keys.isEmpty(); i--) {
             SongInfo song = playSongs.get(i);
             Long id = song.getId();
@@ -144,8 +146,9 @@ public class PlayList implements Parcelable {
             song.setIsChecked(false);
             playSongs.remove(i);
             keys.remove(id);
-            LocalSongModel.update(song);
+            deleteSongs.add(song);
         }
+        LocalSongModel.updateInTx(deleteSongs);
         notifySongCountOrModeChange();
     }
 

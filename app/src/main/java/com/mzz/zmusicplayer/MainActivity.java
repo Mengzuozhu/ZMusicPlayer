@@ -180,7 +180,7 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
             recentFragment.remove(deleteIds);
         } else if (resultCode == EditType.LOCAL.getCode()) {
             List <Long> deleteIds = geiDeleteIds(data);
-            localSongFragment.remove(deleteIds);
+            localSongFragment.delete(deleteIds);
         }
     }
 

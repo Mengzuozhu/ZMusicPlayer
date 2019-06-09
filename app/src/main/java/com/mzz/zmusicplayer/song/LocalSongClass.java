@@ -9,6 +9,7 @@ import java.util.List;
 import lombok.Getter;
 
 /**
+ * 本地所有歌曲
  * author : Mzz
  * date : 2019 2019/6/7 20:01
  * description :
@@ -17,11 +18,9 @@ public class LocalSongClass {
     private static LocalSongClass localSong = new LocalSongClass();
     @Getter
     private List <SongInfo> allLocalSongs;
-    private RecentSong recentSong;
 
     private LocalSongClass() {
         this.allLocalSongs = LocalSongModel.getOrderLocalSongs();
-        recentSong = new RecentSong(allLocalSongs);
     }
 
     /**
@@ -88,6 +87,15 @@ public class LocalSongClass {
     }
 
     /**
+     * Remove.
+     *
+     * @param song the song
+     */
+    public void remove(SongInfo song) {
+        LocalSongModel.delete(song);
+    }
+
+    /**
      * Add all.
      *
      * @param c the c
@@ -126,22 +134,13 @@ public class LocalSongClass {
      * @return the play list playSongs
      */
     List <SongInfo> getPlayListSongs() {
-        List <SongInfo> songs = new ArrayList <>();
+        List <SongInfo> playListSongs = new ArrayList <>();
         for (SongInfo song : this.allLocalSongs) {
             if (song.getIsChecked()) {
-                songs.add(song);
+                playListSongs.add(song);
             }
         }
-        return songs;
-    }
-
-    /**
-     * Gets recent playSongs.
-     *
-     * @return the recent playSongs
-     */
-    public List <SongInfo> getRecentSongs() {
-        return recentSong.getRecentSongs();
+        return playListSongs;
     }
 
     /**
@@ -165,7 +164,7 @@ public class LocalSongClass {
      * @param song the song
      */
     void updateRecentSong(SongInfo song) {
-        recentSong.updateRecentSong(song);
+        RecentSong.getInstance().updateRecentSong(song);
     }
 
 }
