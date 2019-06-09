@@ -9,7 +9,7 @@ import android.view.View;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.song.LocalSong;
+import com.mzz.zmusicplayer.song.LocalSongClass;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.List;
@@ -78,7 +78,7 @@ public class SongInfoAdapter extends BaseQuickAdapter <SongInfo, BaseViewHolder>
      * @param isAscend the is ascend
      */
     public void sortByName(boolean isAscend) {
-        LocalSong.sortByChineseName(songInfos, isAscend);
+        LocalSongClass.sortByChineseName(songInfos, isAscend);
         notifyDataSetChanged();
     }
 
@@ -86,7 +86,7 @@ public class SongInfoAdapter extends BaseQuickAdapter <SongInfo, BaseViewHolder>
      * Sort by add time.
      */
     public void sortById() {
-        LocalSong.sortById(songInfos);
+        LocalSongClass.sortById(songInfos);
         notifyDataSetChanged();
     }
 

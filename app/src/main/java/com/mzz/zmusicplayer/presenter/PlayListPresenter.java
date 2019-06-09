@@ -35,7 +35,7 @@ public class PlayListPresenter implements PlayListContract.Presenter, PlayList.P
         recyclerView = mView.getRecyclerView();
         this.playListListener = playListListener;
         List <SongInfo> orderLocalSongs = LocalSongModel.getOrderLocalSongs();
-        playList = new PlayList(orderLocalSongs, AppSetting.getPlayMode());
+        playList = new PlayList(AppSetting.getPlayMode());
         playList.setPlayListObserver(this);
         updatePlayList();
         intiAdapter();

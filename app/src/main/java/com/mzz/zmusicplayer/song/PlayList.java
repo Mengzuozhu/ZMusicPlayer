@@ -7,7 +7,6 @@ import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
@@ -35,7 +34,7 @@ public class PlayList implements Parcelable {
     };
 
     @Getter
-    private LocalSong localSongs;
+    private LocalSongClass localSongs;
     @Setter
     @Getter
     private List <SongInfo> playSongs;
@@ -49,12 +48,12 @@ public class PlayList implements Parcelable {
     private PlayListObserver playListObserver;
 
     public PlayList() {
-        localSongs = new LocalSong(new ArrayList <>());
+        this.localSongs = LocalSongClass.getInstance();
         initPlayListSongs();
     }
 
-    public PlayList(List <SongInfo> localSongs, PlayedMode playMode) {
-        this.localSongs = new LocalSong(localSongs);
+    public PlayList(PlayedMode playMode) {
+        this.localSongs = LocalSongClass.getInstance();
         this.playMode = playMode;
         initPlayListSongs();
         updatePlayingIndexBySettingId();
@@ -89,15 +88,6 @@ public class PlayList implements Parcelable {
 
     private void initPlayListSongs() {
         this.playSongs = localSongs.getPlayListSongs();
-    }
-
-    /**
-     * Gets local playSongs.
-     *
-     * @return the local playSongs
-     */
-    public List <SongInfo> getLocalAllSongs() {
-        return localSongs.getAllSongs();
     }
 
     /**
@@ -160,16 +150,6 @@ public class PlayList implements Parcelable {
     void addSong(SongInfo song) {
         playSongs.add(song);
         notifySongCountOrModeChange();
-    }
-
-    /**
-     * Add to local songs list .
-     *
-     * @param songs the songs
-     * @return the list
-     */
-    public List <SongInfo> addToLocalSongs(Collection <SongInfo> songs) {
-        return localSongs.addAll(songs);
     }
 
     /**

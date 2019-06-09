@@ -8,16 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.adapter.PlayListAdapter;
+import com.mzz.zmusicplayer.adapter.SongListAdapter;
 import com.mzz.zmusicplayer.edit.EditType;
-import com.mzz.zmusicplayer.header.SongListHeader;
 import com.mzz.zmusicplayer.model.LocalSongModel;
-import com.mzz.zmusicplayer.song.IPlayer;
+import com.mzz.zmusicplayer.song.LocalSongClass;
 import com.mzz.zmusicplayer.song.PlayList;
-import com.mzz.zmusicplayer.song.Player;
 import com.mzz.zmusicplayer.song.SongInfo;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,9 +32,8 @@ public class LocalSongFragment extends Fragment {
     @BindView(R.id.rv_local_song)
     RecyclerView rvLocalSong;
     Unbinder unbinder;
-    private PlayListAdapter playListAdapter;
-    private SongListHeader songListHeader;
-    private IPlayer player;
+    private SongListAdapter songListAdapter;
+    private LocalSongClass localSongs;
 
     /**
      * New instance favorite fragment.
@@ -54,7 +49,7 @@ public class LocalSongFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_local_song, container, false);
         unbinder = ButterKnife.bind(this, view);
-        player = Player.getInstance();
+        localSongs = LocalSongClass.getInstance();
         init();
         return view;
     }
@@ -74,7 +69,7 @@ public class LocalSongFragment extends Fragment {
     }
 
     private void init() {
-        if (playListAdapter == null) {
+        if (songListAdapter == null) {
             initAdapter();
         } else {
             updateSongs();
@@ -82,36 +77,24 @@ public class LocalSongFragment extends Fragment {
     }
 
     private void updateSongs() {
-        List <SongInfo> localSongs = player.getPlayList().getLocalAllSongs();
-        playListAdapter.updatePlaySongs(localSongs);
-        songListHeader.updateSongCount();
+        List <SongInfo> allLocalSongs = localSongs.getAllLocalSongs();
+        songListAdapter.updateData(allLocalSongs);
     }
 
     private void initAdapter() {
         if (rvLocalSong == null) {
             return;
         }
-        playListAdapter = new PlayListAdapter(new PlayList(), rvLocalSong) {
+        songListAdapter = new SongListAdapter(new PlayList(), rvLocalSong, getActivity(),
+                EditType.LOCAL) {
             @Override
             public void removeSongAt(int position) {
                 SongInfo song = getItem(position);
                 LocalSongModel.delete(song);
                 super.removeSongAt(position);
-                songListHeader.updateSongCount();
+                updateSongCount();
             }
         };
-        playListAdapter.setOnItemClickListener((adapter, view, position) -> {
-            SongInfo song = playListAdapter.getItem(position);
-            playListAdapter.updatePlaySongBackgroundColor(song);
-            EventBus.getDefault().post(song);
-        });
-        playListAdapter.setOnItemLongClickListener((adapter, view, position) -> {
-            if (songListHeader != null) {
-                songListHeader.showSongEditActivity();
-            }
-            return false;
-        });
-        songListHeader = new SongListHeader(getActivity(), playListAdapter, EditType.LOCAL);
     }
 
     /**
@@ -120,9 +103,7 @@ public class LocalSongFragment extends Fragment {
      * @param songs the songs
      */
     public void addToLocalSongs(Collection <SongInfo> songs) {
-        List <SongInfo> localSongs = player.getPlayList().addToLocalSongs(songs);
-        playListAdapter.setNewData(localSongs);
-        songListHeader.updateSongCount();
+        songListAdapter.updateData(localSongs.addToLocalSongs(songs));
     }
 
     /**
@@ -131,7 +112,6 @@ public class LocalSongFragment extends Fragment {
      * @param keys the keys
      */
     public void remove(List <Long> keys) {
-        player.getPlayList().getLocalSongs().remove(keys);
-        updateSongs();
+        songListAdapter.updateData(localSongs.remove(keys));
     }
 }

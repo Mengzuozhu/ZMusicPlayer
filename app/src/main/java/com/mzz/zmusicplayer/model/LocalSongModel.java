@@ -9,7 +9,7 @@ import com.mzz.zmusicplayer.greendao.db.DaoMaster;
 import com.mzz.zmusicplayer.greendao.db.DaoSession;
 import com.mzz.zmusicplayer.greendao.db.SongInfoDao;
 import com.mzz.zmusicplayer.setting.AppSetting;
-import com.mzz.zmusicplayer.song.LocalSong;
+import com.mzz.zmusicplayer.song.LocalSongClass;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import org.greenrobot.greendao.database.Database;
@@ -47,13 +47,13 @@ public class LocalSongModel {
     private static void sort(List <SongInfo> songInfos) {
         switch (AppSetting.getSongSortMode()) {
             case ORDER_ASCEND_BY_NAME:
-                LocalSong.sortByChineseName(songInfos, true);
+                LocalSongClass.sortByChineseName(songInfos, true);
                 break;
             case ORDER_DESCEND_BY_NAME:
-                LocalSong.sortByChineseName(songInfos, false);
+                LocalSongClass.sortByChineseName(songInfos, false);
                 break;
             default:
-                LocalSong.sortById(songInfos);
+                LocalSongClass.sortById(songInfos);
                 break;
         }
     }

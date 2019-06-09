@@ -14,14 +14,24 @@ import lombok.Getter;
  * date : 2019 2019/6/7 20:01
  * description :
  */
-public class LocalSong {
+public class LocalSongClass {
     private static final int RECENT_MAX_COUNT = 50;
+    private static LocalSongClass localSong = new LocalSongClass();
     @Getter
-    private List <SongInfo> allSongs;
+    private List <SongInfo> allLocalSongs;
     private LinkedList <SongInfo> recentSongs;
 
-    LocalSong(List <SongInfo> allSongs) {
-        this.allSongs = allSongs;
+    private LocalSongClass() {
+        this.allLocalSongs = LocalSongModel.getOrderLocalSongs();
+    }
+
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
+    public static LocalSongClass getInstance() {
+        return localSong;
     }
 
     /**
@@ -59,35 +69,39 @@ public class LocalSong {
         songInfos.sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
     }
 
-    public void remove(List <Long> keys) {
+    public List <SongInfo> remove(List <Long> keys) {
         LocalSongModel.deleteByKeyInTx(keys);
-        for (int i = allSongs.size() - 1; i >= 0 && !keys.isEmpty(); i--) {
-            SongInfo song = allSongs.get(i);
+        for (int i = allLocalSongs.size() - 1; i >= 0 && !keys.isEmpty(); i--) {
+            SongInfo song = allLocalSongs.get(i);
             Long id = song.getId();
             if (keys.contains(id)) {
-                allSongs.remove(i);
+                allLocalSongs.remove(i);
                 keys.remove(id);
             }
         }
+        return allLocalSongs;
     }
 
     /**
-     * Update play list playSongs list .
+     * Update play list songs list .
      *
-     * @param checkedSong the checked song
-     * @return the PlayListSongs
+     * @param newPlaySongs the new play songs
+     * @return the list
      */
-    List <SongInfo> updatePlayListSongs(List <SongInfo> checkedSong) {
-        List <SongInfo> songs = new ArrayList <>();
-        for (SongInfo localSong : this.allSongs) {
-            boolean isChecked = checkedSong.contains(localSong);
-            if (isChecked) {
-                songs.add(localSong);
+    List <SongInfo> updatePlayListSongs(List <SongInfo> newPlaySongs) {
+        //新建播放列表，避免受其他列表的影响
+        List <SongInfo> playListSongs = new ArrayList <>();
+        for (SongInfo song : this.allLocalSongs) {
+            boolean isPlay = newPlaySongs.contains(song);
+            //更新播放列表歌曲
+            if (isPlay) {
+                playListSongs.add(song);
             }
-            localSong.setIsChecked(isChecked);
+            //更新是否播放
+            song.setIsChecked(isPlay);
         }
-        LocalSongModel.updateInTx(this.allSongs);
-        return songs;
+        LocalSongModel.updateInTx(this.allLocalSongs);
+        return playListSongs;
     }
 
     /**
@@ -95,10 +109,10 @@ public class LocalSong {
      *
      * @param c the c
      */
-    List <SongInfo> addAll(Collection <SongInfo> c) {
-        allSongs.addAll(c);
+    public List <SongInfo> addToLocalSongs(Collection <SongInfo> c) {
+        allLocalSongs.addAll(c);
         LocalSongModel.insertOrReplaceInTx(c);
-        return allSongs;
+        return allLocalSongs;
     }
 
     /**
@@ -108,9 +122,9 @@ public class LocalSong {
      */
     List <SongInfo> getPlayListSongs() {
         List <SongInfo> songs = new ArrayList <>();
-        for (SongInfo localSong : this.allSongs) {
-            if (localSong.getIsChecked()) {
-                songs.add(localSong);
+        for (SongInfo song : this.allLocalSongs) {
+            if (song.getIsChecked()) {
+                songs.add(song);
             }
         }
         return songs;
@@ -123,7 +137,7 @@ public class LocalSong {
      */
     List <SongInfo> getRecentSongs() {
         if (recentSongs == null) {
-            recentSongs = new RecentSong(allSongs).sortRecentSongs();
+            recentSongs = new RecentSong(allLocalSongs).sortRecentSongs();
         }
         return recentSongs;
     }
@@ -135,9 +149,9 @@ public class LocalSong {
      */
     List <SongInfo> getFavoriteSongs() {
         List <SongInfo> favoriteSongs = new ArrayList <>();
-        for (SongInfo localSong : allSongs) {
-            if (localSong.getIsFavorite()) {
-                favoriteSongs.add(localSong);
+        for (SongInfo song : allLocalSongs) {
+            if (song.getIsFavorite()) {
+                favoriteSongs.add(song);
             }
         }
         return favoriteSongs;
