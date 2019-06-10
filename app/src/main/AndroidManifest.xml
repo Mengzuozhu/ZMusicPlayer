@@ -14,7 +14,6 @@
         android:roundIcon="@drawable/music"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.MusicSearchActivity" />
         <activity
             android:name=".MainActivity"
             android:launchMode="singleInstance"
@@ -25,6 +24,9 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.MusicSearchActivity"
+            android:label="搜索" />
         <activity
             android:name=".ui.SongPickerActivity"
             android:label="添加歌曲" />

@@ -12,9 +12,6 @@ import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.MusicSearchAdapter;
 import com.mzz.zmusicplayer.play.PlayList;
-import com.mzz.zmusicplayer.song.SongInfo;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,7 +21,6 @@ public class MusicSearchActivity extends BaseActivity {
     private static final String EXTRA_SEARCH_DATA = "com.mzz.zmusicplayer.EXTRA_SEARCH_DATA";
     @BindView(R.id.rv_search)
     RecyclerView rvSearch;
-    SearchView searchView;
     private MusicSearchAdapter musicSearchAdapter;
 
     public static void startForResult(FragmentActivity activity, Parcelable value) {
@@ -45,13 +41,7 @@ public class MusicSearchActivity extends BaseActivity {
     private void init() {
         PlayList playList = getIntent().getParcelableExtra(EXTRA_SEARCH_DATA);
         //重置选中歌曲的颜色，避免出现多个选中歌曲
-        List <SongInfo> songInfos = playList.getPlaySongs();
-        for (SongInfo songInfo : songInfos) {
-            if (songInfo.isPlayListSelected()) {
-                songInfo.setPlayListSelected(false);
-                break;
-            }
-        }
+        playList.getPlayingSong().setPlayListSelected(false);
         musicSearchAdapter = new MusicSearchAdapter(playList, rvSearch);
     }
 
@@ -59,7 +49,7 @@ public class MusicSearchActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
         //通过MenuItem得到SearchView
-        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.onActionViewExpanded();
         searchView.setQueryHint("搜索");
         musicSearchAdapter.setQueryTextListener(searchView);
