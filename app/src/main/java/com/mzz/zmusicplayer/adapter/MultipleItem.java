@@ -15,7 +15,7 @@ public class MultipleItem implements MultiItemEntity {
     public static final int RIGHT_BUTTON = 1;
     public static final int SWITCH = 2;
     @Getter
-    private String value;
+    private String value = "";
     private int itemType;
     @Getter
     private String name;
@@ -26,6 +26,11 @@ public class MultipleItem implements MultiItemEntity {
         this.itemType = itemType;
         this.name = name;
         this.value = value;
+    }
+
+    public MultipleItem(int itemType, String name) {
+        this.itemType = itemType;
+        this.name = name;
     }
 
     @Override

@@ -11,9 +11,12 @@ public interface AppSettingContract {
 
     interface View {
         RecyclerView getRecyclerView();
+
+        void showCityPickerActivity();
     }
 
     interface Presenter {
+
         void initSetting();
     }
 }

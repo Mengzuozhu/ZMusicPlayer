@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".MusicApplication"
@@ -14,7 +15,10 @@
         android:roundIcon="@drawable/music"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.AppSettingActivity"></activity>
+        <activity
+            android:name=".ui.CityPickerActivity"
+            android:label="选择城市" />
+        <activity android:name=".ui.AppSettingActivity" />
         <activity
             android:name=".MainActivity"
             android:launchMode="singleInstance"

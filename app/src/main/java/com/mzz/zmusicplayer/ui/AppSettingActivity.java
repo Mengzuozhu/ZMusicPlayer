@@ -30,4 +30,9 @@ public class AppSettingActivity extends BaseActivity implements AppSettingContra
     public RecyclerView getRecyclerView() {
         return rvAppSetting;
     }
+
+    @Override
+    public void showCityPickerActivity() {
+        openActivity(CityPickerActivity.class);
+    }
 }

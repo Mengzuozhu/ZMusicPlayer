@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorGrey"
+    tools:context=".ui.CityPickerActivity">
+
+    <SearchView
+        android:id="@+id/sv_city"
+        style="@style/StyleSearchView"
+        android:iconifiedByDefault="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_city_select"
+        style="@style/StyleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="当前选中城市：成都"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sv_city" />
+
+    <View
+        android:id="@+id/divider_city"
+        style="@style/StyleDividerCity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_city_select" />
+
+    <TextView
+        android:id="@+id/tv_popular_city"
+        style="@style/StyleTextView"
+        android:layout_marginTop="16dp"
+        android:text="热门城市"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_city_select" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_city_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_popular_city" />
+
+</android.support.constraint.ConstraintLayout>
