@@ -1,5 +1,6 @@
 package com.mzz.zmusicplayer.presenter;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -91,8 +92,9 @@ public class PlayListPresenter implements PlayListContract.Presenter, PlayList.P
     }
 
     @Override
-    public LinearLayoutManager getLayoutManager() {
-        return playListAdapter.getLayoutManager();
+    public void setScrollFirstShowInNeed(FloatingActionButton floatingActionButton) {
+        playListAdapter.setScrollFirstShowInNeed(floatingActionButton);
+
     }
 
     @Override
@@ -103,7 +105,7 @@ public class PlayListPresenter implements PlayListContract.Presenter, PlayList.P
 
     @Override
     public void scrollToFirst() {
-        playListAdapter.scrollToPosition(0);
+        playListAdapter.scrollToFirst();
     }
 
     /**
@@ -111,8 +113,7 @@ public class PlayListPresenter implements PlayListContract.Presenter, PlayList.P
      */
     @Override
     public void locateToSelectedSong() {
-        int adapterPosition = playList.getPlayingIndex() + 1;
-        playListAdapter.scrollToPosition(adapterPosition);
+        playListAdapter.locateToSelectedSong();
     }
 
     @Override

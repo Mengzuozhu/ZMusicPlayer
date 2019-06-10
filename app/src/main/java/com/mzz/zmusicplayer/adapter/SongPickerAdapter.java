@@ -23,7 +23,6 @@ public class SongPickerAdapter extends SongInfoAdapter {
 
     private TextQueryHandler textQueryHandler;
     private int chbSongSelectId;
-    private RecyclerView recyclerView;
 
     /**
      * Instantiates a new Song info adapter.
@@ -33,7 +32,6 @@ public class SongPickerAdapter extends SongInfoAdapter {
      */
     public SongPickerAdapter(List <SongInfo> songInfos, RecyclerView recyclerView) {
         super(R.layout.item_song_check, songInfos, recyclerView);
-        this.recyclerView = recyclerView;
         chbSongSelectId = R.id.chb_item_song_select;
         ViewerHelper.setOnItemClickWithCheckBox(this, chbSongSelectId);
         textQueryHandler = new TextQueryHandler(this, recyclerView.getContext(), songInfos);

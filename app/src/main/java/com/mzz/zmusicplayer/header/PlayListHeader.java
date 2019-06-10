@@ -39,7 +39,7 @@ public class PlayListHeader {
         this.activity = activity;
         this.recyclerView = playListAdapter.getRecyclerView();
         this.playListAdapter = playListAdapter;
-        playList = playListAdapter.getMPlayList();
+        playList = playListAdapter.getPlayList();
         initHeader();
     }
 

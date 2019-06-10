@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +13,8 @@ import android.view.ViewGroup;
 
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.contract.PlayListContract;
-import com.mzz.zmusicplayer.presenter.PlayListPresenter;
 import com.mzz.zmusicplayer.play.PlayList;
+import com.mzz.zmusicplayer.presenter.PlayListPresenter;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.List;
@@ -35,10 +34,10 @@ public class PlayListFragment extends Fragment implements PlayListContract.View 
 
     @BindView(R.id.rv_song)
     RecyclerView rvSong;
-    @BindView(R.id.fab_song_scroll_first)
+    @BindView(R.id.fab_scroll_first_song)
     FloatingActionButton fabSongScrollFirst;
     private PlayListListener playListListener;
-    private PlayListContract.Presenter mainPresenter;
+    private PlayListContract.Presenter playListPresenter;
 
     /**
      * Use this factory method to create a new instance of
@@ -65,23 +64,8 @@ public class PlayListFragment extends Fragment implements PlayListContract.View 
 
     private void init() {
         getListener();
-        mainPresenter = new PlayListPresenter(this, playListListener);
-        LinearLayoutManager layoutManager = mainPresenter.getLayoutManager();
-        rvSong.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (layoutManager != null) {
-                    int position = layoutManager.findFirstVisibleItemPosition();
-                    if (position > 0) {
-                        View view = fabSongScrollFirst;
-                        view.setVisibility(View.VISIBLE);
-                    } else if (fabSongScrollFirst.isShown()) {
-                        View view = fabSongScrollFirst;
-                        view.setVisibility(View.INVISIBLE);
-                    }
-                }
-            }
-        });
+        playListPresenter = new PlayListPresenter(this, playListListener);
+        playListPresenter.setScrollFirstShowInNeed(fabSongScrollFirst);
     }
 
     private void getListener() {
@@ -92,15 +76,15 @@ public class PlayListFragment extends Fragment implements PlayListContract.View 
     }
 
     public void updatePlayListSongs(List <SongInfo> checkedSongs) {
-        mainPresenter.updatePlayListSongs(checkedSongs);
+        playListPresenter.updatePlayListSongs(checkedSongs);
     }
 
     public void addSongs(List <SongInfo> newSongInfos) {
-        mainPresenter.addSongs(newSongInfos);
+        playListPresenter.addSongs(newSongInfos);
     }
 
     public void remove(List <Long> keys) {
-        mainPresenter.remove(keys);
+        playListPresenter.remove(keys);
     }
 
     @Override
@@ -108,14 +92,14 @@ public class PlayListFragment extends Fragment implements PlayListContract.View 
         return rvSong;
     }
 
-    @OnClick(R.id.fab_song_scroll_first)
+    @OnClick(R.id.fab_scroll_first_song)
     public void scrollToFirstSongOnClick() {
-        mainPresenter.scrollToFirst();
+        playListPresenter.scrollToFirst();
     }
 
     @OnClick(R.id.fab_song_locate)
     public void locateToSelectedSongOnClick() {
-        mainPresenter.locateToSelectedSong();
+        playListPresenter.locateToSelectedSong();
     }
 
     public interface PlayListListener {

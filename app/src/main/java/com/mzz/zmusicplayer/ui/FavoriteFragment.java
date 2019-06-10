@@ -2,6 +2,7 @@ package com.mzz.zmusicplayer.ui;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import lombok.NoArgsConstructor;
 
@@ -30,8 +32,10 @@ import lombok.NoArgsConstructor;
 public class FavoriteFragment extends Fragment implements ISongChangeListener,
         FavoriteSong.IFavoriteSongObserver {
 
-    @BindView(R.id.rv_favorite_song)
+    @BindView(R.id.rv_song)
     RecyclerView rvFavoriteSong;
+    @BindView(R.id.fab_scroll_first_song)
+    FloatingActionButton fabSongScrollFirst;
     Unbinder unbinder;
     private FavoriteSong favoriteSong;
     private SongListAdapter songListAdapter;
@@ -49,7 +53,7 @@ public class FavoriteFragment extends Fragment implements ISongChangeListener,
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_favorite, container, false);
+        View view = inflater.inflate(R.layout.fragment_play_list, container, false);
         unbinder = ButterKnife.bind(this, view);
         favoriteSong = FavoriteSong.getInstance();
         favoriteSong.setFavoriteSongObserver(this);
@@ -92,6 +96,7 @@ public class FavoriteFragment extends Fragment implements ISongChangeListener,
                 favoriteSong.remove(getItem(position));
             }
         };
+        songListAdapter.setScrollFirstShowInNeed(fabSongScrollFirst);
     }
 
     public void remove(List <Long> keys) {
@@ -110,4 +115,15 @@ public class FavoriteFragment extends Fragment implements ISongChangeListener,
     public void onFavoriteSongChange() {
         initOrUpdate();
     }
+
+    @OnClick(R.id.fab_scroll_first_song)
+    public void scrollToFirstSongOnClick() {
+        songListAdapter.scrollToFirst();
+    }
+
+    @OnClick(R.id.fab_song_locate)
+    public void locateToSelectedSongOnClick() {
+        songListAdapter.locateToSelectedSong();
+    }
+
 }

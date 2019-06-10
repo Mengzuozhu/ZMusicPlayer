@@ -1,6 +1,7 @@
 package com.mzz.zmusicplayer.adapter;
 
 import android.content.Context;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -26,7 +28,6 @@ public class SongInfoAdapter extends BaseQuickAdapter <SongInfo, BaseViewHolder>
 
     @Getter
     protected RecyclerView recyclerView;
-    @Getter
     private LinearLayoutManager layoutManager;
     private List <SongInfo> songInfos;
 
@@ -70,6 +71,15 @@ public class SongInfoAdapter extends BaseQuickAdapter <SongInfo, BaseViewHolder>
         if (position < getItemCount()) {
             recyclerView.scrollToPosition(position);
         }
+    }
+
+    /**
+     * Sets scroll first show in need.
+     *
+     * @param fabSongScrollFirst the fab song scroll first
+     */
+    public void setScrollFirstShowInNeed(FloatingActionButton fabSongScrollFirst) {
+        ViewerHelper.setScrollFirstShowInNeed(recyclerView, layoutManager, fabSongScrollFirst);
     }
 
     /**

@@ -25,14 +25,14 @@ public class SongListAdapter extends PlayListAdapter {
      * @param playList     the play list
      * @param recyclerView the recycler view
      */
-    public SongListAdapter(PlayList playList, RecyclerView recyclerView, FragmentActivity activity,
-                           EditType editType) {
+    protected SongListAdapter(PlayList playList, RecyclerView recyclerView,
+                              FragmentActivity activity, EditType editType) {
         super(playList, recyclerView);
         setOnItemLongClick();
         songListHeader = new SongListHeader(activity, this, editType);
     }
 
-    public void updateSongCount() {
+    protected void updateSongCount() {
         songListHeader.updateSongCount();
     }
 

@@ -17,16 +17,13 @@ import android.widget.TextView;
 
 import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zandroidcommon.view.BaseActivity;
-import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongPickerAdapter;
 import com.mzz.zmusicplayer.file.FileManager;
-import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -44,7 +41,7 @@ public class SongPickerActivity extends BaseActivity {
     SearchView svSongFile;
     @BindView(R.id.fab_song_file_scroll_first)
     FloatingActionButton fabSongScrollFirst;
-    private SongPickerAdapter queryAdapter;
+    private SongPickerAdapter songPickerAdapter;
     private List <SongInfo> songInfos;
 
     @Override
@@ -81,12 +78,11 @@ public class SongPickerActivity extends BaseActivity {
     }
 
     private void initAdapter() {
-        HashSet <Integer> allSongIdInFile = LocalSong.getInstance().getAllSongIdInFile();
-        songInfos = FileManager.getInstance().getAllSongInfos(allSongIdInFile);
-        queryAdapter = new SongPickerAdapter(songInfos, rvSongFile);
-        queryAdapter.setQueryTextListener(svSongFile);
-        ViewerHelper.showOrHideScrollFirst(rvSongFile, queryAdapter.getLayoutManager(),
-                fabSongScrollFirst);
+//        HashSet <Integer> allSongIdInFile = LocalSong.getInstance().getAllSongIdInFile();
+        songInfos = FileManager.getInstance().getAllSongInfos(null);
+        songPickerAdapter = new SongPickerAdapter(songInfos, rvSongFile);
+        songPickerAdapter.setQueryTextListener(svSongFile);
+        songPickerAdapter.setScrollFirstShowInNeed(fabSongScrollFirst);
         initHeader();
     }
 
@@ -97,11 +93,11 @@ public class SongPickerActivity extends BaseActivity {
         tvCount.setText(StringHelper.getLocalFormat("%d首", songInfos.size()));
 
         CheckBox chbSelectAll = header.findViewById(R.id.chb_picker_select_all);
-        chbSelectAll.setOnCheckedChangeListener((buttonView, isChecked) -> queryAdapter.selectAll(isChecked));
+        chbSelectAll.setOnCheckedChangeListener((buttonView, isChecked) -> songPickerAdapter.selectAll(isChecked));
 
         ImageView ivSort = header.findViewById(R.id.iv_picker_header_sort);
         ivSort.setOnClickListener(v -> showSongOrderPopupMenu(ivSort));
-        queryAdapter.setHeaderView(header);
+        songPickerAdapter.setHeaderView(header);
     }
 
     private void showSongOrderPopupMenu(View view) {
@@ -111,10 +107,10 @@ public class SongPickerActivity extends BaseActivity {
             int itemId = menuItem.getItemId();
             switch (itemId) {
                 case R.id.action_sort_ascend_by_name:
-                    queryAdapter.sortByName(true);
+                    songPickerAdapter.sortByName(true);
                     return true;
                 case R.id.action_sort_descend_by_name:
-                    queryAdapter.sortByName(false);
+                    songPickerAdapter.sortByName(false);
                     return true;
                 default:
                     break;
@@ -142,6 +138,6 @@ public class SongPickerActivity extends BaseActivity {
 
     @OnClick(R.id.fab_song_file_scroll_first)
     public void scrollToFirstSongOnClick(View view) {
-        queryAdapter.scrollToPosition(0);
+        songPickerAdapter.scrollToPosition(0);
     }
 }

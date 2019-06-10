@@ -30,7 +30,7 @@ public class PlayListAdapter extends SongInfoAdapter {
             R.id.tv_item_song_num};
     private int selectColor;
     @Getter
-    private PlayList mPlayList;
+    private PlayList playList;
     private SongInfo currentColorSong;
     private Context context;
 
@@ -42,7 +42,7 @@ public class PlayListAdapter extends SongInfoAdapter {
      */
     protected PlayListAdapter(PlayList playList, RecyclerView recyclerView) {
         super(R.layout.item_song_list, playList.getPlaySongs(), recyclerView);
-        this.mPlayList = playList;
+        this.playList = playList;
         context = recyclerView.getContext();
         selectColor = context.getColor(R.color.colorGreen);
         setOnItemChildClickListener((adapter, view, position) -> showSongMoreMenu(view, position));
@@ -56,7 +56,7 @@ public class PlayListAdapter extends SongInfoAdapter {
             changePlaySongColor(helper);
             int adapterPosition = helper.getAdapterPosition();
             //排序后，播放位置可能变化，因此重新设置播放位置
-            mPlayList.setPlayingIndex(adapterPosition - 1);
+            playList.setPlayingIndex(adapterPosition - 1);
         } else {
             resetPlaySongColor(helper);
         }
@@ -91,8 +91,23 @@ public class PlayListAdapter extends SongInfoAdapter {
         notifyDataSetChanged();
     }
 
+    /**
+     * Scroll to first.
+     */
+    public void scrollToFirst() {
+        scrollToPosition(0);
+    }
+
+    /**
+     * Locate to selected song.
+     */
+    public void locateToSelectedSong() {
+        int adapterPosition = playList.getPlayingIndex() + 1;
+        scrollToPosition(adapterPosition);
+    }
+
     void updatePlaySongs(List <SongInfo> songs) {
-        mPlayList.setPlaySongs(songs);
+        playList.setPlaySongs(songs);
         setNewData(songs);
     }
 
