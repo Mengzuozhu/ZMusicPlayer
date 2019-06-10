@@ -2,7 +2,6 @@ package com.mzz.zmusicplayer.presenter;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;

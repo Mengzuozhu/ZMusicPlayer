@@ -1,6 +1,7 @@
 package com.mzz.zmusicplayer.song;
 
 import com.mzz.zmusicplayer.model.LocalSongModel;
+import com.mzz.zmusicplayer.setting.AppSetting;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import lombok.Getter;
+
 /**
  * 最近播放的歌曲
  * author : Mzz
@@ -16,28 +19,38 @@ import java.util.PriorityQueue;
  * description :
  */
 public class RecentSong {
-    private static final int RECENT_MAX_COUNT = 50;
     private static RecentSong recentSong = new RecentSong();
+    private int recentSongMaxCount;
     private PriorityQueue <SongInfo> minHeap;
+    @Getter
     private LinkedList <SongInfo> recentSongs;
 
     private RecentSong() {
+        recentSongMaxCount = AppSetting.getRecentSongMaxCount();
+        initRecentSongs();
     }
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static RecentSong getInstance() {
         return recentSong;
     }
 
     /**
-     * Gets recent songs.
+     * Get recent count values string [ ].
      *
-     * @return the recent songs
+     * @return the string [ ]
      */
-    public LinkedList <SongInfo> getRecentSongs() {
-        if (recentSongs == null) {
-            initRecentSongs();
+    public static String[] getRecentCountValues() {
+        int count = 10;
+        String[] recentValues = new String[count];
+        for (int i = 0; i < count; i++) {
+            recentValues[i] = String.valueOf(10 * (i + 1));
         }
-        return recentSongs;
+        return recentValues;
     }
 
     /**
@@ -46,7 +59,6 @@ public class RecentSong {
      * @param song the song
      */
     void updateRecentSong(SongInfo song) {
-        recentSongs = getRecentSongs();
         recentSongs.remove(song);
         recentSongs.addFirst(song);
         removeRecentSong();
@@ -88,6 +100,15 @@ public class RecentSong {
         LocalSongModel.update(song);
     }
 
+    /**
+     * Update recent max count.
+     */
+    public void updateRecentMaxCount(int maxCount) {
+        recentSongMaxCount = maxCount;
+        AppSetting.setRecentSongMaxCount(recentSongMaxCount);
+        removeRecentSong();
+    }
+
     private void initRecentSongs() {
         initMinHeap();
         buildMinHeap();
@@ -98,7 +119,7 @@ public class RecentSong {
     }
 
     private void removeRecentSong() {
-        while (recentSongs.size() > RECENT_MAX_COUNT) {
+        while (recentSongs.size() > recentSongMaxCount) {
             recentSongs.removeLast();
         }
     }
@@ -111,12 +132,16 @@ public class RecentSong {
             if (lastPlayTime == null) {
                 continue;
             }
-            if (minHeap.size() < RECENT_MAX_COUNT) {
+            if (minHeap.size() < recentSongMaxCount) {
                 minHeap.add(localSong);
             }
             //晚于堆顶的最早时间，则删除堆顶，新增该歌曲
             else {
-                Date minTime = minHeap.peek().getLastPlayTime();
+                SongInfo peek = minHeap.peek();
+                if (peek == null) {
+                    continue;
+                }
+                Date minTime = peek.getLastPlayTime();
                 if (minTime != null && lastPlayTime.after(minTime)) {
                     minHeap.poll();
                     minHeap.add(localSong);
@@ -126,7 +151,7 @@ public class RecentSong {
     }
 
     private void initMinHeap() {
-        minHeap = new PriorityQueue <>(RECENT_MAX_COUNT, (o1, o2) -> {
+        minHeap = new PriorityQueue <>(recentSongMaxCount, (o1, o2) -> {
             Date lastPlayTime1 = o1.getLastPlayTime();
             if (lastPlayTime1 == null) {
                 return -1;

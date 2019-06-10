@@ -13,8 +13,9 @@ public class AppSetting {
     private static final String APP_SETTING = "AppSetting";
     private static final String PLAY_MODE = "PLAY_MODE";
     private static final String SONG_ORDER_MODE = "SONG_ORDER_MODE";
-    private static final String PLAY_LIST_TYPE = "PLAY_LIST_TYPE";
     private static final String LAST_PLAY_SONG_ID = "LAST_PLAY_SONG_ID";
+    private static final String RECENT_SONG_COUNT = "RECENT_SONG_COUNT";
+    private static final int DEFAULT_RECENT_MAX_COUNT = 50;
     private static SharedPreferences sharedPreferences;
 
     private static SharedPreferences getSharedPreferences() {
@@ -79,6 +80,24 @@ public class AppSetting {
      */
     public static void setLastPlaySongId(long playSongId) {
         getEdit().putLong(LAST_PLAY_SONG_ID, playSongId).apply();
+    }
+
+    /**
+     * Gets recent song max count.
+     *
+     * @return the recent song max count
+     */
+    public static int getRecentSongMaxCount() {
+        return getSharedPreferences().getInt(RECENT_SONG_COUNT, DEFAULT_RECENT_MAX_COUNT);
+    }
+
+    /**
+     * Sets recent song max count.
+     *
+     * @param recentCount the recent count
+     */
+    public static void setRecentSongMaxCount(int recentCount) {
+        putInt(RECENT_SONG_COUNT, recentCount);
     }
 
     private static void putInt(String key, int value) {

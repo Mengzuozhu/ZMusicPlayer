@@ -20,6 +20,7 @@ import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
 import com.mzz.zmusicplayer.song.ISongChangeListener;
 import com.mzz.zmusicplayer.song.SongInfo;
+import com.mzz.zmusicplayer.ui.AppSettingActivity;
 import com.mzz.zmusicplayer.ui.FavoriteFragment;
 import com.mzz.zmusicplayer.ui.LocalSongFragment;
 import com.mzz.zmusicplayer.ui.MusicControlFragment;
@@ -79,6 +80,8 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
         if (itemId == R.id.action_song_add) {
             startActivityForResult(new Intent(this, SongPickerActivity.class),
                     SongPickerActivity.CODE_ADD_SONG);
+        } else if (itemId == R.id.action_app_setting) {
+            openActivity(AppSettingActivity.class);
         }
         return super.onOptionsItemSelected(item);
     }

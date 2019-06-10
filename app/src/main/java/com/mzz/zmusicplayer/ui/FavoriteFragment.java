@@ -53,7 +53,7 @@ public class FavoriteFragment extends Fragment implements ISongChangeListener,
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_play_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_song_list, container, false);
         unbinder = ButterKnife.bind(this, view);
         favoriteSong = FavoriteSong.getInstance();
         favoriteSong.setFavoriteSongObserver(this);

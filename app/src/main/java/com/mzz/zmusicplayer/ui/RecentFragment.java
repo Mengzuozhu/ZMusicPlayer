@@ -57,7 +57,7 @@ public class RecentFragment extends Fragment implements ISongChangeListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_play_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_song_list, container, false);
         unbinder = ButterKnife.bind(this, view);
         recentSong = RecentSong.getInstance();
         //需在创建视图后，重新初始化适配器

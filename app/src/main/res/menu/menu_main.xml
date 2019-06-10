@@ -7,5 +7,10 @@
         android:orderInCategory="1"
         android:title="@string/menu_song_add"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_app_setting"
+        android:orderInCategory="2"
+        android:title="配置"
+        app:showAsAction="never" />
 
 </menu>
