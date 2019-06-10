@@ -16,14 +16,25 @@ import lombok.Setter;
 public class FavoriteSong {
     private static final FavoriteSong singleton = new FavoriteSong();
     @Setter
-    IFavoriteSongObserver favoriteSongObserver;
+    private IFavoriteSongObserver favoriteSongObserver;
     private List <SongInfo> favoriteSongs;
 
     private FavoriteSong() {
+        initFavoriteSong();
     }
 
     public static FavoriteSong getInstance() {
         return singleton;
+    }
+
+    private void initFavoriteSong() {
+        List <SongInfo> allLocalSongs = LocalSong.getInstance().getAllLocalSongs();
+        favoriteSongs = new ArrayList <>();
+        for (SongInfo song : allLocalSongs) {
+            if (song.getIsFavorite()) {
+                favoriteSongs.add(song);
+            }
+        }
     }
 
     /**
@@ -32,16 +43,6 @@ public class FavoriteSong {
      * @return the favorite playSongs
      */
     public List <SongInfo> getFavoriteSongs() {
-        if (favoriteSongs != null) {
-            return favoriteSongs;
-        }
-        List <SongInfo> allLocalSongs = LocalSong.getInstance().getAllLocalSongs();
-        favoriteSongs = new ArrayList <>();
-        for (SongInfo song : allLocalSongs) {
-            if (song.getIsFavorite()) {
-                favoriteSongs.add(song);
-            }
-        }
         return favoriteSongs;
     }
 
@@ -57,11 +58,7 @@ public class FavoriteSong {
         }
         boolean isFavorite = !song.getIsFavorite();
         song.setIsFavorite(isFavorite);
-        LocalSongModel.update(song);
         updateFavoriteSong(song);
-        if (favoriteSongObserver != null) {
-            favoriteSongObserver.onFavoriteSongChange();
-        }
         return isFavorite;
     }
 
@@ -71,6 +68,10 @@ public class FavoriteSong {
         } else {
             favoriteSongs.remove(song);
         }
+        if (favoriteSongObserver != null) {
+            favoriteSongObserver.onFavoriteSongChange();
+        }
+        LocalSongModel.update(song);
     }
 
     /**
@@ -92,9 +93,9 @@ public class FavoriteSong {
                 } else {
                     song.setIsFavorite(false);
                     removeSongs.add(song);
+                    favoriteSongs.remove(i);
+                    keys.remove(id);
                 }
-                favoriteSongs.remove(i);
-                keys.remove(id);
             }
         }
         LocalSongModel.updateInTx(removeSongs);
@@ -114,7 +115,7 @@ public class FavoriteSong {
             Player.getInstance().switchFavorite();
         } else {
             song.setIsFavorite(false);
-            LocalSongModel.update(song);
+            updateFavoriteSong(song);
         }
     }
 

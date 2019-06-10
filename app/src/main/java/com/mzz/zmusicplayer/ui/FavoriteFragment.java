@@ -90,8 +90,6 @@ public class FavoriteFragment extends Fragment implements ISongChangeListener,
             @Override
             public void removeSongAt(int position) {
                 favoriteSong.remove(getItem(position));
-                super.removeSongAt(position);
-                updateSongCount();
             }
         };
     }
