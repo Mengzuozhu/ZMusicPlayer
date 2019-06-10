@@ -21,10 +21,12 @@ import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongPickerAdapter;
 import com.mzz.zmusicplayer.file.FileManager;
+import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -79,7 +81,8 @@ public class SongPickerActivity extends BaseActivity {
     }
 
     private void initAdapter() {
-        songInfos = FileManager.getInstance().getAllSongInfos();
+        HashSet <Integer> allSongIdInFile = LocalSong.getInstance().getAllSongIdInFile();
+        songInfos = FileManager.getInstance().getAllSongInfos(allSongIdInFile);
         queryAdapter = new SongPickerAdapter(songInfos, rvSongFile);
         queryAdapter.setQueryTextListener(svSongFile);
         ViewerHelper.showOrHideScrollFirst(rvSongFile, queryAdapter.getLayoutManager(),

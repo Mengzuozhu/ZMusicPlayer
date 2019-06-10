@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.mzz.zandroidcommon.adapter.ICheckable;
-import com.mzz.zandroidcommon.common.JsonConverter;
 import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zandroidcommon.view.QueryInfo;
 import com.mzz.zmusicplayer.edit.IEditItem;
@@ -13,9 +12,7 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Transient;
-import org.greenrobot.greendao.converter.PropertyConverter;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import lombok.Getter;
@@ -41,6 +38,7 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
             return new SongInfo[size];
         }
     };
+
     //当前歌曲是否被选中
     @Transient
     @Setter
@@ -55,7 +53,7 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
     private String nameSpell;
     private String title;
     private String fileArtist;
-    private int fileId;
+    private int songIdInFile;
     private Date lastPlayTime;
     private int duration;
     private boolean isChecked = true;
@@ -63,6 +61,24 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
 
     @Generated(hash = 1061935912)
     public SongInfo() {
+    }
+
+    @Generated(hash = 1276055308)
+    public SongInfo(Long id, String name, String path, String artist, String nameSpell,
+                    String title, String fileArtist, int songIdInFile, Date lastPlayTime,
+                    int duration, boolean isChecked, boolean isFavorite) {
+        this.id = id;
+        this.name = name;
+        this.path = path;
+        this.artist = artist;
+        this.nameSpell = nameSpell;
+        this.title = title;
+        this.fileArtist = fileArtist;
+        this.songIdInFile = songIdInFile;
+        this.lastPlayTime = lastPlayTime;
+        this.duration = duration;
+        this.isChecked = isChecked;
+        this.isFavorite = isFavorite;
     }
 
     protected SongInfo(Parcel in) {
@@ -74,32 +90,12 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         this.nameSpell = in.readString();
         this.title = in.readString();
         this.fileArtist = in.readString();
-        this.fileId = in.readInt();
+        this.songIdInFile = in.readInt();
         long tmpLastPlayTime = in.readLong();
         this.lastPlayTime = tmpLastPlayTime == -1 ? null : new Date(tmpLastPlayTime);
         this.duration = in.readInt();
         this.isChecked = in.readByte() != 0;
         this.isFavorite = in.readByte() != 0;
-    }
-
-    @Generated(hash = 683196892)
-    public SongInfo(Long id, String name, String path, String artist, String nameSpell,
-                    String title,
-                    String fileArtist, int fileId, Date lastPlayTime, int duration,
-                    boolean isChecked,
-                    boolean isFavorite) {
-        this.id = id;
-        this.name = name;
-        this.path = path;
-        this.artist = artist;
-        this.nameSpell = nameSpell;
-        this.title = title;
-        this.fileArtist = fileArtist;
-        this.fileId = fileId;
-        this.lastPlayTime = lastPlayTime;
-        this.duration = duration;
-        this.isChecked = isChecked;
-        this.isFavorite = isFavorite;
     }
 
     @Override
@@ -205,6 +201,14 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         this.fileArtist = fileArtist;
     }
 
+    public int getSongIdInFile() {
+        return this.songIdInFile;
+    }
+
+    public void setSongIdInFile(int songIdInFile) {
+        this.songIdInFile = songIdInFile;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -220,32 +224,10 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         dest.writeString(this.nameSpell);
         dest.writeString(this.title);
         dest.writeString(this.fileArtist);
-        dest.writeInt(this.fileId);
+        dest.writeInt(this.songIdInFile);
         dest.writeLong(this.lastPlayTime != null ? this.lastPlayTime.getTime() : -1);
         dest.writeInt(this.duration);
         dest.writeByte(this.isChecked ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isFavorite ? (byte) 1 : (byte) 0);
-    }
-
-    public int getFileId() {
-        return this.fileId;
-    }
-
-    public void setFileId(int fileId) {
-        this.fileId = fileId;
-    }
-
-    public static class SongInfoListConverter implements PropertyConverter <ArrayList <SongInfo>,
-            String> {
-
-        @Override
-        public ArrayList <SongInfo> convertToEntityProperty(String databaseValue) {
-            return JsonConverter.jsonToList(databaseValue, SongInfo.class);
-        }
-
-        @Override
-        public String convertToDatabaseValue(ArrayList <SongInfo> entityProperty) {
-            return JsonConverter.convertToStringValue(entityProperty);
-        }
     }
 }

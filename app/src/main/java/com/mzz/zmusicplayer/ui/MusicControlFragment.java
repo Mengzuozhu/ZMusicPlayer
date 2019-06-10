@@ -17,13 +17,13 @@ import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.TimeHelper;
 import com.mzz.zmusicplayer.contract.MusicControlContract;
-import com.mzz.zmusicplayer.presenter.MusicControlPresenter;
-import com.mzz.zmusicplayer.setting.AppSetting;
-import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.play.IPlayer;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.play.PlayObserver;
 import com.mzz.zmusicplayer.play.Player;
+import com.mzz.zmusicplayer.presenter.MusicControlPresenter;
+import com.mzz.zmusicplayer.setting.AppSetting;
+import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.Date;

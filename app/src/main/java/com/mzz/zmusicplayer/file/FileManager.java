@@ -12,6 +12,7 @@ import com.mzz.zmusicplayer.song.SongInfo;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * author : Mzz
@@ -43,7 +44,7 @@ public class FileManager {
      *
      * @return song infos
      */
-    public List <SongInfo> getAllSongInfos() {
+    public List <SongInfo> getAllSongInfos(Set <Integer> allSongIdInFile) {
         ArrayList <SongInfo> songs = new ArrayList <>();
         try (Cursor c = mContentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 projection, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER)) {
@@ -51,32 +52,39 @@ public class FileManager {
                 return songs;
             }
             while (c.moveToNext()) {
-                // 路径
-                String path = c.getString(0);
                 int isMusic = c.getInt(4);
-                if (isMusic == 0 || !new File(path).exists()) {
+                if (isMusic == 0) {
                     continue;
                 }
 
-                String name = c.getString(1); // DISPLAY_NAME
+                int songIdInFile = c.getInt(5);
+                String songPath = c.getString(0);
+                boolean hasAddThisSong =
+                        allSongIdInFile != null && allSongIdInFile.contains(songIdInFile);
+                if (hasAddThisSong || isFileNotExit(songPath)) {
+                    continue;
+                }
+
+                String displayName = c.getString(1); // DISPLAY_NAME
                 String artist = c.getString(2);
                 String fileArtist = artist;
                 int duration = c.getInt(3);
-                name = extractName(name);
-                String[] strings = name.split(MINUS);
+                //从文件名中提取歌名和歌手
+                displayName = extractName(displayName);
+                String[] strings = displayName.split(MINUS);
                 if (strings.length > 1) {
                     artist = strings[0];
-                    name = strings[1];
+                    displayName = strings[1];
                 }
-                name = name.trim();
+                displayName = displayName.trim();
                 artist = artist.trim();
                 SongInfo song = new SongInfo();
-                song.setName(name);
-                song.setNameSpell(getUpperSpell(name));
-                song.setPath(path);
+                song.setName(displayName);
+                song.setNameSpell(getUpperSpell(displayName));
+                song.setPath(songPath);
                 song.setArtist(artist);
                 song.setFileArtist(fileArtist);
-                song.setFileId(c.getInt(5));
+                song.setSongIdInFile(songIdInFile);
                 song.setTitle(c.getString(6));
                 song.setDuration(duration);
                 song.setIsChecked(true);
@@ -87,6 +95,10 @@ public class FileManager {
             Log.d("FileManager", "e:" + e.getMessage());
         }
         return songs;
+    }
+
+    private boolean isFileNotExit(String path) {
+        return !new File(path).exists();
     }
 
     private String getUpperSpell(String name) {

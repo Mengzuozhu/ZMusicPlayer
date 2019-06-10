@@ -16,9 +16,9 @@ import com.mzz.zmusicplayer.adapter.MusicPage;
 import com.mzz.zmusicplayer.adapter.MusicPagerAdapter;
 import com.mzz.zmusicplayer.edit.EditHandler;
 import com.mzz.zmusicplayer.edit.EditType;
+import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
 import com.mzz.zmusicplayer.song.ISongChangeListener;
-import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.FavoriteFragment;
 import com.mzz.zmusicplayer.ui.LocalSongFragment;
@@ -186,7 +186,6 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
         if (resultCode == SongPickerActivity.CODE_ADD_SONG) {
             ArrayList <SongInfo> newSongInfos =
                     data.getParcelableArrayListExtra(SongPickerActivity.EXTRA_ADD_SONG);
-            playListFragment.addSongs(newSongInfos);
             localSongFragment.addToLocalSongs(newSongInfos);
         } else if (resultCode == EditType.PLAYLIST.getCode()) {
             List <Long> deleteIds = geiDeleteIds(data);

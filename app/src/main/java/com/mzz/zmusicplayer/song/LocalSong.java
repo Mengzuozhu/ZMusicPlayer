@@ -4,6 +4,7 @@ import com.mzz.zmusicplayer.model.LocalSongModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import lombok.Getter;
@@ -152,4 +153,16 @@ public class LocalSong {
         RecentSong.getInstance().updateRecentSong(song);
     }
 
+    /**
+     * Gets all song id in file.
+     *
+     * @return the all song id in file
+     */
+    public HashSet <Integer> getAllSongIdInFile() {
+        HashSet <Integer> songIdInFile = new HashSet <>(allLocalSongs.size());
+        for (SongInfo allLocalSong : allLocalSongs) {
+            songIdInFile.add(allLocalSong.getSongIdInFile());
+        }
+        return songIdInFile;
+    }
 }

@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongListAdapter;
 import com.mzz.zmusicplayer.edit.EditType;
+import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.FavoriteSong;
 import com.mzz.zmusicplayer.song.ISongChangeListener;
-import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.List;
