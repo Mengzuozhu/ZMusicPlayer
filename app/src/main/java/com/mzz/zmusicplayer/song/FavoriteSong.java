@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import lombok.Setter;
+
 /**
  * author : Mzz
  * date : 2019 2019/6/9 20:01
@@ -13,6 +15,8 @@ import java.util.List;
  */
 public class FavoriteSong {
     private static final FavoriteSong singleton = new FavoriteSong();
+    @Setter
+    IFavoriteSongObserver favoriteSongObserver;
     private List <SongInfo> favoriteSongs;
 
     private FavoriteSong() {
@@ -28,6 +32,9 @@ public class FavoriteSong {
      * @return the favorite playSongs
      */
     public List <SongInfo> getFavoriteSongs() {
+        if (favoriteSongs != null) {
+            return favoriteSongs;
+        }
         List <SongInfo> allLocalSongs = LocalSong.getInstance().getAllLocalSongs();
         favoriteSongs = new ArrayList <>();
         for (SongInfo song : allLocalSongs) {
@@ -51,7 +58,19 @@ public class FavoriteSong {
         boolean isFavorite = !song.getIsFavorite();
         song.setIsFavorite(isFavorite);
         LocalSongModel.update(song);
+        updateFavoriteSong(song);
+        if (favoriteSongObserver != null) {
+            favoriteSongObserver.onFavoriteSongChange();
+        }
         return isFavorite;
+    }
+
+    private void updateFavoriteSong(SongInfo song) {
+        if (song.getIsFavorite()) {
+            favoriteSongs.add(song);
+        } else {
+            favoriteSongs.remove(song);
+        }
     }
 
     /**
@@ -99,4 +118,7 @@ public class FavoriteSong {
         }
     }
 
+    public interface IFavoriteSongObserver {
+        void onFavoriteSongChange();
+    }
 }

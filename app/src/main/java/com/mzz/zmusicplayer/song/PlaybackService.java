@@ -171,12 +171,12 @@ public class PlaybackService extends Service implements PlayObserver {
     }
 
     @Override
-    public void onSwitchPrevious(@Nullable SongInfo last) {
+    public void onSwitchFavorite(boolean isFavorite) {
         showNotification();
     }
 
     @Override
-    public void onSwitchFavorite(boolean isFavorite) {
+    public void onSwitchPrevious(@Nullable SongInfo last) {
         showNotification();
     }
 

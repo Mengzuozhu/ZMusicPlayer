@@ -150,7 +150,11 @@ k
 ;app/src/main/java/com/mzz/zmusicplayer/song/RecentSong.java,4\1\41d9dd2b29d38c8bcb3ec98a7ef38ece80cd59b4
 i
 9app/src/main/java/com/mzz/zmusicplayer/edit/EditType.java,a\7\a739ecf45c5968f0ce06c5f6d8fb0e057a0504dc
-o
-?app/src/main/java/com/mzz/zmusicplayer/song/LocalSongClass.java,4\f\4f08dafa99dee6d8548ec277e5634e6d4d7e174d
 s
 Capp/src/main/java/com/mzz/zmusicplayer/adapter/SongListAdapter.java,c\6\c67a3886134c90090bbd291c9963861ea142d85f
+m
+=app/src/main/java/com/mzz/zmusicplayer/song/FavoriteSong.java,e\b\ebdf82c26c226f5ff3936f26d05d0363e6448516
+j
+:app/src/main/java/com/mzz/zmusicplayer/song/LocalSong.java,0\3\031ae1087c28ebd0a7d0b311e50bb2b9e1e3e3aa
+t
+Dapp/src/main/java/com/mzz/zmusicplayer/song/ISongChangeListener.java,4\2\4278a8c127347a90f74e244551d8ecd9ba809cca

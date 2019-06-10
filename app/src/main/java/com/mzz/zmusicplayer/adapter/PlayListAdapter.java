@@ -40,7 +40,7 @@ public class PlayListAdapter extends SongInfoAdapter {
      * @param playList     the play list
      * @param recyclerView the recycler view
      */
-    public PlayListAdapter(PlayList playList, RecyclerView recyclerView) {
+    protected PlayListAdapter(PlayList playList, RecyclerView recyclerView) {
         super(R.layout.item_song_list, playList.getPlaySongs(), recyclerView);
         this.mPlayList = playList;
         context = recyclerView.getContext();
@@ -81,6 +81,16 @@ public class PlayListAdapter extends SongInfoAdapter {
         }
     }
 
+    /**
+     * Remove song at.
+     *
+     * @param position the position
+     */
+    public void removeSongAt(int position) {
+        remove(position);
+        notifyDataSetChanged();
+    }
+
     void updatePlaySongs(List <SongInfo> songs) {
         mPlayList.setPlaySongs(songs);
         setNewData(songs);
@@ -111,16 +121,6 @@ public class PlayListAdapter extends SongInfoAdapter {
             return false;
         });
         popupMenu.show();
-    }
-
-    /**
-     * Remove song at.
-     *
-     * @param position the position
-     */
-    public void removeSongAt(int position) {
-        remove(position);
-        notifyDataSetChanged();
     }
 
     private void showSongDetail(SongInfo songInfo) {

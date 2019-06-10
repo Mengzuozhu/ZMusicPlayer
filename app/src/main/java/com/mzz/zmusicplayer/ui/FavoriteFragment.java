@@ -27,12 +27,13 @@ import lombok.NoArgsConstructor;
  * A simple {@link Fragment} subclass.
  */
 @NoArgsConstructor
-public class FavoriteFragment extends Fragment implements ISongChangeListener {
+public class FavoriteFragment extends Fragment implements ISongChangeListener,
+        FavoriteSong.IFavoriteSongObserver {
 
     @BindView(R.id.rv_favorite_song)
     RecyclerView rvFavoriteSong;
     Unbinder unbinder;
-    FavoriteSong favoriteSong;
+    private FavoriteSong favoriteSong;
     private SongListAdapter songListAdapter;
     private boolean isVisibleToUser;
 
@@ -51,7 +52,8 @@ public class FavoriteFragment extends Fragment implements ISongChangeListener {
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
         unbinder = ButterKnife.bind(this, view);
         favoriteSong = FavoriteSong.getInstance();
-        init();
+        favoriteSong.setFavoriteSongObserver(this);
+        initOrUpdate();
         return view;
     }
 
@@ -66,11 +68,11 @@ public class FavoriteFragment extends Fragment implements ISongChangeListener {
         super.setUserVisibleHint(isVisibleToUser);
         this.isVisibleToUser = isVisibleToUser;
         if (isVisibleToUser) {
-            init();
+            initOrUpdate();
         }
     }
 
-    private void init() {
+    private void initOrUpdate() {
         if (songListAdapter == null) {
             initAdapter();
         } else {
@@ -106,4 +108,8 @@ public class FavoriteFragment extends Fragment implements ISongChangeListener {
         songListAdapter.updatePlaySongBackgroundColor(song);
     }
 
+    @Override
+    public void onFavoriteSongChange() {
+        initOrUpdate();
+    }
 }
