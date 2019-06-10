@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.contract.PlayListContract;
 import com.mzz.zmusicplayer.presenter.PlayListPresenter;
-import com.mzz.zmusicplayer.song.PlayList;
+import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.List;

@@ -11,7 +11,7 @@ import android.widget.SearchView;
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.MusicSearchAdapter;
-import com.mzz.zmusicplayer.song.PlayList;
+import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.mzz.zmusicplayer.song;
+package com.mzz.zmusicplayer.play;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -19,6 +19,7 @@ import com.mzz.zmusicplayer.MusicApplication;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.NotificationHandler;
 import com.mzz.zmusicplayer.setting.PlayedMode;
+import com.mzz.zmusicplayer.song.SongInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

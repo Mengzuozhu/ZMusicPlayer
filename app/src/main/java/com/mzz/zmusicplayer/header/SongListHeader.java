@@ -11,7 +11,7 @@ import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
 import com.mzz.zmusicplayer.edit.EditType;
-import com.mzz.zmusicplayer.song.PlayList;
+import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.MusicSearchActivity;
 import com.mzz.zmusicplayer.ui.SongEditActivity;

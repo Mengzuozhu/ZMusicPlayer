@@ -18,7 +18,7 @@ import com.mzz.zmusicplayer.edit.EditHandler;
 import com.mzz.zmusicplayer.edit.EditType;
 import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
 import com.mzz.zmusicplayer.song.ISongChangeListener;
-import com.mzz.zmusicplayer.song.PlayList;
+import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.FavoriteFragment;
 import com.mzz.zmusicplayer.ui.LocalSongFragment;

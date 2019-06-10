@@ -1,4 +1,4 @@
-package com.mzz.zmusicplayer.song;
+package com.mzz.zmusicplayer.play;
 
 import android.media.MediaPlayer;
 import android.util.Log;
@@ -6,6 +6,8 @@ import android.util.Log;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.MusicApplication;
 import com.mzz.zmusicplayer.setting.PlayedMode;
+import com.mzz.zmusicplayer.song.FavoriteSong;
+import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.io.IOException;
 import java.util.ArrayList;

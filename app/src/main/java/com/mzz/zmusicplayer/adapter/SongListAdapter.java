@@ -5,10 +5,8 @@ import android.support.v7.widget.RecyclerView;
 
 import com.mzz.zmusicplayer.edit.EditType;
 import com.mzz.zmusicplayer.header.SongListHeader;
-import com.mzz.zmusicplayer.song.PlayList;
+import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
-
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 

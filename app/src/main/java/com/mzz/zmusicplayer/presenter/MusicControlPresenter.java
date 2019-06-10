@@ -7,7 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import com.mzz.zmusicplayer.contract.MusicControlContract;
-import com.mzz.zmusicplayer.song.PlaybackService;
+import com.mzz.zmusicplayer.play.PlaybackService;
 
 public class MusicControlPresenter implements MusicControlContract.Presenter {
 

@@ -20,10 +20,10 @@ import com.mzz.zmusicplayer.contract.MusicControlContract;
 import com.mzz.zmusicplayer.presenter.MusicControlPresenter;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
-import com.mzz.zmusicplayer.song.IPlayer;
-import com.mzz.zmusicplayer.song.PlayList;
-import com.mzz.zmusicplayer.song.PlayObserver;
-import com.mzz.zmusicplayer.song.Player;
+import com.mzz.zmusicplayer.play.IPlayer;
+import com.mzz.zmusicplayer.play.PlayList;
+import com.mzz.zmusicplayer.play.PlayObserver;
+import com.mzz.zmusicplayer.play.Player;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.Date;

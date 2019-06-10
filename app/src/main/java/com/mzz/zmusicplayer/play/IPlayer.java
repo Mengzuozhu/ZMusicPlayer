@@ -1,4 +1,6 @@
-package com.mzz.zmusicplayer.song;
+package com.mzz.zmusicplayer.play;
+
+import com.mzz.zmusicplayer.song.SongInfo;
 
 /**
  * author : Mzz

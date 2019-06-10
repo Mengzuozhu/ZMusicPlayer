@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
 import com.mzz.zmusicplayer.contract.PlayListContract;
 import com.mzz.zmusicplayer.header.PlayListHeader;
-import com.mzz.zmusicplayer.song.PlayList;
+import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.PlayListFragment;
 

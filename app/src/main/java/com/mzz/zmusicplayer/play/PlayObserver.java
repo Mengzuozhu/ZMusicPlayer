@@ -1,8 +1,9 @@
-package com.mzz.zmusicplayer.song;
+package com.mzz.zmusicplayer.play;
 
 import android.support.annotation.Nullable;
 
 import com.mzz.zmusicplayer.setting.PlayedMode;
+import com.mzz.zmusicplayer.song.SongInfo;
 
 /**
  * 播放器观察者

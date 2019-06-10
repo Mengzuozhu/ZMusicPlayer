@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.song.PlayList;
+import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import org.greenrobot.eventbus.EventBus;

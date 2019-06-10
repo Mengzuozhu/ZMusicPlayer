@@ -112,7 +112,7 @@ public class LocalSong {
      * @param newPlaySongs the new play songs
      * @return the list
      */
-    List <SongInfo> updatePlayListSongs(List <SongInfo> newPlaySongs) {
+    public List <SongInfo> updatePlayListSongs(List <SongInfo> newPlaySongs) {
         //新建播放列表，避免受其他列表的影响
         List <SongInfo> playListSongs = new ArrayList <>();
         for (SongInfo song : this.allLocalSongs) {
@@ -133,7 +133,7 @@ public class LocalSong {
      *
      * @return the play list playSongs
      */
-    List <SongInfo> getPlayListSongs() {
+    public List <SongInfo> getPlayListSongs() {
         List <SongInfo> playListSongs = new ArrayList <>();
         for (SongInfo song : this.allLocalSongs) {
             if (song.getIsChecked()) {
@@ -148,7 +148,7 @@ public class LocalSong {
      *
      * @param song the song
      */
-    void updateRecentSong(SongInfo song) {
+    public void updateRecentSong(SongInfo song) {
         RecentSong.getInstance().updateRecentSong(song);
     }
 

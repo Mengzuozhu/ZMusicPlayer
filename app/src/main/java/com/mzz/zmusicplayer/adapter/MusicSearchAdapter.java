@@ -5,7 +5,7 @@ import android.widget.SearchView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.mzz.zmusicplayer.common.TextQueryHandler;
-import com.mzz.zmusicplayer.song.PlayList;
+import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import org.greenrobot.eventbus.EventBus;

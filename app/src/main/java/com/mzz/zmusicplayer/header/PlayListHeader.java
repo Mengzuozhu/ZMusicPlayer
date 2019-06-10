@@ -15,7 +15,7 @@ import com.mzz.zmusicplayer.edit.EditType;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.setting.SongOrderMode;
-import com.mzz.zmusicplayer.song.PlayList;
+import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.MusicSearchActivity;
 import com.mzz.zmusicplayer.ui.SongEditActivity;

@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.mzz.zmusicplayer.song.Player;
+import com.mzz.zmusicplayer.play.Player;
 
 /**
  * 耳机监听者

@@ -1,11 +1,13 @@
 package com.mzz.zmusicplayer.song;
 
 import com.mzz.zmusicplayer.model.LocalSongModel;
+import com.mzz.zmusicplayer.play.Player;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import lombok.Getter;
 import lombok.Setter;
 
 /**
@@ -17,6 +19,7 @@ public class FavoriteSong {
     private static final FavoriteSong singleton = new FavoriteSong();
     @Setter
     private IFavoriteSongObserver favoriteSongObserver;
+    @Getter
     private List <SongInfo> favoriteSongs;
 
     private FavoriteSong() {
@@ -38,21 +41,12 @@ public class FavoriteSong {
     }
 
     /**
-     * Gets favorite playSongs.
-     *
-     * @return the favorite playSongs
-     */
-    public List <SongInfo> getFavoriteSongs() {
-        return favoriteSongs;
-    }
-
-    /**
      * Switch favorite boolean.
      *
      * @param song the song
      * @return isFavorite
      */
-    boolean switchFavorite(SongInfo song) {
+    public boolean switchFavorite(SongInfo song) {
         if (song == null) {
             return false;
         }

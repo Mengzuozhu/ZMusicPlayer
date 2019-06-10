@@ -1,12 +1,12 @@
 package com.mzz.zmusicplayer.file;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 import android.util.Log;
 
 import com.github.promeg.pinyinhelper.Pinyin;
+import com.mzz.zmusicplayer.MusicApplication;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.io.File;
@@ -33,8 +33,8 @@ public class FileManager {
     private static FileManager mInstance = new FileManager();
     private static ContentResolver mContentResolver;
 
-    public static FileManager getInstance(Context context) {
-        mContentResolver = context.getContentResolver();
+    public static FileManager getInstance() {
+        mContentResolver = MusicApplication.getContext().getContentResolver();
         return mInstance;
     }
 
@@ -43,7 +43,7 @@ public class FileManager {
      *
      * @return song infos
      */
-    public List <SongInfo> getSongInfos() {
+    public List <SongInfo> getAllSongInfos() {
         ArrayList <SongInfo> songs = new ArrayList <>();
         try (Cursor c = mContentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 projection, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER)) {
