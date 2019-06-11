@@ -1,6 +1,5 @@
 package com.mzz.zmusicplayer.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 
@@ -16,7 +15,6 @@ public class AppSettingActivity extends BaseActivity implements AppSettingContra
 
     @BindView(R.id.rv_app_setting)
     RecyclerView rvAppSetting;
-    private AppSettingContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,26 +22,13 @@ public class AppSettingActivity extends BaseActivity implements AppSettingContra
         setContentView(R.layout.activity_app_setting);
         ButterKnife.bind(this);
 
-        presenter = new AppSettingPresenter(this);
+        AppSettingContract.Presenter presenter = new AppSettingPresenter(this);
         presenter.initSetting();
     }
 
     @Override
     public RecyclerView getRecyclerView() {
         return rvAppSetting;
-    }
-
-    @Override
-    public void showCityPickerActivity() {
-        CityPickerActivity.start(this);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == CityPickerActivity.CITY_PICKER_CODE) {
-            presenter.initSetting();
-        }
     }
 
 }

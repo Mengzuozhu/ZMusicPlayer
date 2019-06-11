@@ -26,16 +26,12 @@ public class AppSettingPresenter implements AppSettingContract.Presenter {
     private static final String CANCEL_NAME = "取消";
     private static final String CONFIRM = "确定";
     private static final String RECENT_SONG_COUNT_NAME = "最近歌曲上限";
-    private static final String WEATHER_CITY = "天气预报城市";
-    private String weatherCity;
     private int recentSongCount;
     private RecyclerView recyclerView;
-    private AppSettingContract.View mView;
     private Context context;
 
     public AppSettingPresenter(AppSettingContract.View view) {
         recyclerView = view.getRecyclerView();
-        mView = view;
         context = recyclerView.getContext();
     }
 
@@ -53,10 +49,8 @@ public class AppSettingPresenter implements AppSettingContract.Presenter {
     private List <MultipleItem> getSettings() {
         List <MultipleItem> settings = new ArrayList <>();
         recentSongCount = AppSetting.getRecentSongMaxCount();
-        weatherCity = AppSetting.getWeatherCity();
         settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, RECENT_SONG_COUNT_NAME,
                 getRecentSongCountInfo()));
-        settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, WEATHER_CITY, weatherCity));
         return settings;
     }
 
@@ -67,8 +61,6 @@ public class AppSettingPresenter implements AppSettingContract.Presenter {
     private void showSetting(int position, TextView textView) {
         if (position == 0) {
             showRecentCountDialog(textView);
-        } else if (position == 1) {
-            mView.showCityPickerActivity();
         }
     }
 

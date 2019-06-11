@@ -15,7 +15,6 @@ public class AppSetting {
     private static final String SONG_ORDER_MODE = "SONG_ORDER_MODE";
     private static final String LAST_PLAY_SONG_ID = "LAST_PLAY_SONG_ID";
     private static final String RECENT_SONG_COUNT = "RECENT_SONG_COUNT";
-    private static final String WEATHER_CITY = "WEATHER_CITY";
     private static final int DEFAULT_RECENT_MAX_COUNT = 50;
     private static SharedPreferences sharedPreferences;
 
@@ -103,24 +102,6 @@ public class AppSetting {
      */
     public static void setRecentSongMaxCount(int recentCount) {
         putInt(RECENT_SONG_COUNT, recentCount);
-    }
-
-    /**
-     * Gets weather city.
-     *
-     * @return the weather city
-     */
-    public static String getWeatherCity() {
-        return getSharedPreferences().getString(WEATHER_CITY, "北京");
-    }
-
-    /**
-     * Sets weather city.
-     *
-     * @param weatherCity the weather city
-     */
-    public static void setWeatherCity(String weatherCity) {
-        getEdit().putString(WEATHER_CITY, weatherCity).apply();
     }
 
     private static void putInt(String key, int value) {

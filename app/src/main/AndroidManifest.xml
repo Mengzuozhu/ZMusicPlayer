@@ -15,9 +15,6 @@
         android:roundIcon="@drawable/music"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".ui.CityPickerActivity"
-            android:label="选择城市" />
         <activity android:name=".ui.AppSettingActivity" />
         <activity
             android:name=".MainActivity"
