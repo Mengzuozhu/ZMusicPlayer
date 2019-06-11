@@ -97,12 +97,6 @@ public class PlayListPresenter implements PlayListContract.Presenter, PlayList.P
     }
 
     @Override
-    public void addSongs(List <SongInfo> newSongInfos) {
-        playList.addSongs(newSongInfos);
-        playListAdapter.setNewData(playList.getPlaySongs());
-    }
-
-    @Override
     public void scrollToFirst() {
         playListAdapter.scrollToFirst();
     }

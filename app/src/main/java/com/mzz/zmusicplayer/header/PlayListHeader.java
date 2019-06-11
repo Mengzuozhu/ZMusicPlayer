@@ -12,15 +12,12 @@ import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
 import com.mzz.zmusicplayer.edit.EditType;
+import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.setting.SongOrderMode;
-import com.mzz.zmusicplayer.play.PlayList;
-import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.MusicSearchActivity;
 import com.mzz.zmusicplayer.ui.SongEditActivity;
-
-import java.util.ArrayList;
 
 /**
  * author : Mzz
@@ -61,8 +58,7 @@ public class PlayListHeader {
      * Show song edit activity.
      */
     public void showSongEditActivity() {
-        SongEditActivity.startForResult(activity, (ArrayList <SongInfo>) playList.getPlaySongs(),
-                EditType.PLAYLIST);
+        SongEditActivity.startForResult(activity, playList.getPlaySongs(), EditType.PLAYLIST);
     }
 
     private void showSearchActivity() {

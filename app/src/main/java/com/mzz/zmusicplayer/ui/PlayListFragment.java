@@ -79,10 +79,6 @@ public class PlayListFragment extends Fragment implements PlayListContract.View 
         playListPresenter.updatePlayListSongs(checkedSongs);
     }
 
-    public void addSongs(List <SongInfo> newSongInfos) {
-        playListPresenter.addSongs(newSongInfos);
-    }
-
     public void remove(List <Long> keys) {
         playListPresenter.remove(keys);
     }

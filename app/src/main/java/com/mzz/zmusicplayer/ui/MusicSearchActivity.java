@@ -23,6 +23,12 @@ public class MusicSearchActivity extends BaseActivity {
     RecyclerView rvSearch;
     private MusicSearchAdapter musicSearchAdapter;
 
+    /**
+     * Start for result.
+     *
+     * @param activity the activity
+     * @param value    the value
+     */
     public static void startForResult(FragmentActivity activity, Parcelable value) {
         Intent intent = new Intent(activity, MusicSearchActivity.class).putExtra(EXTRA_SEARCH_DATA,
                 value);

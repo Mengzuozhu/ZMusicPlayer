@@ -30,8 +30,6 @@ public interface PlayListContract {
 
         void updatePlayListSongs(List <SongInfo> songInfos);
 
-        void addSongs(List <SongInfo> songInfos);
-
         void scrollToFirst();
 
         void locateToSelectedSong();
