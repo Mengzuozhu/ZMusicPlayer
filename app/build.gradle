@@ -2,6 +2,14 @@ apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        realse {
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+            storeFile file(RELEASE_STORE_FILE)
+            storePassword RELEASE_STORE_PASSWORD
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.mzz.zmusicplayer"
@@ -15,6 +23,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.realse
         }
     }
     compileOptions {

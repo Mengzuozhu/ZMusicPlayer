@@ -47,6 +47,26 @@ public class SongListHeader {
         initHeader();
     }
 
+    /**
+     * Show song edit activity.
+     */
+    public void showSongEditActivity() {
+        List <SongInfo> songs = playList.getPlaySongs();
+        if (songs instanceof LinkedList) {
+            songs = new ArrayList <>(songs);
+        }
+        SongEditActivity.startForResult(activity, songs, editType);
+    }
+
+    /**
+     * Update song count.
+     */
+    public void updateSongCount() {
+        int size = playList.getPlaySongs().size();
+        String songCountAndMode = StringHelper.getLocalFormat("播放全部(%d首)", size);
+        tvSongCount.setText(songCountAndMode);
+    }
+
     private void initHeader() {
         View header = LayoutInflater.from(activity).inflate(R.layout.content_song_list_header,
                 recyclerView, false);
@@ -57,6 +77,7 @@ public class SongListHeader {
         ImageView searchView = header.findViewById(R.id.iv_song_header_search);
         searchView.setOnClickListener(v -> showSearchActivity());
         ImageView sortView = header.findViewById(R.id.iv_song_header_sort);
+        //最近列表不支持排序
         if (editType == EditType.RECENT) {
             sortView.setVisibility(View.GONE);
         }
@@ -64,17 +85,6 @@ public class SongListHeader {
         ImageView editView = header.findViewById(R.id.iv_song_header_edit);
         editView.setOnClickListener(v -> showSongEditActivity());
         playListAdapter.setHeaderView(header);
-    }
-
-    /**
-     * Show song edit activity.
-     */
-    public void showSongEditActivity() {
-        List <SongInfo> songs = playList.getPlaySongs();
-        if (songs instanceof LinkedList) {
-            songs = new ArrayList <>(songs);
-        }
-        SongEditActivity.startForResult(activity, songs, editType);
     }
 
     private void showSearchActivity() {
@@ -114,15 +124,6 @@ public class SongListHeader {
         //先开始播放歌曲，再替换播放列表
         EventBus.getDefault().post(playingSong);
         EventBus.getDefault().post(playList.getPlaySongs());
-    }
-
-    /**
-     * Update song count.
-     */
-    public void updateSongCount() {
-        int size = playList.getPlaySongs().size();
-        String songCountAndMode = StringHelper.getLocalFormat("播放全部(%d首)", size);
-        tvSongCount.setText(songCountAndMode);
     }
 
 }
