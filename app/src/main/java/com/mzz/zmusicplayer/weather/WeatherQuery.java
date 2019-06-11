@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.mzz.zandroidcommon.common.StringHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,13 +26,61 @@ import okhttp3.ResponseBody;
 public class WeatherQuery {
     private static final String TAG = "WeatherQuery";
     private static final String EMPTY = "";
+    private static final String API_URL = "https://www.tianqiapi.com/api/?version=v1&city=";
 
-    private static String getUrlByCity(String city) {
-        return String.format("https://www.tianqiapi.com/api/?version=v1&city=%s", city);
+    /**
+     * Can query city weather.
+     *
+     * @param city              the city
+     * @param queryCityCallback the query callback
+     */
+    public static void canQueryCityWeather(String city, QueryCityCallback queryCityCallback) {
+        String urlByCity = getUrlByCity(city);
+        requestByOkHttp(urlByCity, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                queryCityCallback.canQueryCityWeather(EMPTY);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                String cityRes = EMPTY;
+                if (response.isSuccessful()) {
+                    cityRes = parseJsonForCity(response);
+                    //查询城市和返回的结果不一致，说明不支持
+                    if (!cityRes.equals(city)) {
+                        cityRes = EMPTY;
+                    }
+                }
+                queryCityCallback.canQueryCityWeather(cityRes);
+            }
+        });
     }
 
-    private static String parseJsonForCity(Response httpResponse) {
-        ResponseBody body = httpResponse.body();
+    public static void queryForWeather(String city, QueryWeatherCallback queryWeatherCallback) {
+        String urlByCity = getUrlByCity(city);
+        requestByOkHttp(urlByCity, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                //ignore
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (response.isSuccessful()) {
+                    WeatherInfo weatherInfo = parseJsonForWeather(response);
+                    queryWeatherCallback.queryForWeather(weatherInfo);
+                }
+            }
+        });
+    }
+
+    private static String getUrlByCity(String city) {
+        return StringHelper.getLocalFormat("%s%s", API_URL, city);
+    }
+
+    private static String parseJsonForCity(Response response) {
+        ResponseBody body = response.body();
         if (body == null) {
             return "";
         }
@@ -47,8 +96,8 @@ public class WeatherQuery {
         return "";
     }
 
-    private static WeatherInfo parseJsonForWeather(Response httpResponse) {
-        ResponseBody body = httpResponse.body();
+    private static WeatherInfo parseJsonForWeather(Response response) {
+        ResponseBody body = response.body();
         if (body == null) {
             return null;
         }
@@ -64,31 +113,7 @@ public class WeatherQuery {
         return null;
     }
 
-    public static void canQueryCityWeather(String city, QueryCallback queryCallback) {
-        String urlByCity = getUrlByCity(city);
-        requestUrl(urlByCity, new Callback() {
-
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                queryCallback.canQueryCityWeather(EMPTY);
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) {
-                String cityRes = EMPTY;
-                if (response.isSuccessful()) {
-                    cityRes = parseJsonForCity(response);
-                    //查询城市和返回的结果不一致，说明不支持
-                    if (!cityRes.equals(city)) {
-                        cityRes = EMPTY;
-                    }
-                }
-                queryCallback.canQueryCityWeather(cityRes);
-            }
-        });
-    }
-
-    private static void requestUrl(String url, Callback responseCallback) {
+    private static void requestByOkHttp(String url, Callback responseCallback) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)
@@ -96,7 +121,12 @@ public class WeatherQuery {
         client.newCall(request).enqueue(responseCallback);
     }
 
-    public interface QueryCallback {
+    public interface QueryCityCallback {
         void canQueryCityWeather(String cityRes);
     }
+
+    public interface QueryWeatherCallback {
+        void queryForWeather(WeatherInfo weatherInfo);
+    }
+
 }

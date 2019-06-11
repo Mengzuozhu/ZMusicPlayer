@@ -1,6 +1,8 @@
 package com.mzz.zmusicplayer.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -25,6 +27,7 @@ import butterknife.ButterKnife;
 
 public class CityPickerActivity extends BaseActivity {
 
+    public static final int CITY_PICKER_CODE = 2;
     @BindView(R.id.rv_city_picker)
     RecyclerView rvCityPicker;
     @BindView(R.id.sv_city)
@@ -36,6 +39,11 @@ public class CityPickerActivity extends BaseActivity {
     private List <String> cities;
     private BaseQuickAdapter <String, BaseViewHolder> baseAdapter;
     private String selectCity;
+
+    public static void start(FragmentActivity activity) {
+        Intent starter = new Intent(activity, CityPickerActivity.class);
+        activity.startActivityForResult(starter, CITY_PICKER_CODE);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +65,7 @@ public class CityPickerActivity extends BaseActivity {
         int itemId = item.getItemId();
         if (itemId == R.id.action_save) {
             AppSetting.setWeatherCity(selectCity);
+            setResult(CITY_PICKER_CODE, getIntent());
             this.finish();
             return true;
         }
