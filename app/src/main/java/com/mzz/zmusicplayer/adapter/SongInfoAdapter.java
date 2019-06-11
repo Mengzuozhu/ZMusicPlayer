@@ -96,7 +96,7 @@ public class SongInfoAdapter extends BaseQuickAdapter <SongInfo, BaseViewHolder>
      */
     public void sortByName(boolean isAscend) {
         LocalSong.sortByChineseName(songInfos, isAscend);
-        notifyDataSetChanged();
+        setNewData(songInfos);
     }
 
     /**
@@ -104,7 +104,7 @@ public class SongInfoAdapter extends BaseQuickAdapter <SongInfo, BaseViewHolder>
      */
     public void sortById() {
         LocalSong.sortById(songInfos);
-        notifyDataSetChanged();
+        setNewData(songInfos);
     }
 
 }

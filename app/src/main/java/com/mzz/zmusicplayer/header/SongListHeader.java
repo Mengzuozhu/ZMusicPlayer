@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.mzz.zandroidcommon.common.StringHelper;
@@ -51,10 +52,15 @@ public class SongListHeader {
                 recyclerView, false);
         tvSongCount = header.findViewById(R.id.tv_song_header_count);
         updateSongCount();
-        ImageView searchView = header.findViewById(R.id.iv_song_header_search);
-        searchView.setOnClickListener(v -> showSearchActivity());
         ImageView ivPlayAll = header.findViewById(R.id.iv_song_header_play_all);
         ivPlayAll.setOnClickListener(v -> onPlayAllClick());
+        ImageView searchView = header.findViewById(R.id.iv_song_header_search);
+        searchView.setOnClickListener(v -> showSearchActivity());
+        ImageView sortView = header.findViewById(R.id.iv_song_header_sort);
+        if (editType == EditType.RECENT) {
+            sortView.setVisibility(View.GONE);
+        }
+        sortView.setOnClickListener(v -> showSongOrderPopupMenu(sortView));
         ImageView editView = header.findViewById(R.id.iv_song_header_edit);
         editView.setOnClickListener(v -> showSongEditActivity());
         playListAdapter.setHeaderView(header);
@@ -73,6 +79,30 @@ public class SongListHeader {
 
     private void showSearchActivity() {
         MusicSearchActivity.startForResult(activity, playList);
+    }
+
+    private void showSongOrderPopupMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(activity, view);
+        popupMenu.inflate(R.menu.menu_song_sort_by_time);
+        popupMenu.inflate(R.menu.menu_sort_by_name);
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            int itemId = menuItem.getItemId();
+            switch (itemId) {
+                case R.id.action_sort_ascend_by_name:
+                    playListAdapter.sortByName(true);
+                    return true;
+                case R.id.action_sort_descend_by_name:
+                    playListAdapter.sortByName(false);
+                    return true;
+                case R.id.action_sort_by_add_time:
+                    playListAdapter.sortById();
+                    return true;
+                default:
+                    break;
+            }
+            return false;
+        });
+        popupMenu.show();
     }
 
     private void onPlayAllClick() {

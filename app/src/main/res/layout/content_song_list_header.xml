@@ -29,9 +29,17 @@
         android:id="@+id/iv_song_header_search"
         style="@style/StyleHeaderImage"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/iv_song_header_edit"
+        app:layout_constraintEnd_toStartOf="@+id/iv_song_header_sort"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_search" />
+
+    <ImageView
+        android:id="@+id/iv_song_header_sort"
+        style="@style/StyleHeaderImage"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/iv_song_header_edit"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/sort_white" />
 
     <ImageView
         android:id="@+id/iv_song_header_edit"

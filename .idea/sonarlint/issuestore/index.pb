@@ -9,8 +9,6 @@ P
  app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
 i
 9app/src/main/java/com/mzz/zmusicplayer/song/SongInfo.java,5\7\575b76af88e0653f6ecafe3f7980c33517eaa43e
-m
-=app/src/main/java/com/mzz/zmusicplayer/common/TimeHelper.java,7\7\77dd994d2bd20bdff286708f6d8f0a49a7241e7f
 z
 Japp/src/androidTest/java/com/mzz/zmusicplayer/ExampleInstrumentedTest.java,c\e\ce2560da2e292ccf950ffae2ed3e00a026855079
 d
@@ -78,8 +76,6 @@ q
 Aapp/src/main/java/com/mzz/zmusicplayer/ui/SongPickerActivity.java,a\b\abadb3cd30731bf463d38947124c0631d2dd571d
 v
 Fapp/src/main/java/com/mzz/zmusicplayer/common/NotificationHandler.java,8\9\89040e0fecaebe4f0d9cb0276bf5954a0bb4a0fd
-n
->app/src/main/java/com/mzz/zmusicplayer/common/AlbumHelper.java,b\0\b0350db47f36262ebc976c5e57858361ddbd9322
 q
 Aapp/src/main/java/com/mzz/zmusicplayer/setting/SongOrderMode.java,e\3\e3494db0b0cb19130585a9282d3205962f83a173
 l
@@ -112,8 +108,6 @@ u
 Eapp/src/main/java/com/mzz/zmusicplayer/adapter/SongPickerAdapter.java,3\0\306e084c96ac185c63deaa6e33daa5f7dd13c96b
 s
 Capp/src/main/java/com/mzz/zmusicplayer/common/TextQueryHandler.java,e\e\eef8cd70079884f6974e21fb6279b15c7f7987d3
-o
-?app/src/main/java/com/mzz/zmusicplayer/common/TimeRecorder.java,3\f\3f44970ef7e06d506f63b91d774909fb578d4a78
 m
 =app/src/main/java/com/mzz/zmusicplayer/adapter/MusicPage.java,f\0\f0eab98c5e28e1d469d77af4b30557de79136aac
 y
@@ -160,17 +154,11 @@ i
 9app/src/main/java/com/mzz/zmusicplayer/play/PlayList.java,a\a\aa3622480764d7963a7046d05380753ea8cbf698
 |
 Lapp/src/main/java/com/mzz/zmusicplayer/adapter/MultipleItemQuickAdapter.java,3\6\36ac305d76fc24bf5db65519ed9fe02f7f24f0c6
-o
-?app/src/main/java/com/mzz/zmusicplayer/weather/WeatherInfo.java,c\e\ce06d7758ee9e8b8ef092209c247b189d2657a67
-p
-@app/src/main/java/com/mzz/zmusicplayer/weather/WeatherQuery.java,1\a\1a58297d25572a274a09fe4058f542db5219e992
 w
 Gapp/src/main/java/com/mzz/zmusicplayer/contract/AppSettingContract.java,1\8\18021b67d8471cd1ce97d8079808a3b00a7aefbb
 p
 @app/src/main/java/com/mzz/zmusicplayer/adapter/MultipleItem.java,e\f\efbddc86e8d94640ced04061660196fca176c616
 y
 Iapp/src/main/java/com/mzz/zmusicplayer/presenter/AppSettingPresenter.java,2\9\2908164790a1442f3d2eb694dd76ae416b0b8edc
-q
-Aapp/src/main/java/com/mzz/zmusicplayer/ui/CityPickerActivity.java,2\e\2e0aeb29990cd2ff2606cce2b24b1e9e3902c562
 q
 Aapp/src/main/java/com/mzz/zmusicplayer/ui/AppSettingActivity.java,4\6\463d39fb7ec31a72b7ebb4e552c2484f9b792d81
