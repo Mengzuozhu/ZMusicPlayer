@@ -15,7 +15,9 @@
         android:roundIcon="@drawable/music"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.AppSettingActivity" />
+        <activity
+            android:name=".ui.AppSettingActivity"
+            android:label="配置" />
         <activity
             android:name=".MainActivity"
             android:launchMode="singleInstance"

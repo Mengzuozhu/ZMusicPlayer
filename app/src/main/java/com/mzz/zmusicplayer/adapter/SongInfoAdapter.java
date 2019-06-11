@@ -67,10 +67,17 @@ public class SongInfoAdapter extends BaseQuickAdapter <SongInfo, BaseViewHolder>
      *
      * @param position the position
      */
-    public void scrollToPosition(int position) {
+    void scrollToPosition(int position) {
         if (position < getItemCount()) {
             recyclerView.scrollToPosition(position);
         }
+    }
+
+    /**
+     * Scroll to first.
+     */
+    public void scrollToFirst() {
+        scrollToPosition(0);
     }
 
     /**

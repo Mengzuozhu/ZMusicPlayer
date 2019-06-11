@@ -92,13 +92,6 @@ public class PlayListAdapter extends SongInfoAdapter {
     }
 
     /**
-     * Scroll to first.
-     */
-    public void scrollToFirst() {
-        scrollToPosition(0);
-    }
-
-    /**
      * Locate to selected song.
      */
     public void locateToSelectedSong() {

@@ -20,10 +20,12 @@ import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongPickerAdapter;
 import com.mzz.zmusicplayer.file.FileManager;
+import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -78,8 +80,8 @@ public class SongPickerActivity extends BaseActivity {
     }
 
     private void initAdapter() {
-//        HashSet <Integer> allSongIdInFile = LocalSong.getInstance().getAllSongIdInFile();
-        songInfos = FileManager.getInstance().getAllSongInfos(null);
+        HashSet <Integer> allSongIdInFile = LocalSong.getInstance().getAllSongIdInFile();
+        songInfos = FileManager.getInstance().getAllSongInfos(allSongIdInFile);
         songPickerAdapter = new SongPickerAdapter(songInfos, rvSongFile);
         songPickerAdapter.setQueryTextListener(svSongFile);
         songPickerAdapter.setScrollFirstShowInNeed(fabSongScrollFirst);
@@ -138,6 +140,6 @@ public class SongPickerActivity extends BaseActivity {
 
     @OnClick(R.id.fab_song_file_scroll_first)
     public void scrollToFirstSongOnClick(View view) {
-        songPickerAdapter.scrollToPosition(0);
+        songPickerAdapter.scrollToFirst();
     }
 }
