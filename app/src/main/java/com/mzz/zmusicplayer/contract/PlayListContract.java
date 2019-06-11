@@ -36,5 +36,7 @@ public interface PlayListContract {
 
         void remove(List <Long> keys);
 
+        void remove(SongInfo song);
+
     }
 }

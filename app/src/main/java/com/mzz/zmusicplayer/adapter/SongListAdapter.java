@@ -31,8 +31,19 @@ public class SongListAdapter extends PlayListAdapter {
         songListHeader = new SongListHeader(activity, this, playList.getSongListType());
     }
 
-    protected void updateSongCount() {
+    private void updateSongCount() {
         songListHeader.updateSongCount();
+    }
+
+    @Override
+    public void removeSongAt(int position) {
+        super.removeSongAt(position);
+        updateSongCount();
+    }
+
+    public void removeSong(SongInfo song) {
+        int songIndexById = PlayList.getSongIndexById(getData(), song.getId());
+        removeSongAt(songIndexById);
     }
 
     /**

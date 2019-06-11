@@ -75,12 +75,26 @@ public class PlayListFragment extends Fragment implements PlayListContract.View 
         }
     }
 
+    /**
+     * Update play list songs.
+     *
+     * @param checkedSongs the checked songs
+     */
     public void updatePlayListSongs(List <SongInfo> checkedSongs) {
         playListPresenter.updatePlayListSongs(checkedSongs);
     }
 
+    /**
+     * Remove.
+     *
+     * @param keys the keys
+     */
     public void remove(List <Long> keys) {
         playListPresenter.remove(keys);
+    }
+
+    public void remove(SongInfo song) {
+        playListPresenter.remove(song);
     }
 
     @Override

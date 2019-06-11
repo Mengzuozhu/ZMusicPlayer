@@ -99,14 +99,31 @@ public class RecentFragment extends Fragment implements ISongChangeListener {
             public void removeSongAt(int position) {
                 recentSong.remove(this.getItem(position));
                 super.removeSongAt(position);
-                updateSongCount();
             }
         };
         songListAdapter.setScrollFirstShowInNeed(fabSongScrollFirst);
     }
 
+    /**
+     * Remove.
+     *
+     * @param keys the keys
+     */
     public void remove(List <Long> keys) {
         songListAdapter.updateData(recentSong.remove(keys));
+    }
+
+    /**
+     * Remove song.
+     *
+     * @param song the song
+     */
+    public void removeSong(SongInfo song) {
+        if (song == null) {
+            return;
+        }
+        recentSong.remove(song);
+        songListAdapter.removeSong(song);
     }
 
     @Override

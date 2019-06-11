@@ -80,8 +80,8 @@ public class SongPickerActivity extends BaseActivity {
     }
 
     private void initAdapter() {
-        HashSet <Integer> allSongIdInFile = LocalSong.getInstance().getAllSongIdInFile();
-        songInfos = FileManager.getInstance().getAllSongInfos(allSongIdInFile);
+//        HashSet <Integer> allSongIdInFile = LocalSong.getInstance().getAllSongIdInFile();
+        songInfos = FileManager.getInstance().getAllSongInfos(null);
         songPickerAdapter = new SongPickerAdapter(songInfos, rvSongFile);
         songPickerAdapter.setQueryTextListener(svSongFile);
         songPickerAdapter.setScrollFirstShowInNeed(fabSongScrollFirst);

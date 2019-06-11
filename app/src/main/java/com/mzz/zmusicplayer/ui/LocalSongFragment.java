@@ -94,7 +94,6 @@ public class LocalSongFragment extends Fragment implements ISongChangeListener {
             public void removeSongAt(int position) {
                 localSongs.remove(getItem(position));
                 super.removeSongAt(position);
-                updateSongCount();
             }
         };
         songListAdapter.setScrollFirstShowInNeed(fabSongScrollFirst);
@@ -116,6 +115,19 @@ public class LocalSongFragment extends Fragment implements ISongChangeListener {
      */
     public void remove(List <Long> keys) {
         songListAdapter.updateData(localSongs.remove(keys));
+    }
+
+    /**
+     * Remove song.
+     *
+     * @param song the song
+     */
+    public void removeSong(SongInfo song) {
+        if (song == null) {
+            return;
+        }
+        localSongs.remove(song);
+        songListAdapter.removeSong(song);
     }
 
     @Override

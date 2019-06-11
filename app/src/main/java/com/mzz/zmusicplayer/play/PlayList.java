@@ -36,7 +36,6 @@ public class PlayList implements Parcelable {
             return new PlayList[size];
         }
     };
-
     @Getter
     private LocalSong localSongs;
     @Getter
@@ -68,16 +67,18 @@ public class PlayList implements Parcelable {
         this.playingIndex = in.readInt();
         int tmpPlayMode = in.readInt();
         this.playMode = tmpPlayMode == -1 ? null : PlayedMode.values()[tmpPlayMode];
+        int tmpSongListType = in.readInt();
+        this.songListType = tmpSongListType == -1 ? null : SongListType.values()[tmpSongListType];
     }
 
     /**
-     * Gets song index by id.
+     * Gets song index by id.根据ID获取歌曲在列表中的位置
      *
      * @param songInfos the song infos
      * @param songId    the song id
      * @return the song index by id
      */
-    static int getSongIndexById(List <SongInfo> songInfos, long songId) {
+    public static int getSongIndexById(List <SongInfo> songInfos, long songId) {
         int songIndex = -1;
         //根据ID获取歌曲在列表中的位置
         for (int i = 0; i < songInfos.size(); i++) {
@@ -310,6 +311,7 @@ public class PlayList implements Parcelable {
         dest.writeTypedList(this.playSongs);
         dest.writeInt(this.playingIndex);
         dest.writeInt(this.playMode == null ? -1 : this.playMode.ordinal());
+        dest.writeInt(this.songListType == null ? -1 : this.songListType.ordinal());
     }
 
     public interface PlayListObserver {

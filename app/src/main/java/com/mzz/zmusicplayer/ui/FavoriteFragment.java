@@ -99,8 +99,27 @@ public class FavoriteFragment extends Fragment implements ISongChangeListener,
         songListAdapter.setScrollFirstShowInNeed(fabSongScrollFirst);
     }
 
+    /**
+     * Remove.
+     *
+     * @param keys the keys
+     */
     public void remove(List <Long> keys) {
         songListAdapter.updateData(favoriteSong.remove(keys));
+    }
+
+    /**
+     * Remove song.
+     *
+     * @param song the song
+     */
+    public void removeSong(SongInfo song) {
+        if (song == null) {
+            return;
+        }
+        //获取喜欢列表中的对应歌曲，保证删除的是指定对象
+        int songIndexById = PlayList.getSongIndexById(songListAdapter.getData(), song.getId());
+        favoriteSong.remove(songListAdapter.getItem(songIndexById));
     }
 
     @Override

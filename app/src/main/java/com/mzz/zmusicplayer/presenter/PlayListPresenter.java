@@ -86,6 +86,14 @@ public class PlayListPresenter implements PlayListContract.Presenter, PlayList.P
     }
 
     @Override
+    public void remove(SongInfo song) {
+        int songIndexById = PlayList.getSongIndexById(playList.getPlaySongs(), song.getId());
+        playListAdapter.removeSongAt(songIndexById);
+        playList.remove(song);
+        updatePlayList();
+    }
+
+    @Override
     public void updatePlaySongBackgroundColor(SongInfo song) {
         playListAdapter.updatePlaySongBackgroundColor(song);
     }
