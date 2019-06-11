@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongListAdapter;
-import com.mzz.zmusicplayer.edit.EditType;
 import com.mzz.zmusicplayer.play.PlayList;
+import com.mzz.zmusicplayer.play.SongListType;
 import com.mzz.zmusicplayer.song.FavoriteSong;
 import com.mzz.zmusicplayer.song.ISongChangeListener;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -89,8 +89,8 @@ public class FavoriteFragment extends Fragment implements ISongChangeListener,
         if (rvFavoriteSong == null) {
             return;
         }
-        songListAdapter = new SongListAdapter(new PlayList(), rvFavoriteSong, getActivity(),
-                EditType.FAVORITE) {
+        songListAdapter = new SongListAdapter(new PlayList(SongListType.FAVORITE), rvFavoriteSong
+                , getActivity()) {
             @Override
             public void removeSongAt(int position) {
                 favoriteSong.remove(getItem(position));

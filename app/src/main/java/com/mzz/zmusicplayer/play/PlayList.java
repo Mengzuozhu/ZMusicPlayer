@@ -18,6 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * 播放列表
  * author : Mzz
  * date : 2019 2019/5/29 11:17
  * description :
@@ -49,12 +50,17 @@ public class PlayList implements Parcelable {
     private PlayedMode playMode;
     @Setter
     private PlayListObserver playListObserver;
+    @Getter
+    @Setter
+    private SongListType songListType = SongListType.PLAYLIST;
 
     public PlayList() {
-        this.localSongs = LocalSong.getInstance();
-        this.playMode = AppSetting.getPlayMode();
-        initPlayListSongs();
-        updatePlayingIndexBySettingId();
+        init();
+    }
+
+    public PlayList(SongListType songListType) {
+        this.songListType = songListType;
+        init();
     }
 
     protected PlayList(Parcel in) {
@@ -82,6 +88,13 @@ public class PlayList implements Parcelable {
             }
         }
         return songIndex;
+    }
+
+    private void init() {
+        this.localSongs = LocalSong.getInstance();
+        this.playMode = AppSetting.getPlayMode();
+        initPlayListSongs();
+        updatePlayingIndexBySettingId();
     }
 
     /**

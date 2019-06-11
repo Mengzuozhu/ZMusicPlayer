@@ -15,7 +15,7 @@ import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.adapter.MusicPage;
 import com.mzz.zmusicplayer.adapter.MusicPagerAdapter;
 import com.mzz.zmusicplayer.edit.EditHandler;
-import com.mzz.zmusicplayer.edit.EditType;
+import com.mzz.zmusicplayer.play.SongListType;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
 import com.mzz.zmusicplayer.song.ISongChangeListener;
@@ -190,16 +190,16 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
             ArrayList <SongInfo> newSongInfos =
                     data.getParcelableArrayListExtra(SongPickerActivity.EXTRA_ADD_SONG);
             localSongFragment.addToLocalSongs(newSongInfos);
-        } else if (resultCode == EditType.PLAYLIST.getCode()) {
+        } else if (resultCode == SongListType.PLAYLIST.getCode()) {
             List <Long> deleteIds = geiDeleteIds(data);
             playListFragment.remove(deleteIds);
-        } else if (resultCode == EditType.RECENT.getCode()) {
+        } else if (resultCode == SongListType.RECENT.getCode()) {
             List <Long> deleteIds = geiDeleteIds(data);
             recentFragment.remove(deleteIds);
-        } else if (resultCode == EditType.LOCAL.getCode()) {
+        } else if (resultCode == SongListType.LOCAL.getCode()) {
             List <Long> deleteIds = geiDeleteIds(data);
             localSongFragment.remove(deleteIds);
-        } else if (resultCode == EditType.FAVORITE.getCode()) {
+        } else if (resultCode == SongListType.FAVORITE.getCode()) {
             List <Long> deleteIds = geiDeleteIds(data);
             favoriteFragment.remove(deleteIds);
         }

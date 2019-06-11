@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongListAdapter;
-import com.mzz.zmusicplayer.edit.EditType;
 import com.mzz.zmusicplayer.play.PlayList;
+import com.mzz.zmusicplayer.play.SongListType;
 import com.mzz.zmusicplayer.song.ISongChangeListener;
 import com.mzz.zmusicplayer.song.RecentSong;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -93,8 +93,8 @@ public class RecentFragment extends Fragment implements ISongChangeListener {
         if (rvRecentSong == null) {
             return;
         }
-        songListAdapter = new SongListAdapter(new PlayList(), rvRecentSong, getActivity(),
-                EditType.RECENT) {
+        songListAdapter = new SongListAdapter(new PlayList(SongListType.RECENT), rvRecentSong,
+                getActivity()) {
             @Override
             public void removeSongAt(int position) {
                 recentSong.remove(this.getItem(position));

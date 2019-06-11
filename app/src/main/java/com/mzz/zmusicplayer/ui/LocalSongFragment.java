@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongListAdapter;
-import com.mzz.zmusicplayer.edit.EditType;
 import com.mzz.zmusicplayer.play.PlayList;
+import com.mzz.zmusicplayer.play.SongListType;
 import com.mzz.zmusicplayer.song.ISongChangeListener;
 import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -88,8 +88,8 @@ public class LocalSongFragment extends Fragment implements ISongChangeListener {
         if (rvSong == null) {
             return;
         }
-        songListAdapter = new SongListAdapter(new PlayList(), rvSong, getActivity(),
-                EditType.LOCAL) {
+        songListAdapter = new SongListAdapter(new PlayList(SongListType.LOCAL), rvSong,
+                getActivity()) {
             @Override
             public void removeSongAt(int position) {
                 localSongs.remove(getItem(position));

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
-import com.mzz.zmusicplayer.edit.EditType;
+import com.mzz.zmusicplayer.play.SongListType;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.ui.MusicSearchActivity;
@@ -34,16 +34,16 @@ public class SongListHeader {
     private FragmentActivity activity;
     private RecyclerView recyclerView;
     private PlayList playList;
-    private EditType editType;
+    private SongListType songListType;
     private PlayListAdapter playListAdapter;
 
     public SongListHeader(FragmentActivity activity, PlayListAdapter playListAdapter,
-                          EditType editType) {
+                          SongListType songListType) {
         this.activity = activity;
         this.recyclerView = playListAdapter.getRecyclerView();
         this.playListAdapter = playListAdapter;
         playList = playListAdapter.getPlayList();
-        this.editType = editType;
+        this.songListType = songListType;
         initHeader();
     }
 
@@ -55,7 +55,7 @@ public class SongListHeader {
         if (songs instanceof LinkedList) {
             songs = new ArrayList <>(songs);
         }
-        SongEditActivity.startForResult(activity, songs, editType);
+        SongEditActivity.startForResult(activity, songs, songListType);
     }
 
     /**
@@ -78,7 +78,7 @@ public class SongListHeader {
         searchView.setOnClickListener(v -> showSearchActivity());
         ImageView sortView = header.findViewById(R.id.iv_song_header_sort);
         //最近列表不支持排序
-        if (editType == EditType.RECENT) {
+        if (songListType == SongListType.RECENT) {
             sortView.setVisibility(View.GONE);
         }
         sortView.setOnClickListener(v -> showSongOrderPopupMenu(sortView));

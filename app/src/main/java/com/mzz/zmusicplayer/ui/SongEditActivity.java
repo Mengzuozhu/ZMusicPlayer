@@ -12,7 +12,7 @@ import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.SongEditAdapter;
 import com.mzz.zmusicplayer.edit.EditHandler;
-import com.mzz.zmusicplayer.edit.EditType;
+import com.mzz.zmusicplayer.play.SongListType;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.util.ArrayList;
@@ -39,10 +39,11 @@ public class SongEditActivity extends BaseActivity {
      * @param value    the value
      */
     public static void startForResult(FragmentActivity activity, List <SongInfo> value,
-                                      EditType editType) {
+                                      SongListType songListType) {
         Intent intent =
-                new Intent(activity, SongEditActivity.class).putParcelableArrayListExtra(EXTRA_EDIT_DATA, (ArrayList <SongInfo>) value);
-        int code = editType.getCode();
+                new Intent(activity, SongEditActivity.class).putParcelableArrayListExtra(EXTRA_EDIT_DATA,
+                        (ArrayList <SongInfo>) value);
+        int code = songListType.getCode();
         intent.putExtra(EXTRA_RESULT_CODE, code);
         activity.startActivityForResult(intent, code);
     }

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.adapter.PlayListAdapter;
-import com.mzz.zmusicplayer.edit.EditType;
+import com.mzz.zmusicplayer.play.SongListType;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
@@ -58,7 +58,7 @@ public class PlayListHeader {
      * Show song edit activity.
      */
     public void showSongEditActivity() {
-        SongEditActivity.startForResult(activity, playList.getPlaySongs(), EditType.PLAYLIST);
+        SongEditActivity.startForResult(activity, playList.getPlaySongs(), SongListType.PLAYLIST);
     }
 
     private void showSearchActivity() {
