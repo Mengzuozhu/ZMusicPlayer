@@ -13,9 +13,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mzz.zandroidcommon.common.TimeHelper;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.common.TimeHelper;
 import com.mzz.zmusicplayer.contract.MusicControlContract;
 import com.mzz.zmusicplayer.play.IPlayer;
 import com.mzz.zmusicplayer.play.PlayList;
@@ -258,7 +258,7 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         AppSetting.setLastPlaySongId(song.getId());
         tvSongName.setText(String.format("%s-%s", song.getName(), song.getArtist()));
         currentSongDuration = song.getDuration();
-        tvDuration.setText(TimeHelper.formatDuration(currentSongDuration));
+        tvDuration.setText(TimeHelper.formatDurationToTime(currentSongDuration));
         updateProgressTextWithDuration(0);
         onSwitchFavorite(song.getIsFavorite());
         seekBarProgress.setProgress(0);
@@ -303,7 +303,7 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     }
 
     private void updateProgressTextWithDuration(int playDuration) {
-        tvProgress.setText(TimeHelper.formatDuration(playDuration));
+        tvProgress.setText(TimeHelper.formatDurationToTime(playDuration));
     }
 
     private int getDuration(int seekBarProgress) {

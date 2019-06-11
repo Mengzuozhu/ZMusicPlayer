@@ -22,8 +22,6 @@ public class UpgradeDbHelper extends DaoMaster.OpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < newVersion) {
-//            Log.i("greenDAO", "Upgrading schema from version " + oldVersion + " to " +
-//            newVersion + " by migrating all tables data");
             MigrationDbHelper.migrate(db, SongInfoDao.class);
         }
     }

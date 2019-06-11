@@ -28,11 +28,12 @@ public class TextQueryHandler {
     @Setter
     @IdRes
     private int queryColor;
-    private BaseQuickAdapter adapter;
+    private BaseQuickAdapter <SongInfo, BaseViewHolder> adapter;
     private List <SongInfo> songInfos;
     private Map <String, Spannable> nameAndQuerySpans;
 
-    public TextQueryHandler(BaseQuickAdapter adapter, Context context, List <SongInfo> songInfos) {
+    public TextQueryHandler(BaseQuickAdapter <SongInfo, BaseViewHolder> adapter, Context context,
+                            List <SongInfo> songInfos) {
         this.adapter = adapter;
         this.songInfos = songInfos;
         this.nameAndQuerySpans = new HashMap <>();
