@@ -52,6 +52,12 @@ public class PlayListAdapter extends SongInfoAdapter {
     @Override
     protected void convert(BaseViewHolder helper, SongInfo songInfo) {
         super.convert(helper, songInfo);
+        setSongColor(helper, songInfo);
+        helper.addOnClickListener(R.id.iv_song_more);
+        helper.setText(itemSongNameId, songInfo.getName());
+    }
+
+    private void setSongColor(BaseViewHolder helper, SongInfo songInfo) {
         if (songInfo.isPlayListSelected()) {
             changePlaySongColor(helper);
             int adapterPosition = helper.getAdapterPosition();
@@ -60,8 +66,6 @@ public class PlayListAdapter extends SongInfoAdapter {
         } else {
             resetPlaySongColor(helper);
         }
-        helper.addOnClickListener(R.id.iv_song_more);
-        helper.setText(itemSongNameId, songInfo.getName());
     }
 
     /**

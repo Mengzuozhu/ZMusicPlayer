@@ -33,6 +33,10 @@ public class LocalSongModel {
         songInfoDao = daoSession.getSongInfoDao();
     }
 
+    private LocalSongModel() {
+        //no instance
+    }
+
     /**
      * Gets order local playSongs.
      *

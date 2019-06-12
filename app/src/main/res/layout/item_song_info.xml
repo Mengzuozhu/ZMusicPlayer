@@ -2,13 +2,15 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="0dp"
     android:layout_height="match_parent"
+    app:layout_constraintWidth_default="percent"
+    app:layout_constraintWidth_percent="0.9"
     tools:showIn="@layout/item_song_list">
 
     <RelativeLayout
         android:id="@+id/layout_song_num"
-        android:layout_width="40dp"
+        android:layout_width="@dimen/layout_song_num_width_40"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,7 +19,7 @@
         <View
             android:id="@+id/divider_item"
             android:layout_width="2dp"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:background="@color/empty"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -38,17 +40,20 @@
     <TextView
         android:id="@+id/tv_item_song_name"
         style="@style/StyleTextView"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:text="@string/undefined"
         android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/layout_song_num"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_item_song_artist"
         style="@style/StyleTextView"
+        android:layout_width="0dp"
         android:layout_marginStart="0dp"
+        android:layout_weight="1"
         android:text="@string/undefined"
         android:textColor="@color/colorGray"
         android:textSize="12sp"

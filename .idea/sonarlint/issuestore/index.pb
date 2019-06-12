@@ -132,8 +132,6 @@ l
 <app/src/main/java/com/mzz/zmusicplayer/file/FileManager.java,1\e\1e1c80bd6169ee8b89734f8bc88bae91335e1eaa
 k
 ;app/src/main/java/com/mzz/zmusicplayer/song/RecentSong.java,4\1\41d9dd2b29d38c8bcb3ec98a7ef38ece80cd59b4
-i
-9app/src/main/java/com/mzz/zmusicplayer/edit/EditType.java,a\7\a739ecf45c5968f0ce06c5f6d8fb0e057a0504dc
 s
 Capp/src/main/java/com/mzz/zmusicplayer/adapter/SongListAdapter.java,c\6\c67a3886134c90090bbd291c9963861ea142d85f
 m
@@ -162,3 +160,7 @@ y
 Iapp/src/main/java/com/mzz/zmusicplayer/presenter/AppSettingPresenter.java,2\9\2908164790a1442f3d2eb694dd76ae416b0b8edc
 q
 Aapp/src/main/java/com/mzz/zmusicplayer/ui/AppSettingActivity.java,4\6\463d39fb7ec31a72b7ebb4e552c2484f9b792d81
+m
+=app/src/main/java/com/mzz/zmusicplayer/play/SongListType.java,0\7\07005e645cc3ece9d0bcf5821c7012b94632e3f8
+p
+@app/src/main/java/com/mzz/zmusicplayer/edit/RemovedSongInfo.java,c\9\c90b0df0093f9dd9d7fcfab2319a3f59bc75dafc
