@@ -75,7 +75,7 @@ public class TextQueryHandler {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                List <SongInfo> queryResult = getQueryResult(query);
+                List <SongInfo> queryResult = querySongNameAndArtist(query);
                 adapter.setNewData(queryResult);
                 return false;
             }
@@ -91,7 +91,7 @@ public class TextQueryHandler {
         });
     }
 
-    private List <SongInfo> getQueryResult(String queryText) {
+    private List <SongInfo> querySongNameAndArtist(String queryText) {
         List <SongInfo> queryResults = new ArrayList <>();
         if (nameAndQuerySpans != null) {
             nameAndQuerySpans.clear();

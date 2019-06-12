@@ -26,8 +26,6 @@ import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.SongInfo;
 
-import java.util.Date;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -252,7 +250,7 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         if (song == null) {
             return;
         }
-        song.setLastPlayTime(new Date());
+        song.setLastPlayTime(System.currentTimeMillis());
         mPlayer.getPlayList().updateRecentSongs(song);
         //记录播放歌曲ID
         AppSetting.setLastPlaySongId(song.getId());

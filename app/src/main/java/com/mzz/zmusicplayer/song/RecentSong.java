@@ -5,7 +5,6 @@ import com.mzz.zmusicplayer.setting.AppSetting;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -77,7 +76,7 @@ public class RecentSong {
             SongInfo song = recentSongs.get(i);
             Long id = song.getId();
             if (keys.contains(id)) {
-                song.setLastPlayTime(null);
+                song.setLastPlayTime(0);
                 recentSongs.remove(i);
                 keys.remove(id);
                 removeSongs.add(song);
@@ -96,7 +95,7 @@ public class RecentSong {
         if (song == null) {
             return;
         }
-        song.setLastPlayTime(null);
+        song.setLastPlayTime(0);
         LocalSongModel.update(song);
     }
 
@@ -109,6 +108,12 @@ public class RecentSong {
         removeRecentSong();
     }
 
+    private void removeRecentSong() {
+        while (recentSongs.size() > recentSongMaxCount) {
+            recentSongs.removeLast();
+        }
+    }
+
     private void initRecentSongs() {
         initMinHeap();
         buildMinHeap();
@@ -118,18 +123,18 @@ public class RecentSong {
         }
     }
 
-    private void removeRecentSong() {
-        while (recentSongs.size() > recentSongMaxCount) {
-            recentSongs.removeLast();
-        }
+    private void initMinHeap() {
+        minHeap = new PriorityQueue <>(recentSongMaxCount,
+                (o1, o2) -> Long.compare(o1.getLastPlayTime(), o2.getLastPlayTime()));
     }
 
     private void buildMinHeap() {
         List <SongInfo> allSongs = LocalSong.getInstance().getAllLocalSongs();
         //构建最小堆，获取前n个最近播放的歌曲
         for (SongInfo localSong : allSongs) {
-            Date lastPlayTime = localSong.getLastPlayTime();
-            if (lastPlayTime == null) {
+            long lastPlayTime = localSong.getLastPlayTime();
+            //忽略未播放或被删除歌曲
+            if (lastPlayTime == 0) {
                 continue;
             }
             if (minHeap.size() < recentSongMaxCount) {
@@ -141,8 +146,8 @@ public class RecentSong {
                 if (peek == null) {
                     continue;
                 }
-                Date minTime = peek.getLastPlayTime();
-                if (minTime != null && lastPlayTime.after(minTime)) {
+                long minTime = peek.getLastPlayTime();
+                if (lastPlayTime > minTime) {
                     minHeap.poll();
                     minHeap.add(localSong);
                 }
@@ -150,17 +155,4 @@ public class RecentSong {
         }
     }
 
-    private void initMinHeap() {
-        minHeap = new PriorityQueue <>(recentSongMaxCount, (o1, o2) -> {
-            Date lastPlayTime1 = o1.getLastPlayTime();
-            if (lastPlayTime1 == null) {
-                return -1;
-            }
-            Date lastPlayTime2 = o2.getLastPlayTime();
-            if (lastPlayTime2 == null) {
-                return 1;
-            }
-            return lastPlayTime1.compareTo(lastPlayTime2);
-        });
-    }
 }

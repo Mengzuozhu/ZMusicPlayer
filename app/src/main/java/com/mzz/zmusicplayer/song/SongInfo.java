@@ -13,8 +13,6 @@ import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Transient;
 
-import java.util.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,7 +36,6 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
             return new SongInfo[size];
         }
     };
-
     //当前歌曲是否被选中
     @Transient
     @Setter
@@ -49,12 +46,12 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
     private String name;
     private String path;
     private String artist;
-    //全大写的歌名中文拼写，英文保存原样
+    //全大写的中文歌名拼写，英文保存原样
     private String nameSpell;
     private String title;
     private String fileArtist;
     private int songIdInFile;
-    private Date lastPlayTime;
+    private long lastPlayTime;
     private int duration;
     private boolean isChecked = true;
     private boolean isFavorite = false;
@@ -63,9 +60,25 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
     public SongInfo() {
     }
 
-    @Generated(hash = 1276055308)
+    protected SongInfo(Parcel in) {
+        this.isPlayListSelected = in.readByte() != 0;
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.name = in.readString();
+        this.path = in.readString();
+        this.artist = in.readString();
+        this.nameSpell = in.readString();
+        this.title = in.readString();
+        this.fileArtist = in.readString();
+        this.songIdInFile = in.readInt();
+        this.lastPlayTime = in.readLong();
+        this.duration = in.readInt();
+        this.isChecked = in.readByte() != 0;
+        this.isFavorite = in.readByte() != 0;
+    }
+
+    @Generated(hash = 516815091)
     public SongInfo(Long id, String name, String path, String artist, String nameSpell,
-                    String title, String fileArtist, int songIdInFile, Date lastPlayTime,
+                    String title, String fileArtist, int songIdInFile, long lastPlayTime,
                     int duration, boolean isChecked, boolean isFavorite) {
         this.id = id;
         this.name = name;
@@ -79,23 +92,6 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         this.duration = duration;
         this.isChecked = isChecked;
         this.isFavorite = isFavorite;
-    }
-
-    protected SongInfo(Parcel in) {
-        this.isPlayListSelected = in.readByte() != 0;
-        this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.name = in.readString();
-        this.path = in.readString();
-        this.artist = in.readString();
-        this.nameSpell = in.readString();
-        this.title = in.readString();
-        this.fileArtist = in.readString();
-        this.songIdInFile = in.readInt();
-        long tmpLastPlayTime = in.readLong();
-        this.lastPlayTime = tmpLastPlayTime == -1 ? null : new Date(tmpLastPlayTime);
-        this.duration = in.readInt();
-        this.isChecked = in.readByte() != 0;
-        this.isFavorite = in.readByte() != 0;
     }
 
     @Override
@@ -169,14 +165,6 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         this.nameSpell = nameSpell;
     }
 
-    public Date getLastPlayTime() {
-        return this.lastPlayTime;
-    }
-
-    public void setLastPlayTime(Date lastPlayTime) {
-        this.lastPlayTime = lastPlayTime;
-    }
-
     public boolean getIsFavorite() {
         return this.isFavorite;
     }
@@ -209,6 +197,14 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         this.songIdInFile = songIdInFile;
     }
 
+    public long getLastPlayTime() {
+        return this.lastPlayTime;
+    }
+
+    public void setLastPlayTime(long lastPlayTime) {
+        this.lastPlayTime = lastPlayTime;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -225,9 +221,10 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         dest.writeString(this.title);
         dest.writeString(this.fileArtist);
         dest.writeInt(this.songIdInFile);
-        dest.writeLong(this.lastPlayTime != null ? this.lastPlayTime.getTime() : -1);
+        dest.writeLong(this.lastPlayTime);
         dest.writeInt(this.duration);
         dest.writeByte(this.isChecked ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isFavorite ? (byte) 1 : (byte) 0);
     }
+
 }

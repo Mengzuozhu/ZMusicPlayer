@@ -164,3 +164,7 @@ m
 =app/src/main/java/com/mzz/zmusicplayer/play/SongListType.java,0\7\07005e645cc3ece9d0bcf5821c7012b94632e3f8
 p
 @app/src/main/java/com/mzz/zmusicplayer/edit/RemovedSongInfo.java,c\9\c90b0df0093f9dd9d7fcfab2319a3f59bc75dafc
+9
+	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
+s
+Capp/src/main/java/com/mzz/zmusicplayer/common/SongColorHandler.java,5\d\5d84f61b5ea3a1e8a155c655d813ddfeb830ed82
