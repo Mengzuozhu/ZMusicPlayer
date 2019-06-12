@@ -34,7 +34,8 @@ public class SongPickerAdapter extends SongInfoAdapter {
         super(R.layout.item_song_check, songInfos, recyclerView);
         chbSongSelectId = R.id.chb_item_song_select;
         ViewerHelper.setOnItemClickWithCheckBox(this, chbSongSelectId);
-        textQueryHandler = new TextQueryHandler(this, recyclerView.getContext(), songInfos);
+        textQueryHandler = new TextQueryHandler(this, recyclerView.getContext(),
+                R.id.tv_item_song_name, R.id.tv_item_song_artist);
         setOnItemChildCheckListener();
     }
 
@@ -42,7 +43,7 @@ public class SongPickerAdapter extends SongInfoAdapter {
     protected void convert(BaseViewHolder helper, SongInfo songInfo) {
         super.convert(helper, songInfo);
         helper.setChecked(chbSongSelectId, songInfo.getIsChecked()).addOnClickListener(chbSongSelectId);
-        textQueryHandler.setTextByQueryResult(helper, songInfo, R.id.tv_item_song_name);
+        textQueryHandler.setTextByQueryResult(helper, songInfo);
     }
 
     private void setOnItemChildCheckListener() {

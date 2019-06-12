@@ -3,15 +3,18 @@ package com.mzz.zmusicplayer.common;
 import android.content.Context;
 import android.support.annotation.IdRes;
 import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.widget.SearchView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.mzz.zandroidcommon.view.TextQueryHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.song.SongInfo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,12 +33,16 @@ public class TextQueryHandler {
     private int queryColor;
     private BaseQuickAdapter <SongInfo, BaseViewHolder> adapter;
     private List <SongInfo> songInfos;
+    private int itemSongNameId;
+    private int itemSongArtistId;
     private Map <String, Spannable> nameAndQuerySpans;
 
     public TextQueryHandler(BaseQuickAdapter <SongInfo, BaseViewHolder> adapter, Context context,
-                            List <SongInfo> songInfos) {
+                            @IdRes int itemSongNameId, @IdRes int itemSongArtistId) {
         this.adapter = adapter;
-        this.songInfos = songInfos;
+        this.songInfos = adapter.getData();
+        this.itemSongNameId = itemSongNameId;
+        this.itemSongArtistId = itemSongArtistId;
         this.nameAndQuerySpans = new HashMap <>();
         queryColor = context.getColor(R.color.colorRed);
     }
@@ -43,17 +50,21 @@ public class TextQueryHandler {
     /**
      * Sets text by query result.
      *
-     * @param helper         the helper
-     * @param songInfo       the song info
-     * @param itemSongNameId the item song name id
+     * @param helper   the helper
+     * @param songInfo the song info
      */
-    public void setTextByQueryResult(BaseViewHolder helper, SongInfo songInfo,
-                                     @IdRes int itemSongNameId) {
+    public void setTextByQueryResult(BaseViewHolder helper, SongInfo songInfo) {
         String name = songInfo.getName();
-        if (nameAndQuerySpans.containsKey(name)) {
-            helper.setText(itemSongNameId, nameAndQuerySpans.get(name));
+        setSpan(helper, name, itemSongNameId);
+        String artist = songInfo.getArtist();
+        setSpan(helper, artist, itemSongArtistId);
+    }
+
+    private void setSpan(BaseViewHolder helper, String value, int viewId) {
+        if (nameAndQuerySpans.containsKey(value)) {
+            helper.setText(viewId, nameAndQuerySpans.get(value));
         } else {
-            helper.setText(itemSongNameId, name);
+            helper.setText(viewId, value);
         }
     }
 
@@ -64,8 +75,7 @@ public class TextQueryHandler {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                List <SongInfo> queryResult = TextQueryHelper.getQueryResult(songInfos, query,
-                        nameAndQuerySpans, queryColor);
+                List <SongInfo> queryResult = getQueryResult(query);
                 adapter.setNewData(queryResult);
                 return false;
             }
@@ -79,6 +89,43 @@ public class TextQueryHandler {
                 return false;
             }
         });
+    }
+
+    private List <SongInfo> getQueryResult(String queryText) {
+        List <SongInfo> queryResults = new ArrayList <>();
+        if (nameAndQuerySpans != null) {
+            nameAndQuerySpans.clear();
+        } else {
+            nameAndQuerySpans = new HashMap <>();
+        }
+        if (songInfos == null || TextUtils.isEmpty(queryText)) {
+            return queryResults;
+        }
+
+        int queryLength = queryText.length();
+        for (SongInfo song : songInfos) {
+            String name = song.getName();
+            String artist = song.getArtist();
+            int nameIndex = name.indexOf(queryText);
+            int artistIndex = artist.indexOf(queryText);
+            addSpan(queryLength, name, nameIndex);
+            addSpan(queryLength, artist, artistIndex);
+            if (nameIndex >= 0 || artistIndex >= 0) {
+                queryResults.add(song);
+            }
+        }
+        return queryResults;
+
+    }
+
+    private void addSpan(int queryLength, String name, int nameIndex) {
+        if (nameIndex < 0) {
+            return;
+        }
+        Spannable span = new SpannableString(name);
+        span.setSpan(new ForegroundColorSpan(queryColor), nameIndex,
+                nameIndex + queryLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        nameAndQuerySpans.put(name, span);
     }
 
 }

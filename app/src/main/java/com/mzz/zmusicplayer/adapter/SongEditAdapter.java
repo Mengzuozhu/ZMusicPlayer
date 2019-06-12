@@ -28,13 +28,14 @@ public class SongEditAdapter extends SongInfoAdapter {
      */
     public SongEditAdapter(RecyclerView recyclerView, @Nullable List <SongInfo> data) {
         super(R.layout.item_song_edit, data, recyclerView);
-        textQueryHandler = new TextQueryHandler(this, recyclerView.getContext(), data);
+        textQueryHandler = new TextQueryHandler(this, recyclerView.getContext(),
+                R.id.tv_item_song_name, R.id.tv_item_song_artist);
     }
 
     @Override
     protected void convert(BaseViewHolder helper, SongInfo songInfo) {
         super.convert(helper, songInfo);
-        textQueryHandler.setTextByQueryResult(helper, songInfo, R.id.tv_item_song_name);
+        textQueryHandler.setTextByQueryResult(helper, songInfo);
         helper.addOnClickListener(R.id.iv_edit_del);
     }
 

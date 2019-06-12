@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.SearchView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.TextQueryHandler;
 import com.mzz.zmusicplayer.edit.RemovedSongInfo;
 import com.mzz.zmusicplayer.play.PlayList;
@@ -19,7 +20,7 @@ import org.greenrobot.eventbus.EventBus;
  */
 public class MusicSearchAdapter extends PlayListAdapter {
 
-    SongListType songListType;
+    private SongListType songListType;
     private TextQueryHandler textQueryHandler;
 
     /**
@@ -30,8 +31,8 @@ public class MusicSearchAdapter extends PlayListAdapter {
      */
     public MusicSearchAdapter(PlayList playList, RecyclerView recyclerView) {
         super(playList, recyclerView);
-        textQueryHandler = new TextQueryHandler(this, recyclerView.getContext(),
-                playList.getPlaySongs());
+        textQueryHandler = new TextQueryHandler(this, recyclerView.getContext(), itemSongNameId,
+                R.id.tv_item_song_artist);
         songListType = playList.getSongListType();
         this.setOnItemClickListener((adapter, view, position) -> {
             SongInfo song = getItem(position);
@@ -50,7 +51,7 @@ public class MusicSearchAdapter extends PlayListAdapter {
     @Override
     protected void convert(BaseViewHolder helper, SongInfo songInfo) {
         super.convert(helper, songInfo);
-        textQueryHandler.setTextByQueryResult(helper, songInfo, itemSongNameId);
+        textQueryHandler.setTextByQueryResult(helper, songInfo);
     }
 
     /**
