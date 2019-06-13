@@ -51,29 +51,13 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
     private String title;
     private String fileArtist;
     private int songIdInFile;
-    private long lastPlayTime;
+    private long lastPlayTime = 0;
     private int duration;
     private boolean isChecked = true;
     private boolean isFavorite = false;
 
     @Generated(hash = 1061935912)
     public SongInfo() {
-    }
-
-    protected SongInfo(Parcel in) {
-        this.isPlayListSelected = in.readByte() != 0;
-        this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.name = in.readString();
-        this.path = in.readString();
-        this.artist = in.readString();
-        this.nameSpell = in.readString();
-        this.title = in.readString();
-        this.fileArtist = in.readString();
-        this.songIdInFile = in.readInt();
-        this.lastPlayTime = in.readLong();
-        this.duration = in.readInt();
-        this.isChecked = in.readByte() != 0;
-        this.isFavorite = in.readByte() != 0;
     }
 
     @Generated(hash = 516815091)
@@ -92,6 +76,22 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         this.duration = duration;
         this.isChecked = isChecked;
         this.isFavorite = isFavorite;
+    }
+
+    protected SongInfo(Parcel in) {
+        this.isPlayListSelected = in.readByte() != 0;
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.name = in.readString();
+        this.path = in.readString();
+        this.artist = in.readString();
+        this.nameSpell = in.readString();
+        this.title = in.readString();
+        this.fileArtist = in.readString();
+        this.songIdInFile = in.readInt();
+        this.lastPlayTime = in.readLong();
+        this.duration = in.readInt();
+        this.isChecked = in.readByte() != 0;
+        this.isFavorite = in.readByte() != 0;
     }
 
     @Override
@@ -226,5 +226,4 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         dest.writeByte(this.isChecked ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isFavorite ? (byte) 1 : (byte) 0);
     }
-
 }
