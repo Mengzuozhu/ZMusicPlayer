@@ -14,5 +14,6 @@
     <string name="menu_song_add">添加歌曲</string>
     <string name="menu_song_del">删除</string>
     <string name="menu_song_detail">歌曲信息</string>
+    <string name="sort_by_play_count">按播放量排序</string>
 
 </resources>

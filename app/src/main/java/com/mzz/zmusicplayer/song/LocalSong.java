@@ -69,6 +69,15 @@ public class LocalSong {
     }
 
     /**
+     * Sort by play count.
+     *
+     * @param songInfos the song infos
+     */
+    public static void sortByPlayCount(List <SongInfo> songInfos) {
+        songInfos.sort((o1, o2) -> o2.getPlayCount().compareTo(o1.getPlayCount()));
+    }
+
+    /**
      * Remove list .
      *
      * @param keys the keys

@@ -251,6 +251,9 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
             return;
         }
         song.setLastPlayTime(System.currentTimeMillis());
+        if (mPlayer.isPlaying()) {
+            song.addPlayCount();
+        }
         mPlayer.getPlayList().updateRecentSongs(song);
         //记录播放歌曲ID
         AppSetting.setLastPlaySongId(song.getId());

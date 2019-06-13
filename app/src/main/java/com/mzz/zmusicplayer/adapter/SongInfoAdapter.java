@@ -107,4 +107,12 @@ public class SongInfoAdapter extends BaseQuickAdapter <SongInfo, BaseViewHolder>
         setNewData(songInfos);
     }
 
+    /**
+     * Sort by play count.
+     */
+    public void sortByPlayCount() {
+        LocalSong.sortByPlayCount(songInfos);
+        setNewData(songInfos);
+    }
+
 }

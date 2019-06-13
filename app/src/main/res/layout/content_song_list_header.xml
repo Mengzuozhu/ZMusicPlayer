@@ -5,6 +5,15 @@
     android:layout_height="wrap_content"
     android:background="@color/colorGrey">
 
+    <ImageView
+        android:id="@+id/iv_song_header_play_all"
+        style="@style/StyleHeaderImage"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/play" />
+
     <TextView
         android:id="@+id/tv_song_header_count"
         style="@style/StyleTextView"
@@ -16,37 +25,6 @@
         app:layout_constraintStart_toEndOf="@+id/iv_song_header_play_all"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/iv_song_header_play_all"
-        style="@style/StyleHeaderImage"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/play" />
-
-    <ImageView
-        android:id="@+id/iv_song_header_search"
-        style="@style/StyleHeaderImage"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/iv_song_header_sort"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_search" />
-
-    <ImageView
-        android:id="@+id/iv_song_header_sort"
-        style="@style/StyleHeaderImage"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/iv_song_header_edit"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/sort_white" />
-
-    <ImageView
-        android:id="@+id/iv_song_header_edit"
-        style="@style/StyleHeaderImage"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/edit" />
+    <include layout="@layout/layout_song_list_header" />
 
 </android.support.constraint.ConstraintLayout>

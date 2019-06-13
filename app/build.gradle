@@ -31,7 +31,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     greendao {
-        schemaVersion 2
+        schemaVersion 3
         daoPackage 'com.mzz.zmusicplayer.greendao.db'
     }
     repositories {
@@ -62,7 +62,7 @@ dependencies {
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.34'
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.16'
-    implementation 'com.google.code.gson:gson:2.8.5'
+//    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.greenrobot:eventbus:3.1.1'
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'

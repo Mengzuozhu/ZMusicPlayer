@@ -13,7 +13,8 @@ public enum SongOrderMode {
 
     ORDER_ASCEND_BY_ADD_TIME(0, "按添加时间排序"),
     ORDER_ASCEND_BY_NAME(1, "按歌名升序"),
-    ORDER_DESCEND_BY_NAME(2, "按歌名降序");
+    ORDER_DESCEND_BY_NAME(2, "按歌名降序"),
+    ORDER_DESCEND_BY_PLAY_COUNT(3, "按播放量排序");
 
     @Getter
     private final int id;

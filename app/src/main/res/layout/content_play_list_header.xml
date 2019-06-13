@@ -16,28 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/iv_play_header_search"
-        style="@style/StyleHeaderImage"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/iv_play_header_sort"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_search" />
-
-    <ImageView
-        android:id="@+id/iv_play_header_sort"
-        style="@style/StyleHeaderImage"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/iv_play_header_edit"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/sort_white" />
-
-    <ImageView
-        android:id="@+id/iv_play_header_edit"
-        style="@style/StyleHeaderImage"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/edit" />
+    <include layout="@layout/layout_song_list_header" />
 
 </android.support.constraint.ConstraintLayout>

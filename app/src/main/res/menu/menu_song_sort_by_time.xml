@@ -7,4 +7,10 @@
         android:orderInCategory="4"
         android:title="@string/sort_by_add_time"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_sort_by_play_count"
+        android:orderInCategory="5"
+        android:title="@string/sort_by_play_count"
+        app:showAsAction="never" />
 </menu>

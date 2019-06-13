@@ -51,8 +51,9 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
     private String title;
     private String fileArtist;
     private int songIdInFile;
-    private Long lastPlayTime = 0L;
     private int duration;
+    private Integer playCount = 0;
+    private Long lastPlayTime = 0L;
     private boolean isChecked = true;
     private boolean isFavorite = false;
 
@@ -70,16 +71,19 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         this.title = in.readString();
         this.fileArtist = in.readString();
         this.songIdInFile = in.readInt();
-        this.lastPlayTime = (Long) in.readValue(Long.class.getClassLoader());
         this.duration = in.readInt();
+        this.playCount = in.readInt();
+        this.lastPlayTime = (Long) in.readValue(Long.class.getClassLoader());
         this.isChecked = in.readByte() != 0;
         this.isFavorite = in.readByte() != 0;
     }
 
-    @Generated(hash = 274746587)
+    @Generated(hash = 628585481)
     public SongInfo(Long id, String name, String path, String artist, String nameSpell,
-                    String title, String fileArtist, int songIdInFile, Long lastPlayTime,
-                    int duration, boolean isChecked, boolean isFavorite) {
+                    String title,
+                    String fileArtist, int songIdInFile, int duration, Integer playCount,
+                    Long lastPlayTime,
+                    boolean isChecked, boolean isFavorite) {
         this.id = id;
         this.name = name;
         this.path = path;
@@ -88,8 +92,9 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         this.title = title;
         this.fileArtist = fileArtist;
         this.songIdInFile = songIdInFile;
-        this.lastPlayTime = lastPlayTime;
         this.duration = duration;
+        this.playCount = playCount;
+        this.lastPlayTime = lastPlayTime;
         this.isChecked = isChecked;
         this.isFavorite = isFavorite;
     }
@@ -99,12 +104,28 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         return name;
     }
 
+    /**
+     * Add play count.
+     */
+    public void addPlayCount() {
+        if (playCount == null) {
+            playCount = 0;
+        }
+        playCount++;
+    }
+
+    /**
+     * Gets song detail.
+     *
+     * @return the song detail
+     */
     public String getSongDetail() {
         StringBuilder builder = new StringBuilder();
         builder.append(StringHelper.getLocalFormat("歌名: %s\n", getName()));
         builder.append(StringHelper.getLocalFormat("歌手: %s\n", getArtist()));
         builder.append(StringHelper.getLocalFormat("歌手（默认）: %s\n", getFileArtist()));
         builder.append(StringHelper.getLocalFormat("标题: %s\n", getTitle()));
+        builder.append(StringHelper.getLocalFormat("播放量: %s\n", getPlayCount()));
         builder.append(StringHelper.getLocalFormat("文件路径: %s\n", getPath()));
         return builder.toString();
     }
@@ -221,10 +242,21 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         dest.writeString(this.title);
         dest.writeString(this.fileArtist);
         dest.writeInt(this.songIdInFile);
-        dest.writeValue(this.lastPlayTime);
         dest.writeInt(this.duration);
+        dest.writeInt(this.playCount);
+        dest.writeValue(this.lastPlayTime);
         dest.writeByte(this.isChecked ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isFavorite ? (byte) 1 : (byte) 0);
     }
 
+    public Integer getPlayCount() {
+        if (playCount == null) {
+            playCount = 0;
+        }
+        return this.playCount;
+    }
+
+    public void setPlayCount(Integer playCount) {
+        this.playCount = playCount;
+    }
 }
