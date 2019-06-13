@@ -51,7 +51,7 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
     private String title;
     private String fileArtist;
     private int songIdInFile;
-    private long lastPlayTime = 0;
+    private Long lastPlayTime = 0L;
     private int duration;
     private boolean isChecked = true;
     private boolean isFavorite = false;
@@ -60,9 +60,25 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
     public SongInfo() {
     }
 
-    @Generated(hash = 516815091)
+    protected SongInfo(Parcel in) {
+        this.isPlayListSelected = in.readByte() != 0;
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.name = in.readString();
+        this.path = in.readString();
+        this.artist = in.readString();
+        this.nameSpell = in.readString();
+        this.title = in.readString();
+        this.fileArtist = in.readString();
+        this.songIdInFile = in.readInt();
+        this.lastPlayTime = (Long) in.readValue(Long.class.getClassLoader());
+        this.duration = in.readInt();
+        this.isChecked = in.readByte() != 0;
+        this.isFavorite = in.readByte() != 0;
+    }
+
+    @Generated(hash = 274746587)
     public SongInfo(Long id, String name, String path, String artist, String nameSpell,
-                    String title, String fileArtist, int songIdInFile, long lastPlayTime,
+                    String title, String fileArtist, int songIdInFile, Long lastPlayTime,
                     int duration, boolean isChecked, boolean isFavorite) {
         this.id = id;
         this.name = name;
@@ -76,22 +92,6 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         this.duration = duration;
         this.isChecked = isChecked;
         this.isFavorite = isFavorite;
-    }
-
-    protected SongInfo(Parcel in) {
-        this.isPlayListSelected = in.readByte() != 0;
-        this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.name = in.readString();
-        this.path = in.readString();
-        this.artist = in.readString();
-        this.nameSpell = in.readString();
-        this.title = in.readString();
-        this.fileArtist = in.readString();
-        this.songIdInFile = in.readInt();
-        this.lastPlayTime = in.readLong();
-        this.duration = in.readInt();
-        this.isChecked = in.readByte() != 0;
-        this.isFavorite = in.readByte() != 0;
     }
 
     @Override
@@ -197,11 +197,11 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         this.songIdInFile = songIdInFile;
     }
 
-    public long getLastPlayTime() {
+    public Long getLastPlayTime() {
         return this.lastPlayTime;
     }
 
-    public void setLastPlayTime(long lastPlayTime) {
+    public void setLastPlayTime(Long lastPlayTime) {
         this.lastPlayTime = lastPlayTime;
     }
 
@@ -221,9 +221,10 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         dest.writeString(this.title);
         dest.writeString(this.fileArtist);
         dest.writeInt(this.songIdInFile);
-        dest.writeLong(this.lastPlayTime);
+        dest.writeValue(this.lastPlayTime);
         dest.writeInt(this.duration);
         dest.writeByte(this.isChecked ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isFavorite ? (byte) 1 : (byte) 0);
     }
+
 }

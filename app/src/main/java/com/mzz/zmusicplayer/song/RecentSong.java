@@ -76,7 +76,7 @@ public class RecentSong {
             SongInfo song = recentSongs.get(i);
             Long id = song.getId();
             if (keys.contains(id)) {
-                song.setLastPlayTime(0);
+                song.setLastPlayTime(0L);
                 recentSongs.remove(i);
                 keys.remove(id);
                 removeSongs.add(song);
@@ -95,7 +95,7 @@ public class RecentSong {
         if (song == null) {
             return;
         }
-        song.setLastPlayTime(0);
+        song.setLastPlayTime(0L);
         LocalSongModel.update(song);
     }
 
@@ -132,9 +132,9 @@ public class RecentSong {
         List <SongInfo> allSongs = LocalSong.getInstance().getAllLocalSongs();
         //构建最小堆，获取前n个最近播放的歌曲
         for (SongInfo localSong : allSongs) {
-            long lastPlayTime = localSong.getLastPlayTime();
+            Long lastPlayTime = localSong.getLastPlayTime();
             //忽略未播放或被删除歌曲
-            if (lastPlayTime == 0) {
+            if (lastPlayTime == null || lastPlayTime == 0) {
                 continue;
             }
             if (minHeap.size() < recentSongMaxCount) {
