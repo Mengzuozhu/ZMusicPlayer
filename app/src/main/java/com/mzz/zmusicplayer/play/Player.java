@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.MusicApplication;
+import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.FavoriteSong;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -64,20 +65,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         }
         SongInfo playingSong = getPlayingSong();
         if (playingSong != null) {
-            try {
-                mPlayer.reset();
-                mPlayer.setDataSource(playingSong.getPath());
-                mPlayer.prepare();
-                mPlayer.start();
-                notifyPlayStatusChanged(true);
-            } catch (IOException e) {
-                Log.e(TAG, "play: ", e);
-                ViewerHelper.showToast(MusicApplication.getContext(), String.format("歌曲(%s)播放失败！"
-                        , playingSong.getName()));
-                playNext();
-                return false;
-            }
-            return true;
+            return startNewSong(playingSong);
         } else {
             mPlayer.reset();
             notifyResetAllState();
@@ -85,17 +73,22 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         return false;
     }
 
-    @Override
-    public SongInfo getPlayingSong() {
-        return playList.getPlayingSong();
-    }
-
-    @Override
-    public void changePlayMode() {
-        PlayedMode playMode = playList.getPlayMode();
-        playMode = playMode.getNextMode();
-        playList.setPlayMode(playMode);
-        notifyPlayModeChanged(playMode);
+    private boolean startNewSong(SongInfo playingSong) {
+        try {
+            mPlayer.reset();
+            mPlayer.setDataSource(playingSong.getPath());
+            mPlayer.prepare();
+            mPlayer.start();
+            notifyPlayStatusChanged(true);
+            recordPlayingSong(playingSong);
+        } catch (IOException e) {
+            Log.e(TAG, "play: ", e);
+            ViewerHelper.showToast(MusicApplication.getContext(), String.format("歌曲(%s)播放失败！"
+                    , playingSong.getName()));
+            playNext();
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -127,6 +120,19 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     @Override
+    public SongInfo getPlayingSong() {
+        return playList.getPlayingSong();
+    }
+
+    @Override
+    public void changePlayMode() {
+        PlayedMode playMode = playList.getPlayMode();
+        playMode = playMode.getNextMode();
+        playList.setPlayMode(playMode);
+        notifyPlayModeChanged(playMode);
+    }
+
+    @Override
     public void switchFavorite() {
         SongInfo playingSong = getPlayingSong();
         if (playingSong == null) {
@@ -137,35 +143,42 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     @Override
-    public boolean playPrevious() {
+    public void playPrevious() {
         isPaused = false;
         SongInfo previous = playList.previous();
         notifyPlayPrevious(previous);
-        return play();
+        play();
     }
 
     @Override
-    public boolean pause() {
+    public void pause() {
         if (mPlayer.isPlaying()) {
             mPlayer.pause();
             isPaused = true;
             notifyPlayStatusChanged(false);
-            return true;
         }
-        return false;
     }
 
     @Override
-    public boolean playNext() {
+    public void playNext() {
         isPaused = false;
         SongInfo next = playList.next();
         notifyPlayNext(next);
-        return play();
+        play();
     }
 
     @Override
     public boolean isPlaying() {
         return mPlayer.isPlaying();
+    }
+
+    private void recordPlayingSong(SongInfo song) {
+        //记录播放歌曲信息
+        song.setLastPlayTime(System.currentTimeMillis());
+        song.addPlayCount();
+        playList.updateRecentSongs(song);
+        //记录播放歌曲ID
+        AppSetting.setLastPlaySongId(song.getId());
     }
 
     @Override
@@ -178,8 +191,8 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     @Override
-    public boolean seekTo(int progressMilli) {
-        if (playList.isEmpty()) return false;
+    public void seekTo(int progressMilli) {
+        if (playList.isEmpty()) return;
 
         SongInfo currentSong = playList.getPlayingSong();
         if (currentSong != null) {
@@ -188,16 +201,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
             } else {
                 mPlayer.seekTo(progressMilli);
             }
-            return true;
         }
-        return false;
-    }
-
-    @Override
-    public void continuePlay() {
-        mPlayer.start();
-        notifyPlayStatusChanged(true);
-        isPaused = false;
     }
 
     @Override

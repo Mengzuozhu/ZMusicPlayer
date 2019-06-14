@@ -61,23 +61,6 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
     public SongInfo() {
     }
 
-    protected SongInfo(Parcel in) {
-        this.isPlayListSelected = in.readByte() != 0;
-        this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.name = in.readString();
-        this.path = in.readString();
-        this.artist = in.readString();
-        this.nameSpell = in.readString();
-        this.title = in.readString();
-        this.fileArtist = in.readString();
-        this.songIdInFile = in.readInt();
-        this.duration = in.readInt();
-        this.playCount = in.readInt();
-        this.lastPlayTime = (Long) in.readValue(Long.class.getClassLoader());
-        this.isChecked = in.readByte() != 0;
-        this.isFavorite = in.readByte() != 0;
-    }
-
     @Generated(hash = 628585481)
     public SongInfo(Long id, String name, String path, String artist, String nameSpell,
                     String title,
@@ -97,6 +80,23 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         this.lastPlayTime = lastPlayTime;
         this.isChecked = isChecked;
         this.isFavorite = isFavorite;
+    }
+
+    protected SongInfo(Parcel in) {
+        this.isPlayListSelected = in.readByte() != 0;
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.name = in.readString();
+        this.path = in.readString();
+        this.artist = in.readString();
+        this.nameSpell = in.readString();
+        this.title = in.readString();
+        this.fileArtist = in.readString();
+        this.songIdInFile = in.readInt();
+        this.duration = in.readInt();
+        this.playCount = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.lastPlayTime = (Long) in.readValue(Long.class.getClassLoader());
+        this.isChecked = in.readByte() != 0;
+        this.isFavorite = in.readByte() != 0;
     }
 
     @Override
@@ -120,14 +120,12 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
      * @return the song detail
      */
     public String getSongDetail() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(StringHelper.getLocalFormat("歌名: %s\n", getName()));
-        builder.append(StringHelper.getLocalFormat("歌手: %s\n", getArtist()));
-        builder.append(StringHelper.getLocalFormat("歌手（默认）: %s\n", getFileArtist()));
-        builder.append(StringHelper.getLocalFormat("标题: %s\n", getTitle()));
-        builder.append(StringHelper.getLocalFormat("播放量: %s\n", getPlayCount()));
-        builder.append(StringHelper.getLocalFormat("文件路径: %s\n", getPath()));
-        return builder.toString();
+        return StringHelper.getLocalFormat("歌名: %s\n", getName()) +
+                StringHelper.getLocalFormat("歌手: %s\n", getArtist()) +
+                StringHelper.getLocalFormat("歌手（默认）: %s\n", getFileArtist()) +
+                StringHelper.getLocalFormat("标题: %s\n", getTitle()) +
+                StringHelper.getLocalFormat("播放量: %s\n", getPlayCount()) +
+                StringHelper.getLocalFormat("文件路径: %s\n", getPath());
     }
 
     public String getName() {
@@ -226,6 +224,17 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         this.lastPlayTime = lastPlayTime;
     }
 
+    public Integer getPlayCount() {
+        if (playCount == null) {
+            playCount = 0;
+        }
+        return this.playCount;
+    }
+
+    public void setPlayCount(Integer playCount) {
+        this.playCount = playCount;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -243,20 +252,9 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         dest.writeString(this.fileArtist);
         dest.writeInt(this.songIdInFile);
         dest.writeInt(this.duration);
-        dest.writeInt(this.playCount);
+        dest.writeValue(this.playCount);
         dest.writeValue(this.lastPlayTime);
         dest.writeByte(this.isChecked ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isFavorite ? (byte) 1 : (byte) 0);
-    }
-
-    public Integer getPlayCount() {
-        if (playCount == null) {
-            playCount = 0;
-        }
-        return this.playCount;
-    }
-
-    public void setPlayCount(Integer playCount) {
-        this.playCount = playCount;
     }
 }

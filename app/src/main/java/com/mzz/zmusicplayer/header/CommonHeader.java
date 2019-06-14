@@ -71,7 +71,7 @@ class CommonHeader {
     /**
      * Show search activity.
      */
-    void showSearchActivity() {
+    private void showSearchActivity() {
         MusicSearchActivity.startForResult(activity, playList);
     }
 
@@ -80,7 +80,7 @@ class CommonHeader {
      *
      * @param view the view
      */
-    void showSongOrderPopupMenu(View view) {
+    private void showSongOrderPopupMenu(View view) {
         PopupMenu popupMenu = new PopupMenu(activity, view);
         popupMenu.inflate(R.menu.menu_song_sort_by_time);
         popupMenu.inflate(R.menu.menu_sort_by_name);

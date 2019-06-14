@@ -23,17 +23,15 @@ public interface IPlayer {
 
     void switchFavorite();
 
-    boolean playPrevious();
+    void playPrevious();
 
-    boolean pause();
+    void pause();
 
-    boolean playNext();
+    void playNext();
+
+    void seekTo(int progress);
 
     boolean isPlaying();
-
-    boolean seekTo(int progress);
-
-    void continuePlay();
 
     int getCurrentPosition();
 
