@@ -1,10 +1,14 @@
 package com.mzz.zmusicplayer.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +26,7 @@ import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.play.PlayObserver;
 import com.mzz.zmusicplayer.play.Player;
 import com.mzz.zmusicplayer.presenter.MusicControlPresenter;
+import com.mzz.zmusicplayer.receiver.MusicPhoneStateListener;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -57,6 +62,9 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     private IPlayer mPlayer;
     private Handler mHandler = new Handler();
     private MusicControlContract.Presenter musicPresenter;
+    private TelephonyManager mTelephonyManager;
+    // 电话状态监听者
+    private MusicPhoneStateListener phoneStateListener;
     private Runnable mProgressCallback = new Runnable() {
         @Override
         public void run() {
@@ -130,12 +138,27 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         musicPresenter.subscribe();
         ivPlayMode.setImageResource(AppSetting.getPlayMode().getIcon());
         setSeekBarListener();
+        listenPhoneState();
+    }
+
+    private void listenPhoneState() {
+        FragmentActivity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+        mTelephonyManager =
+                (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
+        phoneStateListener = new MusicPhoneStateListener();
+        mTelephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         removeProgressCallback();
+        if (mTelephonyManager != null && phoneStateListener != null) {
+            mTelephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+        }
         mPlayer.unregisterCallback(this);
         AppSetting.setLastPlaySongId(mPlayer.getPlayingSong().getId());
         mPlayer.releasePlayer();
