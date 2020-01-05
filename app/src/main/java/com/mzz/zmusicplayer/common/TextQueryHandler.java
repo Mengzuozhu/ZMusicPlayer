@@ -14,6 +14,8 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.song.SongInfo;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,19 +33,19 @@ public class TextQueryHandler {
     @Setter
     @IdRes
     private int queryColor;
-    private BaseQuickAdapter <SongInfo, BaseViewHolder> adapter;
-    private List <SongInfo> songInfos;
+    private BaseQuickAdapter<SongInfo, BaseViewHolder> adapter;
+    private List<SongInfo> songInfos;
     private int itemSongNameId;
     private int itemSongArtistId;
-    private Map <String, Spannable> nameAndQuerySpans;
+    private Map<String, Spannable> nameAndQuerySpans;
 
-    public TextQueryHandler(BaseQuickAdapter <SongInfo, BaseViewHolder> adapter, Context context,
+    public TextQueryHandler(BaseQuickAdapter<SongInfo, BaseViewHolder> adapter, Context context,
                             @IdRes int itemSongNameId, @IdRes int itemSongArtistId) {
         this.adapter = adapter;
         this.songInfos = adapter.getData();
         this.itemSongNameId = itemSongNameId;
         this.itemSongArtistId = itemSongArtistId;
-        this.nameAndQuerySpans = new HashMap <>();
+        this.nameAndQuerySpans = new HashMap<>();
         queryColor = context.getColor(R.color.colorRed);
     }
 
@@ -75,7 +77,7 @@ public class TextQueryHandler {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                List <SongInfo> queryResult = querySongNameAndArtist(query);
+                List<SongInfo> queryResult = querySongNameAndArtist(query);
                 adapter.setNewData(queryResult);
                 return false;
             }
@@ -91,23 +93,24 @@ public class TextQueryHandler {
         });
     }
 
-    private List <SongInfo> querySongNameAndArtist(String queryText) {
-        List <SongInfo> queryResults = new ArrayList <>();
+    private List<SongInfo> querySongNameAndArtist(String queryText) {
+        List<SongInfo> queryResults = new ArrayList<>();
         if (nameAndQuerySpans != null) {
             nameAndQuerySpans.clear();
         } else {
-            nameAndQuerySpans = new HashMap <>();
+            nameAndQuerySpans = new HashMap<>();
         }
-        if (songInfos == null || TextUtils.isEmpty(queryText)) {
+        if (songInfos == null || StringUtils.isEmpty(queryText)) {
             return queryResults;
         }
 
         int queryLength = queryText.length();
+        String lowerText = queryText.toLowerCase();
         for (SongInfo song : songInfos) {
             String name = song.getName();
             String artist = song.getArtist();
-            int nameIndex = name.indexOf(queryText);
-            int artistIndex = artist.indexOf(queryText);
+            int nameIndex = name.toLowerCase().indexOf(lowerText);
+            int artistIndex = artist.toLowerCase().indexOf(lowerText);
             addSpan(queryLength, name, nameIndex);
             addSpan(queryLength, artist, artistIndex);
             if (nameIndex >= 0 || artistIndex >= 0) {
