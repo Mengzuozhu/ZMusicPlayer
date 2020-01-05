@@ -170,3 +170,5 @@ s
 Capp/src/main/java/com/mzz/zmusicplayer/common/SongColorHandler.java,5\d\5d84f61b5ea3a1e8a155c655d813ddfeb830ed82
 o
 ?app/src/main/java/com/mzz/zmusicplayer/header/CommonHeader.java,2\9\29d8c839de9184e02e6d6b24f805e14b8dbea9ae
+|
+Lapp/src/main/java/com/mzz/zmusicplayer/receiver/MusicPhoneStateListener.java,e\8\e887bcfdb6c213247499c06a3a14c92206524e8c

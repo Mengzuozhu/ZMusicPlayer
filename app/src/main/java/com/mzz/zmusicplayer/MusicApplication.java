@@ -36,4 +36,11 @@ public class MusicApplication extends Application {
         super.onCreate();
         sInstance = this;
     }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+
+        xcrash.XCrash.init(this);
+    }
 }
