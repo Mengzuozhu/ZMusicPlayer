@@ -61,9 +61,9 @@ class CommonHeader {
      * Show song edit activity.
      */
     void showSongEditActivity(SongListType songListType) {
-        List <SongInfo> songs = playList.getPlaySongs();
+        List<SongInfo> songs = playList.getPlaySongs();
         if (songs instanceof LinkedList) {
-            songs = new ArrayList <>(songs);
+            songs = new ArrayList<>(songs);
         }
         SongEditActivity.startForResult(activity, songs, songListType);
     }

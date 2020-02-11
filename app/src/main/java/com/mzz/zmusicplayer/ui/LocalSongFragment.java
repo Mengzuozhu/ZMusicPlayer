@@ -79,7 +79,7 @@ public class LocalSongFragment extends Fragment implements ISongChangeListener {
         if (songListAdapter == null) {
             initAdapter();
         } else {
-            List <SongInfo> allLocalSongs = localSongs.getAllLocalSongs();
+            List<SongInfo> allLocalSongs = localSongs.getAllLocalSongs();
             songListAdapter.updateData(allLocalSongs);
         }
     }
@@ -104,7 +104,7 @@ public class LocalSongFragment extends Fragment implements ISongChangeListener {
      *
      * @param songs the songs
      */
-    public void addToLocalSongs(Collection <SongInfo> songs) {
+    public void addToLocalSongs(Collection<SongInfo> songs) {
         songListAdapter.updateData(localSongs.addToLocalSongs(songs));
     }
 
@@ -113,7 +113,7 @@ public class LocalSongFragment extends Fragment implements ISongChangeListener {
      *
      * @param keys the keys
      */
-    public void remove(List <Long> keys) {
+    public void remove(List<Long> keys) {
         songListAdapter.updateData(localSongs.remove(keys));
     }
 

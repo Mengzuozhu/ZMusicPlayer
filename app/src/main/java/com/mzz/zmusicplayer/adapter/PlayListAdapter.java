@@ -90,7 +90,7 @@ public class PlayListAdapter extends SongInfoAdapter {
         scrollToPosition(adapterPosition);
     }
 
-    void updatePlaySongs(List <SongInfo> songs) {
+    void updatePlaySongs(List<SongInfo> songs) {
         playList.setPlaySongs(songs);
         setNewData(songs);
     }

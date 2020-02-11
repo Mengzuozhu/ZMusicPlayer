@@ -51,7 +51,7 @@ public class SongListAdapter extends PlayListAdapter {
      *
      * @param songs the songs
      */
-    public void updateData(List <SongInfo> songs) {
+    public void updateData(List<SongInfo> songs) {
         updatePlaySongs(songs);
         updateSongCount();
     }

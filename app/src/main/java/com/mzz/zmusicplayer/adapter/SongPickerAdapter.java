@@ -30,7 +30,7 @@ public class SongPickerAdapter extends SongInfoAdapter {
      * @param songInfos    the song infos
      * @param recyclerView the recycler view
      */
-    public SongPickerAdapter(List <SongInfo> songInfos, RecyclerView recyclerView) {
+    public SongPickerAdapter(List<SongInfo> songInfos, RecyclerView recyclerView) {
         super(R.layout.item_song_check, songInfos, recyclerView);
         chbSongSelectId = R.id.chb_item_song_select;
         ViewerHelper.setOnItemClickWithCheckBox(this, chbSongSelectId);

@@ -25,7 +25,7 @@ import lombok.Setter;
  */
 public class PlayList implements Parcelable {
 
-    public static final Creator <PlayList> CREATOR = new Creator <PlayList>() {
+    public static final Creator<PlayList> CREATOR = new Creator<PlayList>() {
         @Override
         public PlayList createFromParcel(Parcel source) {
             return new PlayList(source);
@@ -40,7 +40,7 @@ public class PlayList implements Parcelable {
     private LocalSong localSongs;
     @Getter
     @Setter
-    private List <SongInfo> playSongs;
+    private List<SongInfo> playSongs;
     @Getter
     @Setter
     private int playingIndex = 0;
@@ -78,7 +78,7 @@ public class PlayList implements Parcelable {
      * @param songId    the song id
      * @return the song index by id
      */
-    public static int getSongIndexById(List <SongInfo> songInfos, long songId) {
+    public static int getSongIndexById(List<SongInfo> songInfos, long songId) {
         int songIndex = -1;
         //根据ID获取歌曲在列表中的位置
         for (int i = 0; i < songInfos.size(); i++) {
@@ -103,7 +103,7 @@ public class PlayList implements Parcelable {
      *
      * @param checkedSongs the checked song
      */
-    public void updatePlayListSongs(List <SongInfo> checkedSongs) {
+    public void updatePlayListSongs(List<SongInfo> checkedSongs) {
         this.playSongs = localSongs.updatePlayListSongs(checkedSongs);
     }
 
@@ -127,7 +127,7 @@ public class PlayList implements Parcelable {
      *
      * @param c the c
      */
-    public void addSongs(Collection <SongInfo> c) {
+    public void addSongs(Collection<SongInfo> c) {
         playSongs.addAll(c);
         notifySongCountOrModeChange();
     }
@@ -151,8 +151,8 @@ public class PlayList implements Parcelable {
      *
      * @param keys the keys
      */
-    public void remove(List <Long> keys) {
-        List <SongInfo> deleteSongs = new ArrayList <>();
+    public void remove(List<Long> keys) {
+        List<SongInfo> deleteSongs = new ArrayList<>();
         for (int i = playSongs.size() - 1; i >= 0 && !keys.isEmpty(); i--) {
             SongInfo song = playSongs.get(i);
             Long id = song.getId();

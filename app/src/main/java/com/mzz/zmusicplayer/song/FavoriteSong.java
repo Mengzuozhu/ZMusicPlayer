@@ -20,7 +20,7 @@ public class FavoriteSong {
     @Setter
     private IFavoriteSongObserver favoriteSongObserver;
     @Getter
-    private List <SongInfo> favoriteSongs;
+    private List<SongInfo> favoriteSongs;
 
     private FavoriteSong() {
         initFavoriteSong();
@@ -31,8 +31,8 @@ public class FavoriteSong {
     }
 
     private void initFavoriteSong() {
-        List <SongInfo> allLocalSongs = LocalSong.getInstance().getAllLocalSongs();
-        favoriteSongs = new ArrayList <>();
+        List<SongInfo> allLocalSongs = LocalSong.getInstance().getAllLocalSongs();
+        favoriteSongs = new ArrayList<>();
         for (SongInfo song : allLocalSongs) {
             if (song.getIsFavorite()) {
                 favoriteSongs.add(song);
@@ -74,8 +74,8 @@ public class FavoriteSong {
      * @param keys the keys
      * @return the list
      */
-    public List <SongInfo> remove(Collection <Long> keys) {
-        List <SongInfo> removeSongs = new ArrayList <>();
+    public List<SongInfo> remove(Collection<Long> keys) {
+        List<SongInfo> removeSongs = new ArrayList<>();
         Player player = Player.getInstance();
         for (int i = favoriteSongs.size() - 1; i >= 0 && !keys.isEmpty(); i--) {
             SongInfo song = favoriteSongs.get(i);

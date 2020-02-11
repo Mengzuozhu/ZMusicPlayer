@@ -20,9 +20,9 @@ import lombok.Getter;
 public class RecentSong {
     private static RecentSong recentSong = new RecentSong();
     private int recentSongMaxCount;
-    private PriorityQueue <SongInfo> minHeap;
+    private PriorityQueue<SongInfo> minHeap;
     @Getter
-    private LinkedList <SongInfo> recentSongs;
+    private LinkedList<SongInfo> recentSongs;
 
     private RecentSong() {
         recentSongMaxCount = AppSetting.getRecentSongMaxCount();
@@ -70,8 +70,8 @@ public class RecentSong {
      * @param keys the keys
      * @return the list
      */
-    public List <SongInfo> remove(Collection <Long> keys) {
-        List <SongInfo> removeSongs = new ArrayList <>();
+    public List<SongInfo> remove(Collection<Long> keys) {
+        List<SongInfo> removeSongs = new ArrayList<>();
         for (int i = recentSongs.size() - 1; i >= 0 && !keys.isEmpty(); i--) {
             SongInfo song = recentSongs.get(i);
             Long id = song.getId();
@@ -117,19 +117,19 @@ public class RecentSong {
     private void initRecentSongs() {
         initMinHeap();
         buildMinHeap();
-        recentSongs = new LinkedList <>();
+        recentSongs = new LinkedList<>();
         while (!minHeap.isEmpty()) {
             recentSongs.addFirst(minHeap.poll());
         }
     }
 
     private void initMinHeap() {
-        minHeap = new PriorityQueue <>(recentSongMaxCount,
+        minHeap = new PriorityQueue<>(recentSongMaxCount,
                 (o1, o2) -> Long.compare(o1.getLastPlayTime(), o2.getLastPlayTime()));
     }
 
     private void buildMinHeap() {
-        List <SongInfo> allSongs = LocalSong.getInstance().getAllLocalSongs();
+        List<SongInfo> allSongs = LocalSong.getInstance().getAllLocalSongs();
         //构建最小堆，获取前n个最近播放的歌曲
         for (SongInfo localSong : allSongs) {
             Long lastPlayTime = localSong.getLastPlayTime();

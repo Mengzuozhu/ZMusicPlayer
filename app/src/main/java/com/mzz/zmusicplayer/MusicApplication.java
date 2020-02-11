@@ -26,7 +26,7 @@ public class MusicApplication extends Application {
     public static void exitApp() {
         ActivityManager activityManager =
                 (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
-        List <ActivityManager.AppTask> appTaskList = activityManager.getAppTasks();
+        List<ActivityManager.AppTask> appTaskList = activityManager.getAppTasks();
         for (ActivityManager.AppTask appTask : appTaskList) {
             appTask.finishAndRemoveTask();
         }

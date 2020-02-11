@@ -39,7 +39,7 @@ public class PlayListPresenter implements PlayListContract.Presenter, PlayList.P
     }
 
     @Override
-    public void updatePlayListSongs(List <SongInfo> checkedSongs) {
+    public void updatePlayListSongs(List<SongInfo> checkedSongs) {
         playList.updatePlayListSongs(checkedSongs);
         updatePlayList();
         intiAdapter();
@@ -77,7 +77,7 @@ public class PlayListPresenter implements PlayListContract.Presenter, PlayList.P
     }
 
     @Override
-    public void remove(List <Long> keys) {
+    public void remove(List<Long> keys) {
         if (keys == null || keys.isEmpty()) {
             return;
         }

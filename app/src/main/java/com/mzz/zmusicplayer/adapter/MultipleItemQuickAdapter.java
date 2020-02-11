@@ -14,7 +14,7 @@ import java.util.List;
  * date : 2019 2019/5/11 16:48
  * description :
  */
-public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter <MultipleItem,
+public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter<MultipleItem,
         BaseViewHolder> {
 
     public MultipleItemQuickAdapter(List<MultipleItem> data, RecyclerView recyclerView) {

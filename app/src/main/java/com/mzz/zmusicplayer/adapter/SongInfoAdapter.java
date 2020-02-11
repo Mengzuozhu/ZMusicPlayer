@@ -24,12 +24,12 @@ import lombok.Getter;
  * date : 2019 2019/5/11 16:26
  * description :
  */
-public class SongInfoAdapter extends BaseQuickAdapter <SongInfo, BaseViewHolder> {
+public class SongInfoAdapter extends BaseQuickAdapter<SongInfo, BaseViewHolder> {
 
     @Getter
     protected RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-    private List <SongInfo> songInfos;
+    private List<SongInfo> songInfos;
 
     /**
      * Instantiates a new Song info adapter.
@@ -38,7 +38,7 @@ public class SongInfoAdapter extends BaseQuickAdapter <SongInfo, BaseViewHolder>
      * @param songInfos    the song infos
      * @param recyclerView the recycler view
      */
-    SongInfoAdapter(int layoutResId, List <SongInfo> songInfos, RecyclerView recyclerView) {
+    SongInfoAdapter(int layoutResId, List<SongInfo> songInfos, RecyclerView recyclerView) {
         super(layoutResId, songInfos);
         this.songInfos = songInfos;
         this.recyclerView = recyclerView;

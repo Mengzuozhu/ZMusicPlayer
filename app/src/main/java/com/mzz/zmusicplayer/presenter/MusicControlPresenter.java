@@ -17,10 +17,12 @@ public class MusicControlPresenter implements MusicControlContract.Presenter {
     private boolean mIsServiceBound;
 
     private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             mPlaybackService = ((PlaybackService.LocalBinder) service).getService();
         }
 
+        @Override
         public void onServiceDisconnected(ComponentName className) {
             mPlaybackService = null;
         }

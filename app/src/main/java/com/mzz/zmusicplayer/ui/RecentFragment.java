@@ -84,7 +84,7 @@ public class RecentFragment extends Fragment implements ISongChangeListener {
         if (songListAdapter == null) {
             initAdapter();
         } else {
-            List <SongInfo> recentSongs = recentSong.getRecentSongs();
+            List<SongInfo> recentSongs = recentSong.getRecentSongs();
             songListAdapter.updateData(recentSongs);
         }
     }
@@ -109,7 +109,7 @@ public class RecentFragment extends Fragment implements ISongChangeListener {
      *
      * @param keys the keys
      */
-    public void remove(List <Long> keys) {
+    public void remove(List<Long> keys) {
         songListAdapter.updateData(recentSong.remove(keys));
     }
 

@@ -37,7 +37,7 @@ public class AppSettingPresenter implements AppSettingContract.Presenter {
 
     @Override
     public void initSetting() {
-        List <MultipleItem> settings = getSettings();
+        List<MultipleItem> settings = getSettings();
         MultipleItemQuickAdapter multipleItemAdapter = new MultipleItemQuickAdapter(settings,
                 recyclerView);
         multipleItemAdapter.setOnItemClickListener((adapter1, view1, position) -> {
@@ -46,8 +46,8 @@ public class AppSettingPresenter implements AppSettingContract.Presenter {
         });
     }
 
-    private List <MultipleItem> getSettings() {
-        List <MultipleItem> settings = new ArrayList <>();
+    private List<MultipleItem> getSettings() {
+        List<MultipleItem> settings = new ArrayList<>();
         recentSongCount = AppSetting.getRecentSongMaxCount();
         settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, RECENT_SONG_COUNT_NAME,
                 getRecentSongCountInfo()));

@@ -42,13 +42,13 @@ public class LocalSongModel {
      *
      * @return the order local playSongs
      */
-    public static List <SongInfo> getOrderLocalSongs() {
-        List <SongInfo> songInfos = songInfoDao.loadAll();
+    public static List<SongInfo> getOrderLocalSongs() {
+        List<SongInfo> songInfos = songInfoDao.loadAll();
         sort(songInfos);
         return songInfos;
     }
 
-    private static void sort(List <SongInfo> songInfos) {
+    private static void sort(List<SongInfo> songInfos) {
         switch (AppSetting.getSongSortMode()) {
             case ORDER_ASCEND_BY_NAME:
                 LocalSong.sortByChineseName(songInfos, true);
@@ -67,7 +67,7 @@ public class LocalSongModel {
      *
      * @param keys the keys
      */
-    public static void deleteByKeyInTx(Iterable <Long> keys) {
+    public static void deleteByKeyInTx(Iterable<Long> keys) {
         songInfoDao.deleteByKeyInTx(keys);
     }
 
@@ -88,7 +88,7 @@ public class LocalSongModel {
      *
      * @param songInfos the song infos
      */
-    public static void insertOrReplaceInTx(Iterable <SongInfo> songInfos) {
+    public static void insertOrReplaceInTx(Iterable<SongInfo> songInfos) {
         if (songInfos == null) {
             return;
         }
@@ -112,7 +112,7 @@ public class LocalSongModel {
      *
      * @param songs the songs
      */
-    public static void updateInTx(Iterable <SongInfo> songs) {
+    public static void updateInTx(Iterable<SongInfo> songs) {
         if (songs == null) {
             return;
         }

@@ -26,7 +26,7 @@ public class SongEditAdapter extends SongInfoAdapter {
      * @param recyclerView the recycler view
      * @param data         the data
      */
-    public SongEditAdapter(RecyclerView recyclerView, @Nullable List <SongInfo> data) {
+    public SongEditAdapter(RecyclerView recyclerView, @Nullable List<SongInfo> data) {
         super(R.layout.item_song_edit, data, recyclerView);
         textQueryHandler = new TextQueryHandler(this, recyclerView.getContext(),
                 R.id.tv_item_song_name, R.id.tv_item_song_artist);

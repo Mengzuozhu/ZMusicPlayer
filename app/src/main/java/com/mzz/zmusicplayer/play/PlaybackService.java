@@ -25,12 +25,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Created with Android Studio.
- * User: ryan.hoo.j@gmail.com
- * Date: 9/12/16
- * Time: 4:27 PM
- * Desc: PlayService
- */
+ * 后台服务
+ *
+ * @author zuozhu.meng
+ **/
 public class PlaybackService extends Service implements PlayObserver {
 
     private static final String ACTION_PLAY_TOGGLE = "com.mzz.zmusicplayer.ACTION.PLAY_TOGGLE";
@@ -53,22 +51,6 @@ public class PlaybackService extends Service implements PlayObserver {
         mPlayer.registerCallback(this);
         registerLockScreenReceiver();
         showNotification();
-    }
-
-    private void registerLockScreenReceiver() {
-        lockScreenReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) {
-                    //锁屏后，显示播放工具栏
-                    showNotification();
-                }
-            }
-        };
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        registerReceiver(lockScreenReceiver, filter);
     }
 
     @Override
@@ -113,12 +95,6 @@ public class PlaybackService extends Service implements PlayObserver {
         return START_STICKY;
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
-
     @Override
     public void onDestroy() {
         stopForeground(true);
@@ -128,6 +104,66 @@ public class PlaybackService extends Service implements PlayObserver {
             unregisterReceiver(lockScreenReceiver);
         }
         super.onDestroy();
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+    public boolean isPlaying() {
+        return mPlayer.isPlaying();
+    }
+
+    public SongInfo getPlayingSong() {
+        return mPlayer.getPlayingSong();
+    }
+
+    @Override
+    public void onPlayStatusChanged(boolean isPlaying) {
+        showNotification();
+    }
+
+    @Override
+    public void onSwitchPrevious(@Nullable SongInfo last) {
+        showNotification();
+    }
+
+    @Override
+    public void onSwitchFavorite(boolean isFavorite) {
+        showNotification();
+    }
+
+    @Override
+    public void onSwitchNext(@Nullable SongInfo next) {
+        showNotification();
+    }
+
+    @Override
+    public void onSwitchPlayMode(PlayedMode playedMode) {
+        showNotification();
+    }
+
+    @Override
+    public void resetAllState() {
+        showNotification();
+    }
+
+    private void registerLockScreenReceiver() {
+        lockScreenReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) {
+                    //锁屏后，显示播放工具栏
+                    showNotification();
+                }
+            }
+        };
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(lockScreenReceiver, filter);
     }
 
     private void play() {
@@ -154,14 +190,6 @@ public class PlaybackService extends Service implements PlayObserver {
         mPlayer.changePlayMode();
     }
 
-    public boolean isPlaying() {
-        return mPlayer.isPlaying();
-    }
-
-    public SongInfo getPlayingSong() {
-        return mPlayer.getPlayingSong();
-    }
-
     private void unregisterCallback(PlayObserver callback) {
         mPlayer.unregisterCallback(callback);
     }
@@ -169,36 +197,6 @@ public class PlaybackService extends Service implements PlayObserver {
     private void releasePlayer() {
         mPlayer.releasePlayer();
         super.onDestroy();
-    }
-
-    @Override
-    public void onSwitchFavorite(boolean isFavorite) {
-        showNotification();
-    }
-
-    @Override
-    public void onSwitchPrevious(@Nullable SongInfo last) {
-        showNotification();
-    }
-
-    @Override
-    public void onSwitchNext(@Nullable SongInfo next) {
-        showNotification();
-    }
-
-    @Override
-    public void onSwitchPlayMode(PlayedMode playedMode) {
-        showNotification();
-    }
-
-    @Override
-    public void resetAllState() {
-        showNotification();
-    }
-
-    @Override
-    public void onPlayStatusChanged(boolean isPlaying) {
-        showNotification();
     }
 
     /**
@@ -236,7 +234,7 @@ public class PlaybackService extends Service implements PlayObserver {
     }
 
     private void setUpRemoteView(RemoteViews remoteView) {
-        SparseArray <DrawableAndAction> idAndDrawables = new SparseArray <>();
+        SparseArray<DrawableAndAction> idAndDrawables = new SparseArray<>();
         idAndDrawables.put(R.id.iv_notify_close,
                 new DrawableAndAction(android.R.drawable.ic_menu_close_clear_cancel,
                         ACTION_STOP_SERVICE));

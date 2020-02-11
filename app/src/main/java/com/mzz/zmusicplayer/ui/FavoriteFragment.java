@@ -80,7 +80,7 @@ public class FavoriteFragment extends Fragment implements ISongChangeListener,
         if (songListAdapter == null) {
             initAdapter();
         } else {
-            List <SongInfo> favoriteSongs = favoriteSong.getFavoriteSongs();
+            List<SongInfo> favoriteSongs = favoriteSong.getFavoriteSongs();
             songListAdapter.updateData(favoriteSongs);
         }
     }
@@ -104,7 +104,7 @@ public class FavoriteFragment extends Fragment implements ISongChangeListener,
      *
      * @param keys the keys
      */
-    public void remove(List <Long> keys) {
+    public void remove(List<Long> keys) {
         songListAdapter.updateData(favoriteSong.remove(keys));
     }
 

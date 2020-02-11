@@ -30,7 +30,7 @@ public class SongEditActivity extends BaseActivity {
     RecyclerView rvEdit;
     @BindView(R.id.sv_edit)
     SearchView svEdit;
-    private EditHandler <SongInfo> editHandler;
+    private EditHandler<SongInfo> editHandler;
 
     /**
      * Start for result.
@@ -38,11 +38,11 @@ public class SongEditActivity extends BaseActivity {
      * @param activity the activity
      * @param value    the value
      */
-    public static void startForResult(FragmentActivity activity, List <SongInfo> value,
+    public static void startForResult(FragmentActivity activity, List<SongInfo> value,
                                       SongListType songListType) {
         Intent intent =
                 new Intent(activity, SongEditActivity.class).putParcelableArrayListExtra(EXTRA_EDIT_DATA,
-                        (ArrayList <SongInfo>) value);
+                        (ArrayList<SongInfo>) value);
         int code = songListType.getCode();
         intent.putExtra(EXTRA_RESULT_CODE, code);
         activity.startActivityForResult(intent, code);
@@ -78,10 +78,10 @@ public class SongEditActivity extends BaseActivity {
     }
 
     private void init() {
-        ArrayList <SongInfo> editData = getParcelableArrayListExtra(EXTRA_EDIT_DATA);
+        ArrayList<SongInfo> editData = getParcelableArrayListExtra(EXTRA_EDIT_DATA);
         SongEditAdapter adapter = new SongEditAdapter(rvEdit, editData);
         adapter.setQueryTextListener(svEdit);
-        editHandler = new EditHandler <>(this, editData, adapter).setOnItemChildDeleteListener();
+        editHandler = new EditHandler<>(this, editData, adapter).setOnItemChildDeleteListener();
     }
 
     private void save() {

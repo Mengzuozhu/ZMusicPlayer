@@ -40,7 +40,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements PlayListFragment.PlayListListener {
 
-    List <ISongChangeListener> songChangeListeners;
+    List<ISongChangeListener> songChangeListeners;
     private RecentFragment recentFragment;
     private LocalSongFragment localSongFragment;
     private PlayListFragment playListFragment;
@@ -97,7 +97,7 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
     }
 
     private void initSongChangeListeners() {
-        songChangeListeners = new ArrayList <>();
+        songChangeListeners = new ArrayList<>();
         songChangeListeners.add(recentFragment);
         songChangeListeners.add(localSongFragment);
         songChangeListeners.add(favoriteFragment);
@@ -108,7 +108,7 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
         playListFragment = PlayListFragment.newInstance();
         favoriteFragment = FavoriteFragment.newInstance();
         localSongFragment = LocalSongFragment.newInstance();
-        List <MusicPage> fragments = new ArrayList <>();
+        List<MusicPage> fragments = new ArrayList<>();
         fragments.add(new MusicPage(playListFragment, "播放"));
         fragments.add(new MusicPage(recentFragment, "最近"));
         fragments.add(new MusicPage(localSongFragment, "本地"));
@@ -177,7 +177,7 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
     }
 
     @Subscribe
-    public void updatePlayListSongs(List <SongInfo> songInfos) {
+    public void updatePlayListSongs(List<SongInfo> songInfos) {
         playListFragment.updatePlayListSongs(songInfos);
     }
 
@@ -209,29 +209,29 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
             return;
         }
         if (resultCode == SongPickerActivity.CODE_ADD_SONG) {
-            ArrayList <SongInfo> newSongInfos =
+            ArrayList<SongInfo> newSongInfos =
                     data.getParcelableArrayListExtra(SongPickerActivity.EXTRA_ADD_SONG);
             localSongFragment.addToLocalSongs(newSongInfos);
         } else if (resultCode == SongListType.PLAYLIST.getCode()) {
-            List <Long> deleteIds = getDeleteIds(data);
+            List<Long> deleteIds = getDeleteIds(data);
             playListFragment.remove(deleteIds);
         } else if (resultCode == SongListType.RECENT.getCode()) {
-            List <Long> deleteIds = getDeleteIds(data);
+            List<Long> deleteIds = getDeleteIds(data);
             recentFragment.remove(deleteIds);
         } else if (resultCode == SongListType.LOCAL.getCode()) {
-            List <Long> deleteIds = getDeleteIds(data);
+            List<Long> deleteIds = getDeleteIds(data);
             localSongFragment.remove(deleteIds);
         } else if (resultCode == SongListType.FAVORITE.getCode()) {
-            List <Long> deleteIds = getDeleteIds(data);
+            List<Long> deleteIds = getDeleteIds(data);
             favoriteFragment.remove(deleteIds);
         }
     }
 
-    private List <Long> getDeleteIds(Intent data) {
-        ArrayList <Integer> deleteIds =
+    private List<Long> getDeleteIds(Intent data) {
+        ArrayList<Integer> deleteIds =
                 data.getIntegerArrayListExtra(SongEditActivity.EXTRA_DELETE_ID);
         if (deleteIds == null) {
-            return new ArrayList <>();
+            return new ArrayList<>();
         }
         return EditHandler.integerToLongList(deleteIds);
     }

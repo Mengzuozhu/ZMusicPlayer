@@ -28,7 +28,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     private boolean isPaused;
     @Getter
     private PlayList playList;
-    private List <PlayObserver> mPlayObservers = new ArrayList <>(2);
+    private List<PlayObserver> mPlayObservers = new ArrayList<>(2);
 
     private Player() {
         playList = new PlayList();
@@ -109,7 +109,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
 
     @Override
     public boolean play(SongInfo songInfo) {
-        List <SongInfo> playSongs = playList.getPlaySongs();
+        List<SongInfo> playSongs = playList.getPlaySongs();
         int songIndexById = PlayList.getSongIndexById(playSongs, songInfo.getId());
         if (songIndexById == -1) {
             songInfo.setIsChecked(true);

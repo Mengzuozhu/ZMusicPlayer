@@ -18,13 +18,13 @@ import tyrantgit.explosionfield.ExplosionField;
  */
 public class EditHandler<T extends IEditItem> {
     @Getter
-    private ArrayList <Integer> deleteIds = new ArrayList <>();
-    private List <T> editData;
-    private BaseQuickAdapter <T, BaseViewHolder> adapter;
+    private ArrayList<Integer> deleteIds = new ArrayList<>();
+    private List<T> editData;
+    private BaseQuickAdapter<T, BaseViewHolder> adapter;
     private ExplosionField explosionField;
 
-    public EditHandler(Activity activity, List <T> editData,
-                       BaseQuickAdapter <T, BaseViewHolder> adapter) {
+    public EditHandler(Activity activity, List<T> editData,
+                       BaseQuickAdapter<T, BaseViewHolder> adapter) {
         this.editData = editData;
         this.adapter = adapter;
         explosionField = ExplosionField.attach2Window(activity);
@@ -36,8 +36,8 @@ public class EditHandler<T extends IEditItem> {
      * @param integers the integers
      * @return the list
      */
-    public static List <Long> integerToLongList(List <Integer> integers) {
-        ArrayList <Long> longs = new ArrayList <>();
+    public static List<Long> integerToLongList(List<Integer> integers) {
+        ArrayList<Long> longs = new ArrayList<>();
         for (Integer i : integers) {
             longs.add(i.longValue());
         }
@@ -51,13 +51,13 @@ public class EditHandler<T extends IEditItem> {
         for (T editItem : editData) {
             deleteIds.add(editItem.getId().intValue());
         }
-        adapter.setNewData(new ArrayList <T>());
+        adapter.setNewData(new ArrayList<T>());
     }
 
     /**
      * Sets remove listener.
      */
-    public EditHandler <T> setOnItemChildDeleteListener() {
+    public EditHandler<T> setOnItemChildDeleteListener() {
         adapter.setOnItemChildClickListener((adapter1, view, position) -> {
             IEditItem item = (IEditItem) adapter1.getItem(position);
             if (item == null) {

@@ -80,7 +80,7 @@ public class PlayListFragment extends Fragment implements PlayListContract.View 
      *
      * @param checkedSongs the checked songs
      */
-    public void updatePlayListSongs(List <SongInfo> checkedSongs) {
+    public void updatePlayListSongs(List<SongInfo> checkedSongs) {
         playListPresenter.updatePlayListSongs(checkedSongs);
     }
 
@@ -89,7 +89,7 @@ public class PlayListFragment extends Fragment implements PlayListContract.View 
      *
      * @param keys the keys
      */
-    public void remove(List <Long> keys) {
+    public void remove(List<Long> keys) {
         playListPresenter.remove(keys);
     }
 

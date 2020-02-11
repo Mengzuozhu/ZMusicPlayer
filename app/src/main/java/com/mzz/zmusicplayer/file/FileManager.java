@@ -44,8 +44,8 @@ public class FileManager {
      *
      * @return song infos
      */
-    public List <SongInfo> getAllSongInfos(Set <Integer> allSongIdInFile) {
-        ArrayList <SongInfo> songs = new ArrayList <>();
+    public List<SongInfo> getAllSongInfos(Set<Integer> allSongIdInFile) {
+        ArrayList<SongInfo> songs = new ArrayList<>();
         try (Cursor c = mContentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 projection, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER)) {
             if (c == null) {
