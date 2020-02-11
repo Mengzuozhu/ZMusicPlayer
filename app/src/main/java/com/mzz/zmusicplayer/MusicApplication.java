@@ -4,6 +4,8 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 
+import com.tencent.bugly.crashreport.CrashReport;
+
 import java.util.List;
 
 /**
@@ -35,6 +37,7 @@ public class MusicApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
+        CrashReport.initCrashReport(getApplicationContext(), "8e001177e2", false);
     }
 
     @Override

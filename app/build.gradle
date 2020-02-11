@@ -80,4 +80,5 @@ dependencies {
     implementation 'com.iqiyi.xcrash:xcrash-android-lib:2.4.9'
     implementation("com.google.guava:guava:28.2-android")
     implementation 'org.apache.commons:commons-lang3:3.9'
+    implementation 'com.tencent.bugly:crashreport:3.1.0'
 }
