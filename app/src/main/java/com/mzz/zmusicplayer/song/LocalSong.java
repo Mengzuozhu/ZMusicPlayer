@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import lombok.Getter;
 
@@ -18,7 +19,7 @@ import lombok.Getter;
 public class LocalSong {
     private static LocalSong localSong = new LocalSong();
     @Getter
-    private List <SongInfo> allLocalSongs;
+    private List<SongInfo> allLocalSongs;
 
     private LocalSong() {
         this.allLocalSongs = LocalSongModel.getOrderLocalSongs();
@@ -39,7 +40,7 @@ public class LocalSong {
      * @param songInfos the song infos
      * @param isAscend  the is ascend
      */
-    public static void sortByChineseName(List <SongInfo> songInfos, boolean isAscend) {
+    public static void sortByChineseName(List<SongInfo> songInfos, boolean isAscend) {
         if (isAscend) {
             songInfos.sort((o1, o2) -> {
                 String spell = o1.getNameSpell();
@@ -64,7 +65,7 @@ public class LocalSong {
      *
      * @param songInfos the song infos
      */
-    public static void sortById(List <SongInfo> songInfos) {
+    public static void sortById(List<SongInfo> songInfos) {
         songInfos.sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
     }
 
@@ -73,7 +74,7 @@ public class LocalSong {
      *
      * @param songInfos the song infos
      */
-    public static void sortByPlayCount(List <SongInfo> songInfos) {
+    public static void sortByPlayCount(List<SongInfo> songInfos) {
         songInfos.sort((o1, o2) -> o2.getPlayCount().compareTo(o1.getPlayCount()));
     }
 
@@ -83,7 +84,7 @@ public class LocalSong {
      * @param keys the keys
      * @return the list
      */
-    public List <SongInfo> remove(Collection <Long> keys) {
+    public List<SongInfo> remove(Collection<Long> keys) {
         LocalSongModel.deleteByKeyInTx(keys);
         for (int i = allLocalSongs.size() - 1; i >= 0 && !keys.isEmpty(); i--) {
             SongInfo song = allLocalSongs.get(i);
@@ -110,7 +111,7 @@ public class LocalSong {
      *
      * @param c the c
      */
-    public List <SongInfo> addToLocalSongs(Collection <SongInfo> c) {
+    public List<SongInfo> addToLocalSongs(Collection<SongInfo> c) {
         allLocalSongs.addAll(c);
         LocalSongModel.insertOrReplaceInTx(c);
         return allLocalSongs;
@@ -122,9 +123,9 @@ public class LocalSong {
      * @param newPlaySongs the new play songs
      * @return the list
      */
-    public List <SongInfo> updatePlayListSongs(List <SongInfo> newPlaySongs) {
+    public List<SongInfo> updatePlayListSongs(List<SongInfo> newPlaySongs) {
         //新建播放列表，避免受其他列表的影响
-        List <SongInfo> playListSongs = new ArrayList <>();
+        List<SongInfo> playListSongs = new ArrayList<>();
         for (SongInfo song : this.allLocalSongs) {
             boolean isPlay = newPlaySongs.contains(song);
             //更新播放列表歌曲
@@ -143,8 +144,8 @@ public class LocalSong {
      *
      * @return the play list playSongs
      */
-    public List <SongInfo> getPlayListSongs() {
-        List <SongInfo> playListSongs = new ArrayList <>();
+    public List<SongInfo> getPlayListSongs() {
+        List<SongInfo> playListSongs = new ArrayList<>();
         for (SongInfo song : this.allLocalSongs) {
             if (song.getIsChecked()) {
                 playListSongs.add(song);
@@ -167,8 +168,8 @@ public class LocalSong {
      *
      * @return the all song id in file
      */
-    public HashSet <Integer> getAllSongIdInFile() {
-        HashSet <Integer> songIdInFile = new HashSet <>(allLocalSongs.size());
+    public Set<Integer> getAllSongIdInFile() {
+        Set<Integer> songIdInFile = new HashSet<>(allLocalSongs.size());
         for (SongInfo allLocalSong : allLocalSongs) {
             songIdInFile.add(allLocalSong.getSongIdInFile());
         }

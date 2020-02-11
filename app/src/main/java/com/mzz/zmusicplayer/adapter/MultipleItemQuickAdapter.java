@@ -27,15 +27,9 @@ public class MultipleItemQuickAdapter extends BaseMultiItemQuickAdapter <Multipl
 
     @Override
     protected void convert(BaseViewHolder helper, MultipleItem item) {
-        switch (helper.getItemViewType()) {
-            case MultipleItem.RIGHT_BUTTON:
-                helper.setText(R.id.tv_setting_name, item.getName());
-                helper.setText(R.id.tv_setting_value, item.getValue());
-                break;
-//            case MultipleItem.SWITCH:
-//                helper.setText(R.id.tv_switch_setting_name, item.getName());
-//                helper.setChecked(R.id.swh_status, item.isSwitch());
-//                break;
+        if (helper.getItemViewType() == MultipleItem.RIGHT_BUTTON) {
+            helper.setText(R.id.tv_setting_name, item.getName());
+            helper.setText(R.id.tv_setting_value, item.getValue());
         }
     }
 

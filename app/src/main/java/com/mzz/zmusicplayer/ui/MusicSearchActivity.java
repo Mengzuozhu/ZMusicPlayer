@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.widget.SearchView;
 
@@ -37,6 +36,17 @@ public class MusicSearchActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+        //通过MenuItem得到SearchView
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.onActionViewExpanded();
+        searchView.setQueryHint("搜索");
+        musicSearchAdapter.setQueryTextListener(searchView);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
@@ -50,16 +60,5 @@ public class MusicSearchActivity extends BaseActivity {
         //重置选中歌曲的颜色，避免出现多个选中歌曲
         playList.getPlayingSong().setPlayListSelected(false);
         musicSearchAdapter = new MusicSearchAdapter(playList, rvSearch);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_search, menu);
-        //通过MenuItem得到SearchView
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.onActionViewExpanded();
-        searchView.setQueryHint("搜索");
-        musicSearchAdapter.setQueryTextListener(searchView);
-        return super.onCreateOptionsMenu(menu);
     }
 }

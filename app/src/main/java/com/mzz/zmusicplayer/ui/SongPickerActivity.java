@@ -25,8 +25,8 @@ import com.mzz.zmusicplayer.song.SongInfo;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +44,18 @@ public class SongPickerActivity extends BaseActivity {
     @BindView(R.id.fab_song_file_scroll_first)
     FloatingActionButton fabSongScrollFirst;
     private SongPickerAdapter songPickerAdapter;
-    private List <SongInfo> songInfos;
+    private List<SongInfo> songInfos;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_save, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @OnClick(R.id.fab_song_file_scroll_first)
+    public void scrollToFirstSongOnClick(View view) {
+        songPickerAdapter.scrollToFirst();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,12 +74,6 @@ public class SongPickerActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_save, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.action_save) {
@@ -80,7 +85,7 @@ public class SongPickerActivity extends BaseActivity {
     }
 
     private void initAdapter() {
-        HashSet <Integer> allSongIdInFile = LocalSong.getInstance().getAllSongIdInFile();
+        Set<Integer> allSongIdInFile = LocalSong.getInstance().getAllSongIdInFile();
         songInfos = FileManager.getInstance().getAllSongInfos(allSongIdInFile);
         songPickerAdapter = new SongPickerAdapter(songInfos, rvSongFile);
         songPickerAdapter.setQueryTextListener(svSongFile);
@@ -123,23 +128,18 @@ public class SongPickerActivity extends BaseActivity {
     }
 
     private void save() {
-        ArrayList <SongInfo> newSongInfos = getCheckedSongInfos();
+        ArrayList<SongInfo> newSongInfos = getCheckedSongInfos();
         Intent intent = getIntent().putParcelableArrayListExtra(EXTRA_ADD_SONG, newSongInfos);
         setResult(CODE_ADD_SONG, intent);
     }
 
-    private ArrayList <SongInfo> getCheckedSongInfos() {
-        ArrayList <SongInfo> checkedSongs = new ArrayList <>();
+    private ArrayList<SongInfo> getCheckedSongInfos() {
+        ArrayList<SongInfo> checkedSongs = new ArrayList<>();
         for (SongInfo songInfo : songInfos) {
             if (songInfo.getIsChecked()) {
                 checkedSongs.add(songInfo);
             }
         }
         return checkedSongs;
-    }
-
-    @OnClick(R.id.fab_song_file_scroll_first)
-    public void scrollToFirstSongOnClick(View view) {
-        songPickerAdapter.scrollToFirst();
     }
 }

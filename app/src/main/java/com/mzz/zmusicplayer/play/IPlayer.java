@@ -41,9 +41,9 @@ public interface IPlayer {
 
     void releasePlayer();
 
-    void registerCallback(PlayObserver PlayObserver);
+    void registerCallback(PlayObserver playObserver);
 
-    void unregisterCallback(PlayObserver PlayObserver);
+    void unregisterCallback(PlayObserver playObserver);
 
     void clearCallbacks();
 }

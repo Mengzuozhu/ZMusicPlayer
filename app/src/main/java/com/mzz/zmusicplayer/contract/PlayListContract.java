@@ -2,7 +2,6 @@ package com.mzz.zmusicplayer.contract;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -28,13 +27,13 @@ public interface PlayListContract {
 
         void setScrollFirstShowInNeed(FloatingActionButton floatingActionButton);
 
-        void updatePlayListSongs(List <SongInfo> songInfos);
+        void updatePlayListSongs(List<SongInfo> songInfos);
 
         void scrollToFirst();
 
         void locateToSelectedSong();
 
-        void remove(List <Long> keys);
+        void remove(List<Long> keys);
 
         void remove(SongInfo song);
 

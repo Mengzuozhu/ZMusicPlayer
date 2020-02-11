@@ -25,7 +25,7 @@ import lombok.Setter;
 @Entity
 public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
 
-    public static final Creator <SongInfo> CREATOR = new Creator <SongInfo>() {
+    public static final Creator<SongInfo> CREATOR = new Creator<SongInfo>() {
         @Override
         public SongInfo createFromParcel(Parcel source) {
             return new SongInfo(source);
@@ -63,10 +63,8 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
 
     @Generated(hash = 628585481)
     public SongInfo(Long id, String name, String path, String artist, String nameSpell,
-                    String title,
-                    String fileArtist, int songIdInFile, int duration, Integer playCount,
-                    Long lastPlayTime,
-                    boolean isChecked, boolean isFavorite) {
+                    String title, String fileArtist, int songIdInFile, int duration,
+                    Integer playCount, Long lastPlayTime, boolean isChecked, boolean isFavorite) {
         this.id = id;
         this.name = name;
         this.path = path;
