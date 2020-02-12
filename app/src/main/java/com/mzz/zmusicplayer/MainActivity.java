@@ -29,6 +29,7 @@ import com.mzz.zmusicplayer.ui.PlayListFragment;
 import com.mzz.zmusicplayer.ui.RecentFragment;
 import com.mzz.zmusicplayer.ui.SongEditActivity;
 import com.mzz.zmusicplayer.ui.SongPickerActivity;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.viewpagerindicator.TabPageIndicator;
 
 import org.greenrobot.eventbus.Subscribe;

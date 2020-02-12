@@ -9,7 +9,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 import java.util.List;
 
 /**
- * author : Mzz
+ * @author : Mzz
  * date : 2019 2019/4/26 21:22
  * description :
  */
@@ -37,13 +37,7 @@ public class MusicApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
-        CrashReport.initCrashReport(getApplicationContext(), "8e001177e2", false);
+        CrashReport.initCrashReport(getApplicationContext());
     }
 
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-
-        xcrash.XCrash.init(this);
-    }
 }
