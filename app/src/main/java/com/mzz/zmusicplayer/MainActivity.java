@@ -29,7 +29,6 @@ import com.mzz.zmusicplayer.ui.PlayListFragment;
 import com.mzz.zmusicplayer.ui.RecentFragment;
 import com.mzz.zmusicplayer.ui.SongEditActivity;
 import com.mzz.zmusicplayer.ui.SongPickerActivity;
-import com.tencent.bugly.crashreport.CrashReport;
 import com.viewpagerindicator.TabPageIndicator;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -39,6 +38,9 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 
+/**
+ * @author Mengzz
+ */
 public class MainActivity extends BaseActivity implements PlayListFragment.PlayListListener {
 
     List<ISongChangeListener> songChangeListeners;
@@ -50,94 +52,9 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
     private FavoriteFragment favoriteFragment;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        ViewerHelper.displayHomeAsUpOrNot(this.getSupportActionBar(), false);
-
-        init();
-        EventBusHelper.register(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBusHelper.unregister(this);
-
-        if (headsetReceiver != null) {
-            unregisterReceiver(headsetReceiver);
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.action_song_add) {
-            startActivityForResult(new Intent(this, SongPickerActivity.class),
-                    SongPickerActivity.CODE_ADD_SONG);
-        } else if (itemId == R.id.action_app_setting) {
-            openActivity(AppSettingActivity.class);
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void init() {
-        initTabPage();
-        initSongChangeListeners();
-        headsetReceiver = new HeadsetReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Intent.ACTION_HEADSET_PLUG);
-        registerReceiver(headsetReceiver, intentFilter);
-    }
-
-    private void initSongChangeListeners() {
-        songChangeListeners = new ArrayList<>();
-        songChangeListeners.add(recentFragment);
-        songChangeListeners.add(localSongFragment);
-        songChangeListeners.add(favoriteFragment);
-    }
-
-    private void initTabPage() {
-        recentFragment = RecentFragment.newInstance();
-        playListFragment = PlayListFragment.newInstance();
-        favoriteFragment = FavoriteFragment.newInstance();
-        localSongFragment = LocalSongFragment.newInstance();
-        List<MusicPage> fragments = new ArrayList<>();
-        fragments.add(new MusicPage(playListFragment, "播放"));
-        fragments.add(new MusicPage(recentFragment, "最近"));
-        fragments.add(new MusicPage(localSongFragment, "本地"));
-        fragments.add(new MusicPage(favoriteFragment, "喜欢"));
-        FragmentPagerAdapter adapter =
-                new MusicPagerAdapter(getSupportFragmentManager(), fragments);
-
-        ViewPager pager = findViewById(R.id.pager);
-        pager.setAdapter(adapter);
-        //保证播放界面不被销毁
-        pager.setOffscreenPageLimit(4);
-        TabPageIndicator indicator = findViewById(R.id.indicator);
-        indicator.setViewPager(pager);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            moveTaskToBack(true);
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public void onBackPressed() {
-        //返回键，不退出程序
-        moveTaskToBack(true);
     }
 
     @Override
@@ -204,6 +121,48 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        ViewerHelper.displayHomeAsUpOrNot(this.getSupportActionBar(), false);
+
+        init();
+        EventBusHelper.register(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_song_add) {
+            startActivityForResult(new Intent(this, SongPickerActivity.class),
+                    SongPickerActivity.CODE_ADD_SONG);
+        } else if (itemId == R.id.action_app_setting) {
+            openActivity(AppSettingActivity.class);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBusHelper.unregister(this);
+
+        if (headsetReceiver != null) {
+            unregisterReceiver(headsetReceiver);
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            moveTaskToBack(true);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data == null) {
@@ -226,6 +185,49 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
             List<Long> deleteIds = getDeleteIds(data);
             favoriteFragment.remove(deleteIds);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        //返回键，不退出程序
+        moveTaskToBack(true);
+    }
+
+    private void init() {
+        initTabPage();
+        initSongChangeListeners();
+        headsetReceiver = new HeadsetReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_HEADSET_PLUG);
+        registerReceiver(headsetReceiver, intentFilter);
+    }
+
+    private void initSongChangeListeners() {
+        songChangeListeners = new ArrayList<>();
+        songChangeListeners.add(recentFragment);
+        songChangeListeners.add(localSongFragment);
+        songChangeListeners.add(favoriteFragment);
+    }
+
+    private void initTabPage() {
+        recentFragment = RecentFragment.newInstance();
+        playListFragment = PlayListFragment.newInstance();
+        favoriteFragment = FavoriteFragment.newInstance();
+        localSongFragment = LocalSongFragment.newInstance();
+        List<MusicPage> fragments = new ArrayList<>();
+        fragments.add(new MusicPage(playListFragment, "播放"));
+        fragments.add(new MusicPage(recentFragment, "最近"));
+        fragments.add(new MusicPage(localSongFragment, "本地"));
+        fragments.add(new MusicPage(favoriteFragment, "喜欢"));
+        FragmentPagerAdapter adapter =
+                new MusicPagerAdapter(getSupportFragmentManager(), fragments);
+
+        ViewPager pager = findViewById(R.id.pager);
+        pager.setAdapter(adapter);
+        //保证播放界面不被销毁
+        pager.setOffscreenPageLimit(4);
+        TabPageIndicator indicator = findViewById(R.id.indicator);
+        indicator.setViewPager(pager);
     }
 
     private List<Long> getDeleteIds(Intent data) {
