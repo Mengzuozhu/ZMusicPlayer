@@ -45,5 +45,4 @@ public interface IPlayer {
 
     void unregisterCallback(PlayObserver playObserver);
 
-    void clearCallbacks();
 }

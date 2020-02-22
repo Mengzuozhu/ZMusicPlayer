@@ -99,10 +99,10 @@ public class PlaybackService extends Service implements PlayObserver {
     public void onDestroy() {
         stopForeground(true);
         unregisterCallback(this);
-        releasePlayer();
         if (lockScreenReceiver != null) {
             unregisterReceiver(lockScreenReceiver);
         }
+        mPlayer.releasePlayer();
         super.onDestroy();
     }
 
@@ -192,11 +192,6 @@ public class PlaybackService extends Service implements PlayObserver {
 
     private void unregisterCallback(PlayObserver callback) {
         mPlayer.unregisterCallback(callback);
-    }
-
-    private void releasePlayer() {
-        mPlayer.releasePlayer();
-        super.onDestroy();
     }
 
     /**

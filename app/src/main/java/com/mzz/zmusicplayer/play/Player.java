@@ -214,6 +214,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         if (mPlayer == null) {
             return;
         }
+        mPlayObservers.clear();
         mPlayer.reset();
         mPlayer.release();
     }
@@ -274,11 +275,6 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     @Override
     public void unregisterCallback(PlayObserver playObserver) {
         mPlayObservers.remove(playObserver);
-    }
-
-    @Override
-    public void clearCallbacks() {
-        mPlayObservers.clear();
     }
 
 }
