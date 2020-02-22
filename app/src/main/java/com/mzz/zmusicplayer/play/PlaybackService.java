@@ -55,7 +55,7 @@ public class PlaybackService extends Service implements PlayObserver {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent == null) {
+        if (intent == null || mPlayer == null) {
             return START_STICKY;
         }
         String action = intent.getAction();

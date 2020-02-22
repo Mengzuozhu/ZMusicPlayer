@@ -216,7 +216,6 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         }
         mPlayer.reset();
         mPlayer.release();
-        mPlayer = null;
     }
 
     private void notifyPlayStatusChanged(boolean isPlaying) {

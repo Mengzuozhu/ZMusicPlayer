@@ -58,24 +58,32 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     @BindView(R.id.iv_play_mode)
     ImageView ivPlayMode;
     private int currentSongDuration;
-    //与后台服务共用同一个播放器
+    /**
+     * 与后台服务共用同一个播放器
+     */
     private IPlayer mPlayer;
     private Handler mHandler = new Handler();
     private MusicControlContract.Presenter musicPresenter;
     private TelephonyManager mTelephonyManager;
-    // 电话状态监听者
+    /**
+     * The Phone state listener.
+     */
     private MusicPhoneStateListener phoneStateListener;
     private Runnable mProgressCallback = new Runnable() {
         @Override
         public void run() {
-            if (isDetached()) return;
+            if (isDetached()) {
+                return;
+            }
 
             int currentPosition = mPlayer.getCurrentPosition();
-            updateProgress(currentPosition, true);
+            updateProgress(currentPosition);
         }
 
-        private void updateProgress(int currentPosition, boolean isPostAgain) {
-            if (currentSongDuration == 0) return;
+        private void updateProgress(int currentPosition) {
+            if (currentSongDuration == 0) {
+                return;
+            }
 
             updateProgressTextWithDuration(currentPosition);
             float percent = (float) currentPosition / currentSongDuration;
@@ -83,7 +91,7 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
             int progress = (int) (progressMax * percent);
             if (progress >= 0 && progress <= progressMax) {
                 seekBarProgress.setProgress(progress);
-                if (mPlayer.isPlaying() && isPostAgain) {
+                if (mPlayer.isPlaying()) {
                     //在播放中，则每隔1s触发一次更新事件
                     mHandler.postDelayed(mProgressCallback, UPDATE_PROGRESS_INTERVAL);
                 }
@@ -225,14 +233,16 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
 
     @OnClick(R.id.iv_play_pre)
     public void onPlayPreviousAction() {
-        if (mPlayer == null) return;
-
-        mPlayer.playPrevious();
+        if (mPlayer != null) {
+            mPlayer.playPrevious();
+        }
     }
 
     @OnClick(R.id.iv_play_pause)
     public void onPlayStateChangeAction() {
-        if (mPlayer == null) return;
+        if (mPlayer == null) {
+            return;
+        }
 
         if (mPlayer.isPlaying()) {
             mPlayer.pause();
@@ -244,14 +254,18 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
 
     @OnClick(R.id.iv_play_next)
     public void onPlayNextAction() {
-        if (mPlayer == null) return;
+        if (mPlayer == null) {
+            return;
+        }
 
         mPlayer.playNext();
     }
 
     @OnClick(R.id.iv_play_mode)
     public void onPlayModeAction() {
-        if (mPlayer == null) return;
+        if (mPlayer == null) {
+            return;
+        }
 
         mPlayer.changePlayMode();
     }
