@@ -19,7 +19,7 @@ import lombok.Setter;
 
 /**
  * 播放列表
- * author : Mzz
+ * @author : Mzz
  * date : 2019 2019/5/29 11:17
  * description :
  */

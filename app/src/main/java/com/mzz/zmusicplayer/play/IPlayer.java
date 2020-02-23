@@ -3,7 +3,7 @@ package com.mzz.zmusicplayer.play;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 /**
- * author : Mzz
+ * @author : Mzz
  * date : 2019 2019/5/29 16:08
  * description :
  */

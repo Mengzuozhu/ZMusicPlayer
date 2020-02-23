@@ -7,7 +7,7 @@ import com.mzz.zmusicplayer.song.SongInfo;
 
 /**
  * 播放器观察者
- * author : Mzz
+ * @author : Mzz
  * date : 2019 2019/5/29 16:01
  * description :
  */

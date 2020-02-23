@@ -14,7 +14,6 @@ import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.adapter.MusicPage;
 import com.mzz.zmusicplayer.adapter.MusicPagerAdapter;
-import com.mzz.zmusicplayer.edit.EditHandler;
 import com.mzz.zmusicplayer.edit.RemovedSongInfo;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.play.SongListType;
@@ -26,6 +25,7 @@ import com.mzz.zmusicplayer.ui.FavoriteFragment;
 import com.mzz.zmusicplayer.ui.LocalSongFragment;
 import com.mzz.zmusicplayer.ui.MusicControlFragment;
 import com.mzz.zmusicplayer.ui.PlayListFragment;
+import com.mzz.zmusicplayer.ui.PlayListFragment.PlayListListener;
 import com.mzz.zmusicplayer.ui.RecentFragment;
 import com.mzz.zmusicplayer.ui.SongEditActivity;
 import com.mzz.zmusicplayer.ui.SongPickerActivity;
@@ -35,21 +35,22 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import butterknife.ButterKnife;
 
 /**
  * @author Mengzz
  */
-public class MainActivity extends BaseActivity implements PlayListFragment.PlayListListener {
+public class MainActivity extends BaseActivity implements PlayListListener {
 
-    List<ISongChangeListener> songChangeListeners;
+    private List<ISongChangeListener> songChangeListeners;
     private RecentFragment recentFragment;
     private LocalSongFragment localSongFragment;
     private PlayListFragment playListFragment;
     private MusicControlFragment musicControlFragment;
-    private HeadsetReceiver headsetReceiver;
     private FavoriteFragment favoriteFragment;
+    private HeadsetReceiver headsetReceiver;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -64,8 +65,7 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
         }
         if (musicControlFragment == null) {
             musicControlFragment = MusicControlFragment.newInstance(playList);
-            getSupportFragmentManager().beginTransaction().replace(R.id.layout_control,
-                    musicControlFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.layout_control, musicControlFragment).commit();
         } else {
             musicControlFragment.updateControlPlayList(playList);
         }
@@ -215,12 +215,11 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
         favoriteFragment = FavoriteFragment.newInstance();
         localSongFragment = LocalSongFragment.newInstance();
         List<MusicPage> fragments = new ArrayList<>();
-        fragments.add(new MusicPage(playListFragment, "播放"));
-        fragments.add(new MusicPage(recentFragment, "最近"));
-        fragments.add(new MusicPage(localSongFragment, "本地"));
-        fragments.add(new MusicPage(favoriteFragment, "喜欢"));
-        FragmentPagerAdapter adapter =
-                new MusicPagerAdapter(getSupportFragmentManager(), fragments);
+        fragments.add(new MusicPage(playListFragment, SongListType.PLAYLIST.getDesc()));
+        fragments.add(new MusicPage(recentFragment, SongListType.RECENT.getDesc()));
+        fragments.add(new MusicPage(localSongFragment, SongListType.LOCAL.getDesc()));
+        fragments.add(new MusicPage(favoriteFragment, SongListType.FAVORITE.getDesc()));
+        FragmentPagerAdapter adapter = new MusicPagerAdapter(getSupportFragmentManager(), fragments);
 
         ViewPager pager = findViewById(R.id.pager);
         pager.setAdapter(adapter);
@@ -231,12 +230,11 @@ public class MainActivity extends BaseActivity implements PlayListFragment.PlayL
     }
 
     private List<Long> getDeleteIds(Intent data) {
-        ArrayList<Integer> deleteIds =
-                data.getIntegerArrayListExtra(SongEditActivity.EXTRA_DELETE_ID);
+        List<Integer> deleteIds = data.getIntegerArrayListExtra(SongEditActivity.EXTRA_DELETE_ID);
         if (deleteIds == null) {
             return new ArrayList<>();
         }
-        return EditHandler.integerToLongList(deleteIds);
+        return deleteIds.stream().map(Integer::longValue).collect(Collectors.toList());
     }
 
 }

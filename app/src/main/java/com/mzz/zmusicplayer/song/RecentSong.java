@@ -13,7 +13,7 @@ import lombok.Getter;
 
 /**
  * 最近播放的歌曲
- * author : Mzz
+ * @author : Mzz
  * date : 2019 2019/6/8 15:37
  * description :
  */

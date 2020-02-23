@@ -10,7 +10,7 @@ import com.mzz.zmusicplayer.R;
 import java.util.List;
 
 /**
- * author : Mzz
+ * @author : Mzz
  * date : 2019 2019/5/11 16:48
  * description :
  */

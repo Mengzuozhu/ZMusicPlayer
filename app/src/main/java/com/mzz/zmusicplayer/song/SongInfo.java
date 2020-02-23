@@ -18,7 +18,7 @@ import lombok.Setter;
 
 /**
  * 歌曲信息
- * author : Mzz
+ * @author : Mzz
  * date : 2019 2019/5/7 19:22
  * description :
  */

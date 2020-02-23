@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * 支持歌曲查询的适配器
- * author : Mzz
+ * @author : Mzz
  * date : 2019 2019/6/1 16:05
  * description :
  */

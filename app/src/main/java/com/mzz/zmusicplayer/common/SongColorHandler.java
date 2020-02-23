@@ -10,7 +10,7 @@ import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 /**
- * author : Mzz
+ * @author : Mzz
  * date : 2019 2019/6/12 10:27
  * description :
  */

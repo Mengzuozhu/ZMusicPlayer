@@ -1,7 +1,7 @@
 package com.mzz.zmusicplayer.song;
 
 /**
- * author : Mzz
+ * @author : Mzz
  * date : 2019 2019/6/9 21:03
  * description :
  */

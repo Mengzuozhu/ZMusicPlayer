@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * author : Mzz
+ * @author : Mzz
  * date : 2019 2019/5/11 16:47
  * description :
  */

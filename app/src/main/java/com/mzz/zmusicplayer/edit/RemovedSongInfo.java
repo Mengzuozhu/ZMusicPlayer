@@ -8,7 +8,7 @@ import lombok.Getter;
 
 /**
  * 被移除的歌曲信息
- * author : Mzz
+ * @author : Mzz
  * date : 2019 2019/6/11 18:45
  * description :
  */

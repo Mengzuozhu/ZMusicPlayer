@@ -12,7 +12,7 @@ import com.mzz.zmusicplayer.song.SongInfo;
 import java.util.List;
 
 /**
- * author : Mzz
+ * @author : Mzz
  * date : 2019 2019/6/4 18:08
  * description :
  */

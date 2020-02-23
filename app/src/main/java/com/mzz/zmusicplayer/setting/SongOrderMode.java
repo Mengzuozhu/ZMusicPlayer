@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * author : Mzz
+ * @author : Mzz
  * date : 2019 2019/5/31 19:32
  * description :
  */

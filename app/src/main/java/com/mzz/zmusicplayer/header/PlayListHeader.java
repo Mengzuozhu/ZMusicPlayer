@@ -13,7 +13,7 @@ import com.mzz.zmusicplayer.play.SongListType;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 
 /**
- * author : Mzz
+ * @author : Mzz
  * date : 2019 2019/6/7 17:49
  * description :
  */

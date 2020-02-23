@@ -14,7 +14,7 @@ import com.mzz.zmusicplayer.song.SongInfo;
 import org.greenrobot.eventbus.EventBus;
 
 /**
- * author : Mzz
+ * @author : Mzz
  * date : 2019 2019/6/3 10:52
  * description :
  */

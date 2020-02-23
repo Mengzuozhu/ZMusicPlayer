@@ -14,7 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import com.mzz.zmusicplayer.MainActivity;
 
 /**
- * author : Mzz
+ * @author : Mzz
  * date : 2019 2019/5/30 21:57
  * description :
  */
