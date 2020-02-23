@@ -13,7 +13,7 @@ import com.mzz.zandroidcommon.common.EventBusHelper;
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.play.PlayList;
-import com.mzz.zmusicplayer.play.SongListType;
+import com.mzz.zmusicplayer.enums.SongListType;
 import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
 import com.mzz.zmusicplayer.song.ISongChangeListener;
 import com.mzz.zmusicplayer.song.SongInfo;

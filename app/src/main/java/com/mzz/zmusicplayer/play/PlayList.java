@@ -4,7 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.mzz.zmusicplayer.config.AppSetting;
-import com.mzz.zmusicplayer.config.PlayedMode;
+import com.mzz.zmusicplayer.enums.PlayedMode;
+import com.mzz.zmusicplayer.enums.SongListType;
 import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.SongInfo;

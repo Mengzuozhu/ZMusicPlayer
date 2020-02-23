@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.mzz.zmusicplayer.MusicApplication;
+import com.mzz.zmusicplayer.enums.PlayedMode;
+import com.mzz.zmusicplayer.enums.SongOrderMode;
 
 /**
  * The type App setting.

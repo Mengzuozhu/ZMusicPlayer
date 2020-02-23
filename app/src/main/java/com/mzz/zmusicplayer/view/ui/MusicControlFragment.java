@@ -9,20 +9,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mzz.zandroidcommon.common.TimeHelper;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.config.AppSetting;
-import com.mzz.zmusicplayer.config.PlayedMode;
+import com.mzz.zmusicplayer.enums.PlayedMode;
 import com.mzz.zmusicplayer.manage.ListenerManager;
 import com.mzz.zmusicplayer.play.IPlayer;
 import com.mzz.zmusicplayer.play.PlayList;
@@ -224,12 +222,6 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         seekBarService.removeProgressCallback();
         seekBarService.resetProgress();
         updatePlayToggle(false);
-    }
-
-    @Override
-    public void handleError(Throwable error) {
-        Log.e("MusicControlFragment", error.getMessage(), error);
-        Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     @Override

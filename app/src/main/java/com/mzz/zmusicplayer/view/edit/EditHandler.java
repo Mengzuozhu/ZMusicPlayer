@@ -23,25 +23,10 @@ public class EditHandler<T extends IEditItem> {
     private BaseQuickAdapter<T, BaseViewHolder> adapter;
     private ExplosionField explosionField;
 
-    public EditHandler(Activity activity, List<T> editData,
-                       BaseQuickAdapter<T, BaseViewHolder> adapter) {
+    public EditHandler(Activity activity, List<T> editData, BaseQuickAdapter<T, BaseViewHolder> adapter) {
         this.editData = editData;
         this.adapter = adapter;
         explosionField = ExplosionField.attach2Window(activity);
-    }
-
-    /**
-     * Integer to long list list .
-     *
-     * @param integers the integers
-     * @return the list
-     */
-    public static List<Long> integerToLongList(List<Integer> integers) {
-        ArrayList<Long> longs = new ArrayList<>();
-        for (Integer i : integers) {
-            longs.add(i.longValue());
-        }
-        return longs;
     }
 
     /**

@@ -1,6 +1,6 @@
 package com.mzz.zmusicplayer.view.edit;
 
-import com.mzz.zmusicplayer.play.SongListType;
+import com.mzz.zmusicplayer.enums.SongListType;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import lombok.AllArgsConstructor;

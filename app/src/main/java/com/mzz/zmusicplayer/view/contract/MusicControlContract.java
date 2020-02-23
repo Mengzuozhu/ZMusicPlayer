@@ -8,8 +8,6 @@ public interface MusicControlContract {
 
     interface View {
 
-        void handleError(Throwable error);
-
         void onSongUpdated(@Nullable SongInfo song);
 
         void updatePlayToggle(boolean play);

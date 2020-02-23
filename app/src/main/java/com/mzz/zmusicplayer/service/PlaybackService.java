@@ -1,4 +1,4 @@
-package com.mzz.zmusicplayer.play;
+package com.mzz.zmusicplayer.service;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -18,7 +18,9 @@ import android.widget.RemoteViews;
 import com.mzz.zmusicplayer.MusicApplication;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.NotificationHandler;
-import com.mzz.zmusicplayer.config.PlayedMode;
+import com.mzz.zmusicplayer.enums.PlayedMode;
+import com.mzz.zmusicplayer.play.PlayObserver;
+import com.mzz.zmusicplayer.play.Player;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import lombok.AllArgsConstructor;

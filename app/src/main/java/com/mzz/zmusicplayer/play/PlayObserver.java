@@ -2,7 +2,7 @@ package com.mzz.zmusicplayer.play;
 
 import android.support.annotation.Nullable;
 
-import com.mzz.zmusicplayer.config.PlayedMode;
+import com.mzz.zmusicplayer.enums.PlayedMode;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 /**

@@ -47,7 +47,7 @@
                 android:label="编辑歌曲" />
 
         <service
-                android:name=".play.PlaybackService"
+                android:name=".service.PlaybackService"
                 android:exported="false">
             <intent-filter>
                 <action android:name="com.mzz.zmusicplayer.ACTION.PLAY_TOGGLE" />

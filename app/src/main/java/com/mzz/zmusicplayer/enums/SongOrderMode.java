@@ -1,4 +1,4 @@
-package com.mzz.zmusicplayer.config;
+package com.mzz.zmusicplayer.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

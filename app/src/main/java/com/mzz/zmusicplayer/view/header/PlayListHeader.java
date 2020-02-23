@@ -7,9 +7,9 @@ import android.widget.TextView;
 
 import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.config.PlayedMode;
+import com.mzz.zmusicplayer.enums.PlayedMode;
 import com.mzz.zmusicplayer.play.PlayList;
-import com.mzz.zmusicplayer.play.SongListType;
+import com.mzz.zmusicplayer.enums.SongListType;
 import com.mzz.zmusicplayer.view.adapter.PlayListAdapter;
 
 /**

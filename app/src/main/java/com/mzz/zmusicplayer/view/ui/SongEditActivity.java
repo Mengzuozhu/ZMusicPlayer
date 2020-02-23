@@ -10,7 +10,7 @@ import android.widget.SearchView;
 
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.play.SongListType;
+import com.mzz.zmusicplayer.enums.SongListType;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.view.adapter.SongEditAdapter;
 import com.mzz.zmusicplayer.view.edit.EditHandler;

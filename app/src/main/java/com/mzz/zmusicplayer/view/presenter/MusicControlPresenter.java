@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
-import com.mzz.zmusicplayer.play.PlaybackService;
+import com.mzz.zmusicplayer.service.PlaybackService;
 import com.mzz.zmusicplayer.view.contract.MusicControlContract;
 
+/**
+ * @author Mengzz
+ */
 public class MusicControlPresenter implements MusicControlContract.Presenter {
 
     private Context mContext;

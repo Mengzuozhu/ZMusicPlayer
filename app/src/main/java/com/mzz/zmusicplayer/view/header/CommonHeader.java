@@ -7,9 +7,9 @@ import android.widget.PopupMenu;
 
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.config.AppSetting;
-import com.mzz.zmusicplayer.config.SongOrderMode;
+import com.mzz.zmusicplayer.enums.SongOrderMode;
 import com.mzz.zmusicplayer.play.PlayList;
-import com.mzz.zmusicplayer.play.SongListType;
+import com.mzz.zmusicplayer.enums.SongListType;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.view.adapter.PlayListAdapter;
 import com.mzz.zmusicplayer.view.ui.MusicSearchActivity;
