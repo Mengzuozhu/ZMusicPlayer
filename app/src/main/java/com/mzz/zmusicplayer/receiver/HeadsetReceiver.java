@@ -13,6 +13,7 @@ import com.mzz.zmusicplayer.play.Player;
  * description :
  */
 public class HeadsetReceiver extends BroadcastReceiver {
+
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();

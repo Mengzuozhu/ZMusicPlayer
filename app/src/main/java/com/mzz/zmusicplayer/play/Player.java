@@ -28,7 +28,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     private boolean isPaused;
     @Getter
     private PlayList playList;
-    private List<PlayObserver> mPlayObservers = new ArrayList<>(2);
+    private List<PlayObserver> playObservers = new ArrayList<>(2);
 
     private Player() {
         playList = new PlayList();
@@ -214,13 +214,13 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         if (mPlayer == null) {
             return;
         }
-        mPlayObservers.clear();
+        playObservers.clear();
         mPlayer.reset();
         mPlayer.release();
     }
 
     private void notifyPlayStatusChanged(boolean isPlaying) {
-        for (PlayObserver playObserver : mPlayObservers) {
+        for (PlayObserver playObserver : playObservers) {
             if (playObserver != null) {
                 playObserver.onPlayStatusChanged(isPlaying);
             }
@@ -228,7 +228,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     private void notifyFavoriteChanged(boolean isFavorite) {
-        for (PlayObserver playObserver : mPlayObservers) {
+        for (PlayObserver playObserver : playObservers) {
             if (playObserver != null) {
                 playObserver.onSwitchFavorite(isFavorite);
             }
@@ -236,7 +236,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     private void notifyPlayPrevious(SongInfo song) {
-        for (PlayObserver playObserver : mPlayObservers) {
+        for (PlayObserver playObserver : playObservers) {
             if (playObserver != null) {
                 playObserver.onSwitchPrevious(song);
             }
@@ -244,7 +244,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     private void notifyPlayNext(SongInfo song) {
-        for (PlayObserver playObserver : mPlayObservers) {
+        for (PlayObserver playObserver : playObservers) {
             if (playObserver != null) {
                 playObserver.onSwitchNext(song);
             }
@@ -252,7 +252,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     private void notifyPlayModeChanged(PlayedMode playedMode) {
-        for (PlayObserver playObserver : mPlayObservers) {
+        for (PlayObserver playObserver : playObservers) {
             if (playObserver != null) {
                 playObserver.onSwitchPlayMode(playedMode);
             }
@@ -260,7 +260,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     private void notifyResetAllState() {
-        for (PlayObserver playObserver : mPlayObservers) {
+        for (PlayObserver playObserver : playObservers) {
             if (playObserver != null) {
                 playObserver.resetAllState();
             }
@@ -269,12 +269,12 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
 
     @Override
     public void registerCallback(PlayObserver playObserver) {
-        mPlayObservers.add(playObserver);
+        playObservers.add(playObserver);
     }
 
     @Override
     public void unregisterCallback(PlayObserver playObserver) {
-        mPlayObservers.remove(playObserver);
+        playObservers.remove(playObserver);
     }
 
 }

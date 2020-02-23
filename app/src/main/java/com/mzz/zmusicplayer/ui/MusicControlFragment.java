@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
@@ -23,12 +22,12 @@ import com.mzz.zandroidcommon.common.TimeHelper;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.contract.MusicControlContract;
+import com.mzz.zmusicplayer.manage.ListenerManager;
 import com.mzz.zmusicplayer.play.IPlayer;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.play.PlayObserver;
 import com.mzz.zmusicplayer.play.Player;
 import com.mzz.zmusicplayer.presenter.MusicControlPresenter;
-import com.mzz.zmusicplayer.receiver.AppStateListener;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -39,9 +38,9 @@ import butterknife.OnClick;
 
 /**
  * The type Control fragment.
+ * @author Mengzz
  */
-public class MusicControlFragment extends Fragment implements MusicControlContract.View,
-        PlayObserver {
+public class MusicControlFragment extends Fragment implements MusicControlContract.View, PlayObserver {
     private static final String ARGUMENT_PLAY_LIST = "ARGUMENT_PLAY_LIST";
     /**
      * 更新进度条的间隔，单位：ms
@@ -69,9 +68,6 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     private Handler mHandler = new Handler();
     private MusicControlContract.Presenter musicPresenter;
     private TelephonyManager mTelephonyManager;
-    /**
-     * The Phone state listener.
-     */
     private PhoneStateListener phoneStateListener;
     private Runnable mProgressCallback = new Runnable() {
         @Override
@@ -121,8 +117,7 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_control, container, false);
     }
 
@@ -130,7 +125,6 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-
         init();
     }
 
@@ -173,11 +167,9 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
 
     @OnClick(R.id.iv_favorite)
     public void onFavoriteChangeAction() {
-        if (mPlayer == null) {
-            return;
+        if (mPlayer != null) {
+            mPlayer.switchFavorite();
         }
-
-        mPlayer.switchFavorite();
     }
 
     @OnClick(R.id.iv_play_pre)
@@ -313,24 +305,13 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     }
 
     private void initOnAudioFocusChangeListener() {
-        FragmentActivity activity = getActivity();
-        if (activity != null) {
-            onAudioFocusChangeListener = focusChange -> {
-                if (focusChange == AudioManager.AUDIOFOCUS_LOSS && mPlayer.isPlaying()) {
-                    mPlayer.pause();
-                }
-            };
-            audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
-        }
+        audioManager = (AudioManager) ListenerManager.getSystemService(Context.AUDIO_SERVICE);
+        onAudioFocusChangeListener = ListenerManager.getOnAudioFocusChangeListener();
     }
 
     private void listenPhoneState() {
-        FragmentActivity activity = getActivity();
-        if (activity == null) {
-            return;
-        }
-        mTelephonyManager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
-        phoneStateListener = AppStateListener.getMusicPhoneStateListener();
+        mTelephonyManager = (TelephonyManager) ListenerManager.getSystemService(Context.TELEPHONY_SERVICE);
+        phoneStateListener = ListenerManager.getMusicPhoneStateListener();
         mTelephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
     }
 
