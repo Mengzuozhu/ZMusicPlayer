@@ -1,7 +1,7 @@
 package com.mzz.zmusicplayer.song;
 
+import com.mzz.zmusicplayer.config.AppSetting;
 import com.mzz.zmusicplayer.model.LocalSongModel;
-import com.mzz.zmusicplayer.setting.AppSetting;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +13,7 @@ import lombok.Getter;
 
 /**
  * 最近播放的歌曲
+ *
  * @author : Mzz
  * date : 2019 2019/6/8 15:37
  * description :

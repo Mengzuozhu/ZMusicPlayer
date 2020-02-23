@@ -18,7 +18,7 @@ import android.widget.RemoteViews;
 import com.mzz.zmusicplayer.MusicApplication;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.NotificationHandler;
-import com.mzz.zmusicplayer.setting.PlayedMode;
+import com.mzz.zmusicplayer.config.PlayedMode;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import lombok.AllArgsConstructor;

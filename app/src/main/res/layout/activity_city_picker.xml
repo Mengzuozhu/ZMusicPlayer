@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorGrey"
-    tools:context=".ui.CityPickerActivity">
+    tools:context=".view.ui.CityPickerActivity">
 
     <SearchView
         android:id="@+id/sv_city"

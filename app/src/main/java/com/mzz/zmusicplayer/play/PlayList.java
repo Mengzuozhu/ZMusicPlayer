@@ -3,9 +3,9 @@ package com.mzz.zmusicplayer.play;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mzz.zmusicplayer.config.AppSetting;
+import com.mzz.zmusicplayer.config.PlayedMode;
 import com.mzz.zmusicplayer.model.LocalSongModel;
-import com.mzz.zmusicplayer.setting.AppSetting;
-import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.SongInfo;
 
@@ -19,6 +19,7 @@ import lombok.Setter;
 
 /**
  * 播放列表
+ *
  * @author : Mzz
  * date : 2019 2019/5/29 11:17
  * description :

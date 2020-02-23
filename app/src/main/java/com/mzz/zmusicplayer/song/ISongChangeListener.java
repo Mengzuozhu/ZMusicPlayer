@@ -6,5 +6,10 @@ package com.mzz.zmusicplayer.song;
  * description :
  */
 public interface ISongChangeListener {
+    /**
+     * Update play song background color.
+     *
+     * @param song the song
+     */
     void updatePlaySongBackgroundColor(SongInfo song);
 }

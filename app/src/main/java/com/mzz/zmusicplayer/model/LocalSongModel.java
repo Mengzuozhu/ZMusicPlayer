@@ -5,10 +5,10 @@ import android.content.Context;
 import com.mzz.zmusicplayer.MusicApplication;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.UpgradeDbHelper;
+import com.mzz.zmusicplayer.config.AppSetting;
 import com.mzz.zmusicplayer.greendao.db.DaoMaster;
 import com.mzz.zmusicplayer.greendao.db.DaoSession;
 import com.mzz.zmusicplayer.greendao.db.SongInfoDao;
-import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.SongInfo;
 

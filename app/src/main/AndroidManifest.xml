@@ -22,7 +22,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".ui.AppSettingActivity"
+                android:name=".view.ui.AppSettingActivity"
                 android:label="配置" />
         <activity
                 android:name=".MainActivity"
@@ -37,13 +37,13 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".ui.MusicSearchActivity"
+                android:name=".view.ui.MusicSearchActivity"
                 android:label="搜索" />
         <activity
-                android:name=".ui.SongPickerActivity"
+                android:name=".view.ui.SongPickerActivity"
                 android:label="添加歌曲" />
         <activity
-                android:name=".ui.SongEditActivity"
+                android:name=".view.ui.SongEditActivity"
                 android:label="编辑歌曲" />
 
         <service

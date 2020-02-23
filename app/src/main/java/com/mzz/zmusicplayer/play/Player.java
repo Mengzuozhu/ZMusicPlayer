@@ -5,8 +5,8 @@ import android.util.Log;
 
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.MusicApplication;
-import com.mzz.zmusicplayer.setting.AppSetting;
-import com.mzz.zmusicplayer.setting.PlayedMode;
+import com.mzz.zmusicplayer.config.AppSetting;
+import com.mzz.zmusicplayer.config.PlayedMode;
 import com.mzz.zmusicplayer.song.FavoriteSong;
 import com.mzz.zmusicplayer.song.SongInfo;
 

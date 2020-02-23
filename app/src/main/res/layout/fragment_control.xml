@@ -6,7 +6,7 @@
     android:layout_height="@dimen/control_height"
     android:background="@color/colorDark"
     android:orientation="vertical"
-    tools:context=".ui.MusicControlFragment">
+    tools:context=".view.ui.MusicControlFragment">
 
     <include layout="@layout/layout_progress" />
 

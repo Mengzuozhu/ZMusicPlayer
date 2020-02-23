@@ -5,6 +5,7 @@ import lombok.Getter;
 
 /**
  * 歌曲列表类型
+ *
  * @author : Mzz
  * date : 2019 2019/6/9 15:30
  * description :

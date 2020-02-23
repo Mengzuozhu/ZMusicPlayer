@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.mzz.zandroidcommon.adapter.ICheckable;
 import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zandroidcommon.view.QueryInfo;
-import com.mzz.zmusicplayer.edit.IEditItem;
+import com.mzz.zmusicplayer.view.edit.IEditItem;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
@@ -18,6 +18,7 @@ import lombok.Setter;
 
 /**
  * 歌曲信息
+ *
  * @author : Mzz
  * date : 2019 2019/5/7 19:22
  * description :
