@@ -20,7 +20,7 @@ import java.util.Set;
  * description :
  */
 public class FileManager {
-    private static final String[] projection = {
+    private static final String[] PROJECTION = {
             MediaStore.Audio.Media.DATA,
             MediaStore.Audio.Media.DISPLAY_NAME,
             MediaStore.Audio.Media.ARTIST,
@@ -29,7 +29,9 @@ public class FileManager {
             MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.TITLE
     };
-    //文件名中的歌手和歌名的分隔符
+    /**
+     * 文件名中的歌手和歌名的分隔符
+     */
     private static final String MINUS = " - ";
     private static FileManager mInstance = new FileManager();
     private static ContentResolver mContentResolver;
@@ -46,29 +48,29 @@ public class FileManager {
      */
     public List<SongInfo> getAllSongInfos(Set<Integer> allSongIdInFile) {
         ArrayList<SongInfo> songs = new ArrayList<>();
-        try (Cursor c = mContentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                projection, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER)) {
-            if (c == null) {
+        try (Cursor cursor = mContentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                PROJECTION, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER)) {
+            if (cursor == null) {
                 return songs;
             }
-            while (c.moveToNext()) {
-                int isMusic = c.getInt(4);
+            while (cursor.moveToNext()) {
+                int isMusic = cursor.getInt(4);
                 if (isMusic == 0) {
                     continue;
                 }
 
-                int songIdInFile = c.getInt(5);
-                String songPath = c.getString(0);
+                int songIdInFile = cursor.getInt(5);
+                String songPath = cursor.getString(0);
                 boolean hasAddThisSong =
                         allSongIdInFile != null && allSongIdInFile.contains(songIdInFile);
                 if (hasAddThisSong || isFileNotExit(songPath)) {
                     continue;
                 }
 
-                String displayName = c.getString(1); // DISPLAY_NAME
-                String artist = c.getString(2);
+                String displayName = cursor.getString(1);
+                String artist = cursor.getString(2);
                 String fileArtist = artist;
-                int duration = c.getInt(3);
+                int duration = cursor.getInt(3);
                 //从文件名中提取歌名和歌手
                 displayName = extractName(displayName);
                 String[] strings = displayName.split(MINUS);
@@ -85,14 +87,14 @@ public class FileManager {
                 song.setArtist(artist);
                 song.setFileArtist(fileArtist);
                 song.setSongIdInFile(songIdInFile);
-                song.setTitle(c.getString(6));
+                song.setTitle(cursor.getString(6));
                 song.setDuration(duration);
                 song.setIsChecked(true);
                 songs.add(song);
             }
 
         } catch (Exception e) {
-            Log.d("FileManager", "e:" + e.getMessage());
+            Log.e("FileManager", "getAllSongInfos fail", e);
         }
         return songs;
     }
@@ -103,10 +105,7 @@ public class FileManager {
 
     private String getUpperSpell(String name) {
         String pinyin = Pinyin.toPinyin(name, "");
-        if (pinyin == null) {
-            pinyin = "";
-        }
-        return pinyin.toUpperCase();
+        return pinyin == null ? "" : pinyin.toUpperCase();
     }
 
     private String extractName(String name) {

@@ -36,7 +36,9 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
             return new SongInfo[size];
         }
     };
-    //当前歌曲是否被选中
+    /**
+     * 当前歌曲是否被选中
+     */
     @Transient
     @Setter
     @Getter
@@ -46,7 +48,9 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
     private String name;
     private String path;
     private String artist;
-    //全大写的中文歌名拼写，英文保存原样
+    /**
+     * 全大写的中文歌名拼写，英文保存原样
+     */
     private String nameSpell;
     private String title;
     private String fileArtist;
@@ -162,10 +166,12 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         return this.isChecked;
     }
 
+    @Override
     public void setIsChecked(boolean isChecked) {
         this.isChecked = isChecked;
     }
 
+    @Override
     public Long getId() {
         return this.id;
     }
