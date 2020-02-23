@@ -9,7 +9,7 @@
         android:id="@+id/tv_picker_header_count"
         style="@style/StyleTextView"
         android:text="@string/undefined"
-        android:textSize="@dimen/sp_16"
+        android:textSize="@dimen/font_16"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
