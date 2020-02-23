@@ -13,6 +13,8 @@ import com.mzz.zmusicplayer.song.SongInfo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 import lombok.Getter;
 
@@ -73,24 +75,6 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         return false;
     }
 
-    private boolean startNewSong(SongInfo playingSong) {
-        try {
-            mPlayer.reset();
-            mPlayer.setDataSource(playingSong.getPath());
-            mPlayer.prepare();
-            mPlayer.start();
-            notifyPlayStatusChanged(true);
-            recordPlayingSong(playingSong);
-        } catch (IOException e) {
-            Log.e(TAG, "play: ", e);
-            ViewerHelper.showToast(MusicApplication.getContext(), String.format("歌曲(%s)播放失败！"
-                    , playingSong.getName()));
-            playNext();
-            return false;
-        }
-        return true;
-    }
-
     @Override
     public boolean play(PlayList playList) {
         if (playList == null) return false;
@@ -117,19 +101,6 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
             songIndexById = playSongs.size() - 1;
         }
         return play(songIndexById);
-    }
-
-    @Override
-    public SongInfo getPlayingSong() {
-        return playList.getPlayingSong();
-    }
-
-    @Override
-    public void changePlayMode() {
-        PlayedMode playMode = playList.getPlayMode();
-        playMode = playMode.getNextMode();
-        playList.setPlayMode(playMode);
-        notifyPlayModeChanged(playMode);
     }
 
     @Override
@@ -168,29 +139,6 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     @Override
-    public boolean isPlaying() {
-        return mPlayer.isPlaying();
-    }
-
-    private void recordPlayingSong(SongInfo song) {
-        //记录播放歌曲信息
-        song.setLastPlayTime(System.currentTimeMillis());
-        song.addPlayCount();
-        playList.updateRecentSongs(song);
-        //记录播放歌曲ID
-        AppSetting.setLastPlaySongId(song.getId());
-    }
-
-    @Override
-    public int getCurrentPosition() {
-        int position = mPlayer.getCurrentPosition();
-        if (position == 0) {
-            position = 1;
-        }
-        return position;
-    }
-
-    @Override
     public void seekTo(int progressMilli) {
         if (playList.isEmpty()) return;
 
@@ -205,8 +153,30 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     @Override
-    public void onCompletion(MediaPlayer mp) {
-        playNext();
+    public boolean isPlaying() {
+        return mPlayer.isPlaying();
+    }
+
+    @Override
+    public int getCurrentPosition() {
+        int position = mPlayer.getCurrentPosition();
+        if (position == 0) {
+            position = 1;
+        }
+        return position;
+    }
+
+    @Override
+    public SongInfo getPlayingSong() {
+        return playList.getPlayingSong();
+    }
+
+    @Override
+    public void changePlayMode() {
+        PlayedMode playMode = playList.getPlayMode();
+        playMode = playMode.getNextMode();
+        playList.setPlayMode(playMode);
+        notifyPlayModeChanged(playMode);
     }
 
     @Override
@@ -219,54 +189,6 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         mPlayer.release();
     }
 
-    private void notifyPlayStatusChanged(boolean isPlaying) {
-        for (PlayObserver playObserver : playObservers) {
-            if (playObserver != null) {
-                playObserver.onPlayStatusChanged(isPlaying);
-            }
-        }
-    }
-
-    private void notifyFavoriteChanged(boolean isFavorite) {
-        for (PlayObserver playObserver : playObservers) {
-            if (playObserver != null) {
-                playObserver.onSwitchFavorite(isFavorite);
-            }
-        }
-    }
-
-    private void notifyPlayPrevious(SongInfo song) {
-        for (PlayObserver playObserver : playObservers) {
-            if (playObserver != null) {
-                playObserver.onSwitchPrevious(song);
-            }
-        }
-    }
-
-    private void notifyPlayNext(SongInfo song) {
-        for (PlayObserver playObserver : playObservers) {
-            if (playObserver != null) {
-                playObserver.onSwitchNext(song);
-            }
-        }
-    }
-
-    private void notifyPlayModeChanged(PlayedMode playedMode) {
-        for (PlayObserver playObserver : playObservers) {
-            if (playObserver != null) {
-                playObserver.onSwitchPlayMode(playedMode);
-            }
-        }
-    }
-
-    private void notifyResetAllState() {
-        for (PlayObserver playObserver : playObservers) {
-            if (playObserver != null) {
-                playObserver.resetAllState();
-            }
-        }
-    }
-
     @Override
     public void registerCallback(PlayObserver playObserver) {
         playObservers.add(playObserver);
@@ -275,6 +197,66 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     @Override
     public void unregisterCallback(PlayObserver playObserver) {
         playObservers.remove(playObserver);
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        playNext();
+    }
+
+    private boolean startNewSong(SongInfo playingSong) {
+        try {
+            mPlayer.reset();
+            mPlayer.setDataSource(playingSong.getPath());
+            mPlayer.prepare();
+            mPlayer.start();
+            notifyPlayStatusChanged(true);
+            recordPlayingSong(playingSong);
+        } catch (IOException e) {
+            Log.e(TAG, "play: ", e);
+            ViewerHelper.showToast(MusicApplication.getContext(), String.format("歌曲(%s)播放失败！"
+                    , playingSong.getName()));
+            playNext();
+            return false;
+        }
+        return true;
+    }
+
+    private void recordPlayingSong(SongInfo song) {
+        //记录播放歌曲信息
+        song.setLastPlayTime(System.currentTimeMillis());
+        song.addPlayCount();
+        playList.updateRecentSongs(song);
+        //记录播放歌曲ID
+        AppSetting.setLastPlaySongId(song.getId());
+    }
+
+    private void notifyPlayStatusChanged(boolean isPlaying) {
+        forEachObservers(observer -> observer.onPlayStatusChanged(isPlaying));
+    }
+
+    private void notifyFavoriteChanged(boolean isFavorite) {
+        forEachObservers(observer -> observer.onSwitchFavorite(isFavorite));
+    }
+
+    private void notifyPlayPrevious(SongInfo song) {
+        forEachObservers(observer -> observer.onSwitchPrevious(song));
+    }
+
+    private void notifyPlayNext(SongInfo song) {
+        forEachObservers(observer -> observer.onSwitchNext(song));
+    }
+
+    private void notifyPlayModeChanged(PlayedMode playedMode) {
+        forEachObservers(observer -> observer.onSwitchPlayMode(playedMode));
+    }
+
+    private void notifyResetAllState() {
+        forEachObservers(PlayObserver::resetAllState);
+    }
+
+    private void forEachObservers(Consumer<PlayObserver> consumer) {
+        playObservers.stream().filter(Objects::nonNull).forEach(consumer);
     }
 
 }

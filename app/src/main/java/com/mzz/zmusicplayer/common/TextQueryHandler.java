@@ -62,14 +62,6 @@ public class TextQueryHandler {
         setSpan(helper, artist, itemSongArtistId);
     }
 
-    private void setSpan(BaseViewHolder helper, String value, int viewId) {
-        if (nameAndQuerySpans.containsKey(value)) {
-            helper.setText(viewId, nameAndQuerySpans.get(value));
-        } else {
-            helper.setText(viewId, value);
-        }
-    }
-
     /**
      * Sets query text listener.
      */
@@ -91,6 +83,14 @@ public class TextQueryHandler {
                 return false;
             }
         });
+    }
+
+    private void setSpan(BaseViewHolder helper, String value, int viewId) {
+        if (nameAndQuerySpans.containsKey(value)) {
+            helper.setText(viewId, nameAndQuerySpans.get(value));
+        } else {
+            helper.setText(viewId, value);
+        }
     }
 
     private List<SongInfo> querySongNameAndArtist(String queryText) {
