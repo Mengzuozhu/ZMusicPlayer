@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -227,6 +228,7 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
 
     @Override
     public void handleError(Throwable error) {
+        Log.e("MusicControlFragment", error.getMessage(), error);
         Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
@@ -237,10 +239,8 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         }
         tvSongName.setText(String.format("%s-%s", song.getName(), song.getArtist()));
         int duration = song.getDuration();
-        seekBarService.setCurrentSongDuration(duration);
         tvDuration.setText(TimeHelper.formatDurationToTime(duration));
-        seekBarService.updateProgressTextWithDuration(0);
-        seekBarService.resetProgress();
+        seekBarService.onSongUpdated(duration);
         onSwitchFavorite(song.getIsFavorite());
     }
 

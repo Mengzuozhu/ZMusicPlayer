@@ -28,31 +28,37 @@ public class SeekBarService {
     @Setter
     private int currentSongDuration;
     private Fragment musicControlFragment;
-    private Runnable mProgressCallback;
+    private Runnable progressCallback;
 
     public SeekBarService(SeekBar seekBarProgress, TextView tvProgress, IPlayer player, Fragment musicControlFragment) {
         this.seekBarProgress = seekBarProgress;
         this.tvProgress = tvProgress;
         this.player = player;
         this.musicControlFragment = musicControlFragment;
-        mProgressCallback = updateProgressInTime();
+        progressCallback = updateProgressInTime();
         setSeekBarListener();
     }
 
     public void removeProgressCallback() {
-        mHandler.removeCallbacks(mProgressCallback);
+        mHandler.removeCallbacks(progressCallback);
+    }
+
+    public void onSongUpdated(int duration) {
+        setCurrentSongDuration(duration);
+        updateProgressTextWithDuration(0);
+        resetProgress();
     }
 
     public void updateProgressBar() {
         removeProgressCallback();
-        mHandler.post(mProgressCallback);
+        mHandler.post(progressCallback);
     }
 
     public void resetProgress() {
         seekBarProgress.setProgress(0);
     }
 
-    public void updateProgressTextWithDuration(int playDuration) {
+    private void updateProgressTextWithDuration(int playDuration) {
         tvProgress.setText(TimeHelper.formatDurationToTime(playDuration));
     }
 
@@ -81,7 +87,7 @@ public class SeekBarService {
                     seekBarProgress.setProgress(progress);
                     if (player != null && player.isPlaying()) {
                         //在播放中，则每隔1s触发一次更新事件
-                        mHandler.postDelayed(mProgressCallback, UPDATE_PROGRESS_INTERVAL);
+                        mHandler.postDelayed(progressCallback, UPDATE_PROGRESS_INTERVAL);
                     }
                 }
             }
