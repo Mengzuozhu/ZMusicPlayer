@@ -8,8 +8,6 @@ import android.widget.TextView;
 import com.mzz.zandroidcommon.common.TimeHelper;
 import com.mzz.zmusicplayer.play.IPlayer;
 
-import lombok.Setter;
-
 /**
  * 进度条服务
  *
@@ -25,7 +23,6 @@ public class SeekBarService {
     private TextView tvProgress;
     private IPlayer player;
     private Handler mHandler = new Handler();
-    @Setter
     private int currentSongDuration;
     private Fragment musicControlFragment;
     private Runnable progressCallback;
@@ -44,7 +41,7 @@ public class SeekBarService {
     }
 
     public void onSongUpdated(int duration) {
-        setCurrentSongDuration(duration);
+        currentSongDuration = duration;
         updateProgressTextWithDuration(0);
         resetProgress();
     }

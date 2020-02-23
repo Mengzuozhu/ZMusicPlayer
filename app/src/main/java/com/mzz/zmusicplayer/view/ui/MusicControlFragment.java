@@ -259,11 +259,7 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         mPlayer.registerCallback(this);
         mPlayer.setPlayList(mPlayList);
         seekBarService = new SeekBarService(seekBarProgress, tvProgress, mPlayer, this);
-        SongInfo playingSong = mPlayer.getPlayingSong();
-        if (playingSong != null) {
-            seekBarService.setCurrentSongDuration(playingSong.getDuration());
-            onSongUpdated(playingSong);
-        }
+        onSongUpdated(mPlayer.getPlayingSong());
         musicPresenter = new MusicControlPresenter(getActivity(), this);
         musicPresenter.subscribe();
         ivPlayMode.setImageResource(AppSetting.getPlayMode().getIcon());
