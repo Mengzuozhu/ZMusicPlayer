@@ -18,8 +18,11 @@ public enum PlayedMode {
 
     @Getter
     private final int id;
+    /**
+     * 中文描述
+     */
     @Getter
-    private final String desc;//中文描述
+    private final String desc;
 
     /**
      * Gets next mode.

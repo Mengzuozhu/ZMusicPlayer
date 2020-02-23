@@ -7,6 +7,8 @@ import com.mzz.zmusicplayer.MusicApplication;
 
 /**
  * The type App setting.
+ *
+ * @author Mengzz
  */
 public class AppSetting {
 
@@ -20,14 +22,6 @@ public class AppSetting {
 
     private AppSetting() {
         //no instance
-    }
-
-    private static SharedPreferences getSharedPreferences() {
-        if (sharedPreferences == null) {
-            sharedPreferences = MusicApplication.getContext().getSharedPreferences(APP_SETTING,
-                    Context.MODE_PRIVATE);
-        }
-        return sharedPreferences;
     }
 
     /**
@@ -102,6 +96,14 @@ public class AppSetting {
      */
     public static void setRecentSongMaxCount(int recentCount) {
         putInt(RECENT_SONG_COUNT, recentCount);
+    }
+
+    private static SharedPreferences getSharedPreferences() {
+        if (sharedPreferences == null) {
+            sharedPreferences = MusicApplication.getContext().getSharedPreferences(APP_SETTING,
+                    Context.MODE_PRIVATE);
+        }
+        return sharedPreferences;
     }
 
     private static void putInt(String key, int value) {

@@ -1,6 +1,8 @@
 package com.mzz.zmusicplayer.ui;
 
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -26,7 +28,7 @@ import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.play.PlayObserver;
 import com.mzz.zmusicplayer.play.Player;
 import com.mzz.zmusicplayer.presenter.MusicControlPresenter;
-import com.mzz.zmusicplayer.receiver.MusicPhoneStateListener;
+import com.mzz.zmusicplayer.receiver.AppStateListener;
 import com.mzz.zmusicplayer.setting.AppSetting;
 import com.mzz.zmusicplayer.setting.PlayedMode;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -41,7 +43,9 @@ import butterknife.OnClick;
 public class MusicControlFragment extends Fragment implements MusicControlContract.View,
         PlayObserver {
     private static final String ARGUMENT_PLAY_LIST = "ARGUMENT_PLAY_LIST";
-    //更新进度条的间隔，单位：ms
+    /**
+     * 更新进度条的间隔，单位：ms
+     */
     private static final long UPDATE_PROGRESS_INTERVAL = 1000;
     @BindView(R.id.progress_song)
     SeekBar seekBarProgress;
@@ -68,7 +72,7 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     /**
      * The Phone state listener.
      */
-    private MusicPhoneStateListener phoneStateListener;
+    private PhoneStateListener phoneStateListener;
     private Runnable mProgressCallback = new Runnable() {
         @Override
         public void run() {
@@ -99,6 +103,8 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         }
 
     };
+    private OnAudioFocusChangeListener onAudioFocusChangeListener;
+    private AudioManager audioManager;
 
     /**
      * Use this factory method to create a new instance of
@@ -128,38 +134,6 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         init();
     }
 
-    private void init() {
-        Bundle bundle = getArguments();
-        PlayList mPlayList = new PlayList();
-        if (bundle != null) {
-            mPlayList = bundle.getParcelable(ARGUMENT_PLAY_LIST);
-        }
-        mPlayer = Player.getInstance();
-        mPlayer.registerCallback(this);
-        mPlayer.setPlayList(mPlayList);
-        SongInfo playingSong = mPlayer.getPlayingSong();
-        if (playingSong != null) {
-            currentSongDuration = playingSong.getDuration();
-            onSongUpdated(playingSong);
-        }
-        musicPresenter = new MusicControlPresenter(getActivity(), this);
-        musicPresenter.subscribe();
-        ivPlayMode.setImageResource(AppSetting.getPlayMode().getIcon());
-        setSeekBarListener();
-        listenPhoneState();
-    }
-
-    private void listenPhoneState() {
-        FragmentActivity activity = getActivity();
-        if (activity == null) {
-            return;
-        }
-        mTelephonyManager =
-                (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
-        phoneStateListener = new MusicPhoneStateListener();
-        mTelephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -171,33 +145,6 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         AppSetting.setLastPlaySongId(mPlayer.getPlayingSong().getId());
         mPlayer.releasePlayer();
         musicPresenter.unsubscribe();
-    }
-
-    private void setSeekBarListener() {
-        seekBarProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    updateProgressTextWithDuration(getDuration(progress));
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                removeProgressCallback();
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                if (!mPlayer.isPlaying()) {
-                    mPlayer.play();
-                }
-                mPlayer.seekTo(getDuration(seekBar.getProgress()));
-                if (mPlayer.isPlaying()) {
-                    updateProgressBar();
-                }
-            }
-        });
     }
 
     public void updateControlPlayList(PlayList playList) {
@@ -226,7 +173,9 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
 
     @OnClick(R.id.iv_favorite)
     public void onFavoriteChangeAction() {
-        if (mPlayer == null) return;
+        if (mPlayer == null) {
+            return;
+        }
 
         mPlayer.switchFavorite();
     }
@@ -271,28 +220,16 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     }
 
     @Override
-    public void resetAllState() {
-        //重置所有状态
-        String undefined = this.getString(R.string.undefined);
-        tvSongName.setText(undefined);
-        tvDuration.setText(undefined);
-        tvProgress.setText(undefined);
-        removeProgressCallback();
-        updatePlayToggle(false);
-        seekBarProgress.setProgress(0);
-    }
-
-    @Override
-    public void onSongUpdated(@Nullable SongInfo song) {
-        if (song == null) {
-            return;
+    public void onPlayStatusChanged(boolean isPlaying) {
+        if (isPlaying) {
+            updateProgressBar();
+            audioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.STREAM_MUSIC,
+                    AudioManager.AUDIOFOCUS_GAIN);
+        } else {
+            removeProgressCallback();
+            audioManager.abandonAudioFocus(onAudioFocusChangeListener);
         }
-        tvSongName.setText(String.format("%s-%s", song.getName(), song.getArtist()));
-        currentSongDuration = song.getDuration();
-        tvDuration.setText(TimeHelper.formatDurationToTime(currentSongDuration));
-        updateProgressTextWithDuration(0);
-        onSwitchFavorite(song.getIsFavorite());
-        seekBarProgress.setProgress(0);
+        updatePlayToggle(isPlaying);
     }
 
     @Override
@@ -319,18 +256,109 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     }
 
     @Override
-    public void onPlayStatusChanged(boolean isPlaying) {
-        if (isPlaying) {
-            updateProgressBar();
-        } else {
-            removeProgressCallback();
+    public void resetAllState() {
+        //重置所有状态
+        String undefined = this.getString(R.string.undefined);
+        tvSongName.setText(undefined);
+        tvDuration.setText(undefined);
+        tvProgress.setText(undefined);
+        removeProgressCallback();
+        updatePlayToggle(false);
+        seekBarProgress.setProgress(0);
+    }
+
+    @Override
+    public void handleError(Throwable error) {
+        Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSongUpdated(@Nullable SongInfo song) {
+        if (song == null) {
+            return;
         }
-        updatePlayToggle(isPlaying);
+        tvSongName.setText(String.format("%s-%s", song.getName(), song.getArtist()));
+        currentSongDuration = song.getDuration();
+        tvDuration.setText(TimeHelper.formatDurationToTime(currentSongDuration));
+        updateProgressTextWithDuration(0);
+        onSwitchFavorite(song.getIsFavorite());
+        seekBarProgress.setProgress(0);
     }
 
     @Override
     public void updatePlayToggle(boolean isPlaying) {
         ivPlayOrPause.setImageResource(isPlaying ? R.drawable.pause : R.drawable.play);
+    }
+
+    private void init() {
+        Bundle bundle = getArguments();
+        PlayList mPlayList = new PlayList();
+        if (bundle != null) {
+            mPlayList = bundle.getParcelable(ARGUMENT_PLAY_LIST);
+        }
+        mPlayer = Player.getInstance();
+        mPlayer.registerCallback(this);
+        mPlayer.setPlayList(mPlayList);
+        SongInfo playingSong = mPlayer.getPlayingSong();
+        if (playingSong != null) {
+            currentSongDuration = playingSong.getDuration();
+            onSongUpdated(playingSong);
+        }
+        musicPresenter = new MusicControlPresenter(getActivity(), this);
+        musicPresenter.subscribe();
+        ivPlayMode.setImageResource(AppSetting.getPlayMode().getIcon());
+        setSeekBarListener();
+        listenPhoneState();
+        initOnAudioFocusChangeListener();
+    }
+
+    private void initOnAudioFocusChangeListener() {
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            onAudioFocusChangeListener = focusChange -> {
+                if (focusChange == AudioManager.AUDIOFOCUS_LOSS && mPlayer.isPlaying()) {
+                    mPlayer.pause();
+                }
+            };
+            audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
+        }
+    }
+
+    private void listenPhoneState() {
+        FragmentActivity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+        mTelephonyManager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
+        phoneStateListener = AppStateListener.getMusicPhoneStateListener();
+        mTelephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+    }
+
+    private void setSeekBarListener() {
+        seekBarProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    updateProgressTextWithDuration(getDuration(progress));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                removeProgressCallback();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (!mPlayer.isPlaying()) {
+                    mPlayer.play();
+                }
+                mPlayer.seekTo(getDuration(seekBar.getProgress()));
+                if (mPlayer.isPlaying()) {
+                    updateProgressBar();
+                }
+            }
+        });
     }
 
     private void updateProgressTextWithDuration(int playDuration) {
@@ -349,11 +377,6 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
 
     private void removeProgressCallback() {
         mHandler.removeCallbacks(mProgressCallback);
-    }
-
-    @Override
-    public void handleError(Throwable error) {
-        Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
 }
