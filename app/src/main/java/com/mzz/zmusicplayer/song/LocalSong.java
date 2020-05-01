@@ -1,5 +1,6 @@
 package com.mzz.zmusicplayer.song;
 
+import com.mzz.zmusicplayer.common.util.FileUtil;
 import com.mzz.zmusicplayer.model.LocalSongModel;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class LocalSong {
 
     private LocalSong() {
         this.allLocalSongs = LocalSongModel.getOrderLocalSongs();
+        removeInvalidSong();
     }
 
     /**
@@ -136,6 +138,7 @@ public class LocalSong {
             //更新是否播放
             song.setIsChecked(isPlay);
         }
+        removeInvalidSong();
         LocalSongModel.updateInTx(this.allLocalSongs);
         return playListSongs;
     }
@@ -175,5 +178,9 @@ public class LocalSong {
             songIdInFile.add(allLocalSong.getSongIdInFile());
         }
         return songIdInFile;
+    }
+
+    private void removeInvalidSong() {
+        allLocalSongs.removeIf(songInfo -> FileUtil.isFileNotExists(songInfo.getPath()));
     }
 }

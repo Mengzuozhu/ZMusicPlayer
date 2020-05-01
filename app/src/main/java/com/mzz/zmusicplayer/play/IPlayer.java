@@ -27,7 +27,7 @@ public interface IPlayer {
 
     void pause();
 
-    void playNext();
+    boolean playNext();
 
     void seekTo(int progress);
 

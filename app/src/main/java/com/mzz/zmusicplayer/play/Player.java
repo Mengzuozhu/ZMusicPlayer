@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.MusicApplication;
+import com.mzz.zmusicplayer.common.util.FileUtil;
 import com.mzz.zmusicplayer.config.AppSetting;
 import com.mzz.zmusicplayer.enums.PlayedMode;
 import com.mzz.zmusicplayer.song.FavoriteSong;
@@ -131,11 +132,11 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     @Override
-    public void playNext() {
+    public boolean playNext() {
         isPaused = false;
         SongInfo next = playList.next();
         notifyPlayNext(next);
-        play();
+        return play();
     }
 
     @Override
@@ -205,19 +206,24 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     private boolean startNewSong(SongInfo playingSong) {
+        String songPath = playingSong.getPath();
+        String name = playingSong.getName();
+        if (FileUtil.isFileNotExists(songPath)) {
+            ViewerHelper.showToast(MusicApplication.getContext(), String.format("歌曲(%s)文件不存在", name));
+            playList.remove(playingSong);
+            return playNext();
+        }
         try {
             mPlayer.reset();
-            mPlayer.setDataSource(playingSong.getPath());
+            mPlayer.setDataSource(songPath);
             mPlayer.prepare();
             mPlayer.start();
             notifyPlayStatusChanged(true);
             recordPlayingSong(playingSong);
         } catch (IOException e) {
-            Log.e(TAG, "play: ", e);
-            ViewerHelper.showToast(MusicApplication.getContext(), String.format("歌曲(%s)播放失败！"
-                    , playingSong.getName()));
-            playNext();
-            return false;
+            Log.e(TAG, "startNewSong fail: ", e);
+            ViewerHelper.showToast(MusicApplication.getContext(), String.format("歌曲(%s)播放失败！", name));
+            return playNext();
         }
         return true;
     }
