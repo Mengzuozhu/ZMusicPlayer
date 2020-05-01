@@ -1,6 +1,6 @@
 package com.mzz.zmusicplayer.view.adapter;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.widget.CheckBox;
 import android.widget.SearchView;
 

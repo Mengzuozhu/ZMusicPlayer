@@ -1,6 +1,6 @@
 package com.mzz.zmusicplayer.view.contract;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.mzz.zmusicplayer.song.SongInfo;
 

@@ -1,7 +1,7 @@
 package com.mzz.zmusicplayer.common;
 
 import android.content.Context;
-import android.support.annotation.IdRes;
+import androidx.annotation.IdRes;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;

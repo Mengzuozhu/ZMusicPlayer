@@ -1,6 +1,6 @@
 package com.mzz.zmusicplayer.view.header;
 
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;

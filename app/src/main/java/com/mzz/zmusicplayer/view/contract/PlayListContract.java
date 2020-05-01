@@ -1,8 +1,8 @@
 package com.mzz.zmusicplayer.view.contract;
 
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.RecyclerView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mzz.zmusicplayer.song.SongInfo;
 
