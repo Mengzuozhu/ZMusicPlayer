@@ -37,6 +37,8 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
             return new SongInfo[size];
         }
     };
+    private static final String UNKNOWN = "<unknown>";
+    private static final String UNKNOWN_ARTIST = "未知歌手";
     /**
      * 当前歌曲是否被选中
      */
@@ -123,10 +125,9 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
      * @return the song detail
      */
     public String getSongDetail() {
-        return StringHelper.getLocalFormat("歌名: %s\n", getName()) +
+        return StringHelper.getLocalFormat("歌名: %s\n", getTitle()) +
                 StringHelper.getLocalFormat("歌手: %s\n", getArtist()) +
-                StringHelper.getLocalFormat("歌手（默认）: %s\n", getFileArtist()) +
-                StringHelper.getLocalFormat("标题: %s\n", getTitle()) +
+                StringHelper.getLocalFormat("文件名: %s\n", getName()) +
                 StringHelper.getLocalFormat("播放量: %s\n", getPlayCount()) +
                 StringHelper.getLocalFormat("文件路径: %s\n", getPath());
     }
@@ -152,6 +153,7 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
     }
 
     public String getArtist() {
+        artist = artist.equals(UNKNOWN) ? UNKNOWN_ARTIST : artist;
         return this.artist;
     }
 

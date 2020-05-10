@@ -69,25 +69,25 @@ public class FileManager {
 
                 String displayName = cursor.getString(1);
                 String artist = cursor.getString(2);
-                String fileArtist = artist;
                 int duration = cursor.getInt(3);
+                String title = cursor.getString(6);
                 //从文件名中提取歌名和歌手
-                displayName = extractName(displayName);
-                String[] strings = displayName.split(MINUS);
-                if (strings.length > 1) {
-                    artist = strings[0];
-                    displayName = strings[1];
-                }
-                displayName = displayName.trim();
-                artist = artist.trim();
+                //displayName = extractName(displayName);
+                //String[] strings = displayName.split(MINUS);
+                //if (strings.length > 1) {
+                //    artist = strings[0];
+                //    displayName = strings[1];
+                //}
+                //displayName = displayName.trim();
+                //artist = artist.trim();
                 SongInfo song = new SongInfo();
                 song.setName(displayName);
-                song.setNameSpell(getUpperSpell(displayName));
+                song.setNameSpell(getUpperSpell(title));
                 song.setPath(songPath);
                 song.setArtist(artist);
-                song.setFileArtist(fileArtist);
+                song.setFileArtist(artist);
                 song.setSongIdInFile(songIdInFile);
-                song.setTitle(cursor.getString(6));
+                song.setTitle(title);
                 song.setDuration(duration);
                 song.setIsChecked(true);
                 songs.add(song);
