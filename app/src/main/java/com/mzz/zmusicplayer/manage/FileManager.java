@@ -32,7 +32,8 @@ public class FileManager {
     /**
      * 文件名中的歌手和歌名的分隔符
      */
-    private static final String MINUS = " - ";
+    private static final String MINUS = " -";
+    private static final String MP3 = ".mp3";
     private static FileManager mInstance = new FileManager();
     private static ContentResolver mContentResolver;
 
@@ -69,23 +70,24 @@ public class FileManager {
 
                 String displayName = cursor.getString(1);
                 String artist = cursor.getString(2);
+                String fileArtist = artist;
                 int duration = cursor.getInt(3);
                 String title = cursor.getString(6);
                 //从文件名中提取歌名和歌手
-                //displayName = extractName(displayName);
-                //String[] strings = displayName.split(MINUS);
-                //if (strings.length > 1) {
-                //    artist = strings[0];
-                //    displayName = strings[1];
-                //}
-                //displayName = displayName.trim();
-                //artist = artist.trim();
+                displayName = extractName(displayName, artist);
+                String[] strings = displayName.split(MINUS);
+                if (strings.length > 1) {
+                    artist = strings[0];
+                    displayName = strings[1];
+                }
+                displayName = displayName.trim();
+                artist = artist.trim();
                 SongInfo song = new SongInfo();
                 song.setName(displayName);
-                song.setNameSpell(getUpperSpell(title));
+                song.setNameSpell(getUpperSpell(displayName));
                 song.setPath(songPath);
                 song.setArtist(artist);
-                song.setFileArtist(artist);
+                song.setFileArtist(fileArtist);
                 song.setSongIdInFile(songIdInFile);
                 song.setTitle(title);
                 song.setDuration(duration);
@@ -108,18 +110,13 @@ public class FileManager {
         return pinyin == null ? "" : pinyin.toUpperCase();
     }
 
-    private String extractName(String name) {
+    private String extractName(String name, String artist) {
+        name = name.replace(artist + MINUS, "").replace(MP3, "");
         int bracketIndex = name.lastIndexOf('[');
         if (bracketIndex > 0) {
             name = name.substring(0, bracketIndex);
         }
-
-        int dotIndex = name.lastIndexOf('.');
-        //去除后缀
-        if (dotIndex > 0) {
-            name = name.substring(0, dotIndex);
-        }
-        return name;
+        return name.trim();
     }
 
 }
