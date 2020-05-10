@@ -229,7 +229,7 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         if (song == null) {
             return;
         }
-        tvSongName.setText(String.format("%s-%s", song.getName(), song.getArtist()));
+        tvSongName.setText(String.format("%s-%s", song.getSongName(), song.getArtist()));
         int duration = song.getDuration();
         tvDuration.setText(TimeHelper.formatDurationToTime(duration));
         seekBarService.onSongUpdated(duration);

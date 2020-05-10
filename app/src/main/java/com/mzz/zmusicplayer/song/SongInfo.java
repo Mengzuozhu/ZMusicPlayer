@@ -131,6 +131,10 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
                 StringHelper.getLocalFormat("文件路径: %s\n", getPath());
     }
 
+    public String getSongName() {
+        return this.title;
+    }
+
     public String getName() {
         return this.name;
     }
@@ -262,4 +266,5 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
         dest.writeByte(this.isChecked ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isFavorite ? (byte) 1 : (byte) 0);
     }
+
 }

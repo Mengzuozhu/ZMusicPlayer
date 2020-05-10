@@ -207,7 +207,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
 
     private boolean startNewSong(SongInfo playingSong) {
         String songPath = playingSong.getPath();
-        String name = playingSong.getName();
+        String name = playingSong.getSongName();
         if (FileUtil.isFileNotExists(songPath)) {
             ViewerHelper.showToast(MusicApplication.getContext(), String.format("歌曲(%s)文件不存在", name));
             playList.remove(playingSong);

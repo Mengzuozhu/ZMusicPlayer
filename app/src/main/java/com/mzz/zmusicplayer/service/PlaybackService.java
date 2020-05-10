@@ -258,7 +258,7 @@ public class PlaybackService extends Service implements PlayObserver {
         SongInfo currentSong = mPlayer.getPlayingSong();
         if (currentSong != null) {
             remoteView.setTextViewText(R.id.tv_song_name, String.format("%s-%s",
-                    currentSong.getName(), currentSong.getArtist()));
+                    currentSong.getSongName(), currentSong.getArtist()));
             remoteView.setImageViewResource(R.id.iv_favorite, currentSong.getIsFavorite()
                     ? R.drawable.favorite : R.drawable.favorite_white);
         } else {

@@ -52,7 +52,7 @@ public class PlayListAdapter extends SongInfoAdapter {
         super.convert(helper, songInfo);
         songColorHandler.setSongColor(helper, songInfo);
         helper.addOnClickListener(R.id.iv_song_more);
-        helper.setText(itemSongNameId, songInfo.getName());
+        helper.setText(itemSongNameId, songInfo.getSongName());
     }
 
     /**

@@ -56,7 +56,7 @@ public class TextQueryHandler {
      * @param songInfo the song info
      */
     public void setTextByQueryResult(BaseViewHolder helper, SongInfo songInfo) {
-        String name = songInfo.getName();
+        String name = songInfo.getSongName();
         setSpan(helper, name, itemSongNameId);
         String artist = songInfo.getArtist();
         setSpan(helper, artist, itemSongArtistId);
@@ -107,7 +107,7 @@ public class TextQueryHandler {
         int queryLength = queryText.length();
         String lowerText = queryText.toLowerCase();
         for (SongInfo song : songInfos) {
-            String name = song.getName();
+            String name = song.getSongName();
             String artist = song.getArtist();
             int nameIndex = name.toLowerCase().indexOf(lowerText);
             int artistIndex = artist.toLowerCase().indexOf(lowerText);
