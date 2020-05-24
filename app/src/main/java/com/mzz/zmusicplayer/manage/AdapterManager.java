@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * TODO
+ * 适配器管理
  *
  * @author zuozhu.meng
  * @date 2020/5/24
