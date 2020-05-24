@@ -1,17 +1,18 @@
 package com.mzz.zmusicplayer.view.ui;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.enums.SongListType;
+import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.FavoriteSong;
 import com.mzz.zmusicplayer.song.ISongChangeListener;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -36,7 +37,7 @@ public class FavoriteFragment extends Fragment implements ISongChangeListener,
     RecyclerView rvFavoriteSong;
     @BindView(R.id.fab_scroll_first_song)
     FloatingActionButton fabSongScrollFirst;
-    Unbinder unbinder;
+    private Unbinder unbinder;
     private FavoriteSong favoriteSong;
     private SongListAdapter songListAdapter;
     private boolean isVisibleToUser;
@@ -62,41 +63,19 @@ public class FavoriteFragment extends Fragment implements ISongChangeListener,
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
+    public void onResume() {
+        super.onResume();
+        if (!isVisibleToUser) {
+            initOrUpdate();
+            isVisibleToUser = true;
+        }
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        this.isVisibleToUser = isVisibleToUser;
-        if (isVisibleToUser) {
-            initOrUpdate();
-        }
-    }
-
-    private void initOrUpdate() {
-        if (songListAdapter == null) {
-            initAdapter();
-        } else {
-            List<SongInfo> favoriteSongs = favoriteSong.getFavoriteSongs();
-            songListAdapter.updateData(favoriteSongs);
-        }
-    }
-
-    private void initAdapter() {
-        if (rvFavoriteSong == null) {
-            return;
-        }
-        songListAdapter = new SongListAdapter(new PlayList(SongListType.FAVORITE), rvFavoriteSong
-                , getActivity()) {
-            @Override
-            public void removeSongAt(int position) {
-                favoriteSong.remove(getItem(position));
-            }
-        };
-        songListAdapter.setScrollFirstShowInNeed(fabSongScrollFirst);
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+        isVisibleToUser = false;
     }
 
     /**
@@ -143,6 +122,29 @@ public class FavoriteFragment extends Fragment implements ISongChangeListener,
     @OnClick(R.id.fab_song_locate)
     public void locateToSelectedSongOnClick() {
         songListAdapter.locateToSelectedSong();
+    }
+
+    private void initOrUpdate() {
+        if (songListAdapter == null) {
+            initAdapter();
+        } else {
+            List<SongInfo> favoriteSongs = favoriteSong.getFavoriteSongs();
+            songListAdapter.updateData(favoriteSongs);
+        }
+    }
+
+    private void initAdapter() {
+        if (rvFavoriteSong == null) {
+            return;
+        }
+        songListAdapter = new SongListAdapter(new PlayList(SongListType.FAVORITE), rvFavoriteSong
+                , getActivity()) {
+            @Override
+            public void removeSongAt(int position) {
+                favoriteSong.remove(getItem(position));
+            }
+        };
+        songListAdapter.setScrollFirstShowInNeed(fabSongScrollFirst);
     }
 
 }

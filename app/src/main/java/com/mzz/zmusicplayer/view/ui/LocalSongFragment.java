@@ -1,17 +1,18 @@
 package com.mzz.zmusicplayer.view.ui;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.enums.SongListType;
+import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.ISongChangeListener;
 import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -28,6 +29,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * A simple {@link Fragment} subclass.
+ *
  * @author Mengzz
  */
 @NoArgsConstructor
@@ -37,7 +39,7 @@ public class LocalSongFragment extends Fragment implements ISongChangeListener {
     RecyclerView rvSong;
     @BindView(R.id.fab_scroll_first_song)
     FloatingActionButton fabSongScrollFirst;
-    Unbinder unbinder;
+    private Unbinder unbinder;
     private SongListAdapter songListAdapter;
     private LocalSong localSongs;
     private boolean isVisibleToUser;
@@ -62,41 +64,19 @@ public class LocalSongFragment extends Fragment implements ISongChangeListener {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
+    public void onResume() {
+        super.onResume();
+        if (!isVisibleToUser) {
+            init();
+            isVisibleToUser = true;
+        }
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        this.isVisibleToUser = isVisibleToUser;
-        if (isVisibleToUser) {
-            init();
-        }
-    }
-
-    private void init() {
-        if (songListAdapter == null) {
-            initAdapter();
-        } else {
-            List<SongInfo> allLocalSongs = localSongs.getAllLocalSongs();
-            songListAdapter.updateData(allLocalSongs);
-        }
-    }
-
-    private void initAdapter() {
-        if (rvSong == null) {
-            return;
-        }
-        songListAdapter = new SongListAdapter(new PlayList(SongListType.LOCAL), rvSong, getActivity()) {
-            @Override
-            public void removeSongAt(int position) {
-                localSongs.remove(getItem(position));
-                super.removeSongAt(position);
-            }
-        };
-        songListAdapter.setScrollFirstShowInNeed(fabSongScrollFirst);
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+        isVisibleToUser = false;
     }
 
     /**
@@ -146,6 +126,29 @@ public class LocalSongFragment extends Fragment implements ISongChangeListener {
     @OnClick(R.id.fab_song_locate)
     public void locateToSelectedSongOnClick() {
         songListAdapter.locateToSelectedSong();
+    }
+
+    private void init() {
+        if (songListAdapter == null) {
+            initAdapter();
+        } else {
+            List<SongInfo> allLocalSongs = localSongs.getAllLocalSongs();
+            songListAdapter.updateData(allLocalSongs);
+        }
+    }
+
+    private void initAdapter() {
+        if (rvSong == null) {
+            return;
+        }
+        songListAdapter = new SongListAdapter(new PlayList(SongListType.LOCAL), rvSong, getActivity()) {
+            @Override
+            public void removeSongAt(int position) {
+                localSongs.remove(getItem(position));
+                super.removeSongAt(position);
+            }
+        };
+        songListAdapter.setScrollFirstShowInNeed(fabSongScrollFirst);
     }
 
 }

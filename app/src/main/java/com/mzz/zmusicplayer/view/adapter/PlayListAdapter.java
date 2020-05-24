@@ -96,10 +96,7 @@ public class PlayListAdapter extends SongInfoAdapter {
     }
 
     private void setPlaySongClickListener() {
-        this.setOnItemClickListener((adapter, view, position) -> {
-            SongInfo song = getItem(position);
-            EventBus.getDefault().post(song);
-        });
+        this.setOnItemClickListener((adapter, view, position) -> EventBus.getDefault().post(getItem(position)));
     }
 
     private void showSongMoreMenu(View view, int position) {

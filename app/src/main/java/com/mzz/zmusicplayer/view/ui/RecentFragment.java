@@ -1,17 +1,18 @@
 package com.mzz.zmusicplayer.view.ui;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mzz.zmusicplayer.R;
-import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.enums.SongListType;
+import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.ISongChangeListener;
 import com.mzz.zmusicplayer.song.RecentSong;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -66,42 +67,19 @@ public class RecentFragment extends Fragment implements ISongChangeListener {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
+    public void onResume() {
+        super.onResume();
+        if (!isVisibleToUser) {
+            init();
+            isVisibleToUser = true;
+        }
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        this.isVisibleToUser = isVisibleToUser;
-        if (isVisibleToUser) {
-            init();
-        }
-    }
-
-    private void init() {
-        if (songListAdapter == null) {
-            initAdapter();
-        } else {
-            List<SongInfo> recentSongs = recentSong.getRecentSongs();
-            songListAdapter.updateData(recentSongs);
-        }
-    }
-
-    private void initAdapter() {
-        if (rvRecentSong == null) {
-            return;
-        }
-        songListAdapter = new SongListAdapter(new PlayList(SongListType.RECENT), rvRecentSong,
-                getActivity()) {
-            @Override
-            public void removeSongAt(int position) {
-                recentSong.remove(this.getItem(position));
-                super.removeSongAt(position);
-            }
-        };
-        songListAdapter.setScrollFirstShowInNeed(fabSongScrollFirst);
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+        isVisibleToUser = false;
     }
 
     /**
@@ -142,6 +120,30 @@ public class RecentFragment extends Fragment implements ISongChangeListener {
     @OnClick(R.id.fab_song_locate)
     public void locateToSelectedSongOnClick() {
         songListAdapter.locateToSelectedSong();
+    }
+
+    private void init() {
+        if (songListAdapter == null) {
+            initAdapter();
+        } else {
+            List<SongInfo> recentSongs = recentSong.getRecentSongs();
+            songListAdapter.updateData(recentSongs);
+        }
+    }
+
+    private void initAdapter() {
+        if (rvRecentSong == null) {
+            return;
+        }
+        songListAdapter = new SongListAdapter(new PlayList(SongListType.RECENT), rvRecentSong,
+                getActivity()) {
+            @Override
+            public void removeSongAt(int position) {
+                recentSong.remove(this.getItem(position));
+                super.removeSongAt(position);
+            }
+        };
+        songListAdapter.setScrollFirstShowInNeed(fabSongScrollFirst);
     }
 
 }
