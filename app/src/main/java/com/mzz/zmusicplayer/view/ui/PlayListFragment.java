@@ -1,16 +1,17 @@
 package com.mzz.zmusicplayer.view.ui;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -62,19 +63,6 @@ public class PlayListFragment extends Fragment implements PlayListContract.View 
         init();
     }
 
-    private void init() {
-        getListener();
-        playListPresenter = new PlayListPresenter(this, playListListener);
-        playListPresenter.setScrollFirstShowInNeed(fabSongScrollFirst);
-    }
-
-    private void getListener() {
-        FragmentActivity activity = getActivity();
-        if (activity instanceof PlayListListener) {
-            playListListener = (PlayListListener) activity;
-        }
-    }
-
     /**
      * Update play list songs.
      *
@@ -112,10 +100,22 @@ public class PlayListFragment extends Fragment implements PlayListContract.View 
         playListPresenter.locateToSelectedSong();
     }
 
+    private void init() {
+        getListener();
+        playListPresenter = new PlayListPresenter(this, playListListener);
+        playListPresenter.setScrollFirstShowInNeed(fabSongScrollFirst);
+    }
+
+    private void getListener() {
+        FragmentActivity activity = getActivity();
+        if (activity instanceof PlayListListener) {
+            playListListener = (PlayListListener) activity;
+        }
+    }
+
     public interface PlayListListener {
 
         void setPlayList(PlayList playList);
 
-        void setPlayingIndex(int playingIndex);
     }
 }

@@ -72,15 +72,6 @@ public class MainActivity extends BaseActivity implements PlayListListener {
         }
     }
 
-    @Override
-    public void setPlayingIndex(int playingIndex) {
-        if (musicControlFragment != null) {
-            musicControlFragment.updatePlayingIndex(playingIndex);
-        } else {
-            setPlayList(new PlayList());
-        }
-    }
-
     @Subscribe
     public void updatePlayingSong(SongInfo songInfo) {
         if (musicControlFragment != null) {

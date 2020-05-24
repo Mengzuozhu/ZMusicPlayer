@@ -60,7 +60,6 @@ public class PlayListPresenter implements PlayListContract.Presenter, PlayList.P
             }
         };
         playListHeader = new PlayListHeader(activity, playListAdapter);
-        //playListAdapter.setOnItemClickListener((adapter, view, position) -> playListListener.setPlayingIndex(position));
         playListAdapter.setOnItemLongClickListener((adapter, view, position) -> {
             if (playListHeader != null) {
                 playListHeader.showSongEditActivity();
