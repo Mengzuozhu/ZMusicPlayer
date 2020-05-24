@@ -2,7 +2,6 @@ package com.mzz.zmusicplayer.view.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.PopupMenu;
@@ -128,8 +127,7 @@ public class PlayListAdapter extends SongInfoAdapter {
     private void showSongDetail(SongInfo songInfo) {
         String name = songInfo.getName();
         String artist = songInfo.getArtist();
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-        View songDetailView = inflater.inflate(R.layout.content_song_detail, null, false);
+        View songDetailView = View.inflate(mContext, R.layout.content_song_detail, null);
 
         EditText etSongName = songDetailView.findViewById(R.id.et_song_name);
         etSongName.setText(name);
@@ -143,6 +141,7 @@ public class PlayListAdapter extends SongInfoAdapter {
                 .setPositiveButton("保存", (dialog, which) -> {
                     updateSongName(songInfo, name, etSongName);
                     updateArtist(songInfo, artist, etArtistName);
+                    notifyDataSetChanged();
                     dialog.dismiss();
                 })
                 .setNegativeButton("取消", (dialog, which) -> dialog.dismiss())
