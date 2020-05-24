@@ -19,7 +19,7 @@ import java.util.List;
 import lombok.Getter;
 
 /**
- * 铃声可拖拽适配器
+ * 可拖拽适配器
  *
  * @author : Mzz
  * date : 2019 2019/5/11 16:26

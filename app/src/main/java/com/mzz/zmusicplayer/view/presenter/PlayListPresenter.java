@@ -4,6 +4,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mzz.zmusicplayer.manage.AdapterManager;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.view.adapter.PlayListAdapter;
@@ -59,6 +60,7 @@ public class PlayListPresenter implements PlayListContract.Presenter, PlayList.P
                 updatePlayList();
             }
         };
+        AdapterManager.register(playListAdapter);
         playListHeader = new PlayListHeader(activity, playListAdapter);
         playListAdapter.setOnItemLongClickListener((adapter, view, position) -> {
             if (playListHeader != null) {

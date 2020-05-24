@@ -2,14 +2,15 @@ package com.mzz.zmusicplayer.view.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.widget.SearchView;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.manage.AdapterManager;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.view.adapter.MusicSearchAdapter;
 
@@ -18,7 +19,8 @@ import butterknife.ButterKnife;
 
 public class MusicSearchActivity extends BaseActivity {
 
-    private static final String EXTRA_SEARCH_DATA = "com.mzz.zmusicplayer.EXTRA_SEARCH_DATA";
+    private static final String SEARCH = "搜索";
+    private static PlayList playList;
     @BindView(R.id.rv_search)
     RecyclerView rvSearch;
     private MusicSearchAdapter musicSearchAdapter;
@@ -29,10 +31,9 @@ public class MusicSearchActivity extends BaseActivity {
      * @param activity the activity
      * @param value    the value
      */
-    public static void startForResult(FragmentActivity activity, Parcelable value) {
-        Intent intent = new Intent(activity, MusicSearchActivity.class).putExtra(EXTRA_SEARCH_DATA,
-                value);
-        activity.startActivity(intent);
+    public static void startForResult(FragmentActivity activity, PlayList value) {
+        playList = value;
+        activity.startActivity(new Intent(activity, MusicSearchActivity.class));
     }
 
     @Override
@@ -41,9 +42,15 @@ public class MusicSearchActivity extends BaseActivity {
         //通过MenuItem得到SearchView
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.onActionViewExpanded();
-        searchView.setQueryHint("搜索");
+        searchView.setQueryHint(SEARCH);
         musicSearchAdapter.setQueryTextListener(searchView);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AdapterManager.unregister(musicSearchAdapter);
     }
 
     @Override
@@ -56,9 +63,11 @@ public class MusicSearchActivity extends BaseActivity {
     }
 
     private void init() {
-        PlayList playList = getIntent().getParcelableExtra(EXTRA_SEARCH_DATA);
-        //重置选中歌曲的颜色，避免出现多个选中歌曲
-        playList.getPlayingSong().setPlayListSelected(false);
-        musicSearchAdapter = new MusicSearchAdapter(playList, rvSearch);
+        if (playList != null) {
+            //重置选中歌曲的颜色，避免出现多个选中歌曲
+            playList.getPlayingSong().setPlayListSelected(false);
+            musicSearchAdapter = new MusicSearchAdapter(playList, rvSearch);
+            AdapterManager.register(musicSearchAdapter);
+        }
     }
 }

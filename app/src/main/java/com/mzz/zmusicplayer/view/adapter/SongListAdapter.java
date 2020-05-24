@@ -3,6 +3,7 @@ package com.mzz.zmusicplayer.view.adapter;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mzz.zmusicplayer.manage.AdapterManager;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.view.header.SongListHeader;
@@ -29,6 +30,7 @@ public class SongListAdapter extends PlayListAdapter {
         super(playList, recyclerView);
         setOnItemLongClick();
         songListHeader = new SongListHeader(activity, this, playList.getSongListType());
+        AdapterManager.register(this);
     }
 
     private void updateSongCount() {

@@ -13,6 +13,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.SongColorHandler;
 import com.mzz.zmusicplayer.common.util.SongUtil;
+import com.mzz.zmusicplayer.manage.AdapterManager;
 import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -141,7 +142,7 @@ public class PlayListAdapter extends SongInfoAdapter {
                 .setPositiveButton("保存", (dialog, which) -> {
                     updateSongName(songInfo, name, etSongName);
                     updateArtist(songInfo, artist, etArtistName);
-                    notifyDataSetChanged();
+                    AdapterManager.notifyDataSetChanged();
                     dialog.dismiss();
                 })
                 .setNegativeButton("取消", (dialog, which) -> dialog.dismiss())
