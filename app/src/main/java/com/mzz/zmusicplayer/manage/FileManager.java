@@ -5,8 +5,8 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.github.promeg.pinyinhelper.Pinyin;
 import com.mzz.zmusicplayer.MusicApplication;
+import com.mzz.zmusicplayer.common.util.SongUtil;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.io.File;
@@ -84,7 +84,7 @@ public class FileManager {
                 artist = artist.trim();
                 SongInfo song = new SongInfo();
                 song.setName(displayName);
-                song.setNameSpell(getUpperSpell(displayName));
+                song.setNameSpell(SongUtil.getUpperSpell(displayName));
                 song.setPath(songPath);
                 song.setArtist(artist);
                 song.setFileArtist(fileArtist);
@@ -103,11 +103,6 @@ public class FileManager {
 
     private boolean isFileNotExit(String path) {
         return !new File(path).exists();
-    }
-
-    private String getUpperSpell(String name) {
-        String pinyin = Pinyin.toPinyin(name, "");
-        return pinyin == null ? "" : pinyin.toUpperCase();
     }
 
     private String extractName(String name, String artist) {

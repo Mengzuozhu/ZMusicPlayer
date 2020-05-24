@@ -2,13 +2,19 @@ package com.mzz.zmusicplayer.view.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.PopupMenu;
+import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.SongColorHandler;
+import com.mzz.zmusicplayer.common.util.SongUtil;
+import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 
@@ -47,14 +53,6 @@ public class PlayListAdapter extends SongInfoAdapter {
         setPlaySongClickListener();
     }
 
-    @Override
-    protected void convert(BaseViewHolder helper, SongInfo songInfo) {
-        super.convert(helper, songInfo);
-        songColorHandler.setSongColor(helper, songInfo);
-        helper.addOnClickListener(R.id.iv_song_more);
-        helper.setText(itemSongNameId, songInfo.getSongName());
-    }
-
     /**
      * Update play song background color.
      *
@@ -90,6 +88,14 @@ public class PlayListAdapter extends SongInfoAdapter {
         scrollToPosition(adapterPosition);
     }
 
+    @Override
+    protected void convert(BaseViewHolder helper, SongInfo songInfo) {
+        super.convert(helper, songInfo);
+        songColorHandler.setSongColor(helper, songInfo);
+        helper.addOnClickListener(R.id.iv_song_more);
+        helper.setText(itemSongNameId, songInfo.getSongName());
+    }
+
     void updatePlaySongs(List<SongInfo> songs) {
         playList.setPlaySongs(songs);
         setNewData(songs);
@@ -120,11 +126,46 @@ public class PlayListAdapter extends SongInfoAdapter {
     }
 
     private void showSongDetail(SongInfo songInfo) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+        String name = songInfo.getName();
+        String artist = songInfo.getArtist();
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View songDetailView = inflater.inflate(R.layout.content_song_detail, null, false);
+
+        EditText etSongName = songDetailView.findViewById(R.id.et_song_name);
+        etSongName.setText(name);
+        EditText etArtistName = songDetailView.findViewById(R.id.et_artist_name);
+        etArtistName.setText(artist);
+        TextView tvDetailFilePath = songDetailView.findViewById(R.id.tv_detail_file_path);
+        tvDetailFilePath.setText(songInfo.getPath());
+
+        AlertDialog alertDialog = new AlertDialog.Builder(context)
                 .setTitle("歌曲信息")
-                .setMessage(songInfo.getSongDetail())
-                .setPositiveButton("确定", (dialog, which) -> dialog.dismiss());
-        builder.create().show();
+                .setPositiveButton("保存", (dialog, which) -> {
+                    updateSongName(songInfo, name, etSongName);
+                    updateArtist(songInfo, artist, etArtistName);
+                    dialog.dismiss();
+                })
+                .setNegativeButton("取消", (dialog, which) -> dialog.dismiss())
+                .setView(songDetailView)
+                .create();
+        alertDialog.show();
+    }
+
+    private void updateArtist(SongInfo songInfo, String artist, EditText etArtistName) {
+        String newArtist = etArtistName.getText().toString();
+        if (!artist.equals(newArtist)) {
+            songInfo.setArtist(newArtist);
+            LocalSongModel.update(songInfo);
+        }
+    }
+
+    private void updateSongName(SongInfo songInfo, String name, EditText etSongName) {
+        String newSongName = etSongName.getText().toString();
+        if (!name.equals(newSongName)) {
+            songInfo.setName(newSongName);
+            songInfo.setNameSpell(SongUtil.getUpperSpell(newSongName));
+            LocalSongModel.update(songInfo);
+        }
     }
 
 }

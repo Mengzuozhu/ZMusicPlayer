@@ -15,5 +15,8 @@
     <string name="menu_song_del">删除</string>
     <string name="menu_song_detail">歌曲信息</string>
     <string name="sort_by_play_count">按播放量排序</string>
+    <string name="song_name">歌名</string>
+    <string name="song_artist">歌手</string>
+    <string name="file_path">文件路径</string>
 
 </resources>

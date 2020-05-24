@@ -33,4 +33,5 @@
     <dimen name="song_name_space">24dp</dimen>
     <dimen name="notify_height">88dp</dimen>
     <dimen name="layout_song_num_width_40">40dp</dimen>
+    <dimen name="detail_margin">25dp</dimen>
 </resources>
