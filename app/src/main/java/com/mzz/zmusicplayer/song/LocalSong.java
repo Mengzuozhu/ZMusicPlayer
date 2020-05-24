@@ -5,6 +5,7 @@ import com.mzz.zmusicplayer.model.LocalSongModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,21 +46,9 @@ public class LocalSong {
      */
     public static void sortByChineseName(List<SongInfo> songInfos, boolean isAscend) {
         if (isAscend) {
-            songInfos.sort((o1, o2) -> {
-                String spell = o1.getNameSpell();
-                if (spell == null) {
-                    return -1;
-                }
-                return spell.compareTo(o2.getNameSpell());
-            });
+            songInfos.sort(Comparator.comparing(SongInfo::getNameSpell));
         } else {
-            songInfos.sort((o1, o2) -> {
-                String spell = o2.getNameSpell();
-                if (spell == null) {
-                    return -1;
-                }
-                return spell.compareTo(o1.getNameSpell());
-            });
+            songInfos.sort(Comparator.comparing(SongInfo::getNameSpell, Comparator.reverseOrder()));
         }
     }
 
@@ -69,7 +58,7 @@ public class LocalSong {
      * @param songInfos the song infos
      */
     public static void sortById(List<SongInfo> songInfos) {
-        songInfos.sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
+        songInfos.sort(Comparator.comparing(SongInfo::getId));
     }
 
     /**
@@ -78,7 +67,7 @@ public class LocalSong {
      * @param songInfos the song infos
      */
     public static void sortByPlayCount(List<SongInfo> songInfos) {
-        songInfos.sort((o1, o2) -> o2.getPlayCount().compareTo(o1.getPlayCount()));
+        songInfos.sort(Comparator.comparing(SongInfo::getPlayCount));
     }
 
     /**
