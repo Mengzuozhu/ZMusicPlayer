@@ -6,9 +6,9 @@ import com.mzz.zmusicplayer.model.LocalSongModel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import lombok.Getter;
 
@@ -101,11 +101,11 @@ public class LocalSong {
     /**
      * Add all.
      *
-     * @param c the c
+     * @param songInfos the songInfos
      */
-    public List<SongInfo> addToLocalSongs(Collection<SongInfo> c) {
-        allLocalSongs.addAll(c);
-        LocalSongModel.insertOrReplaceInTx(c);
+    public List<SongInfo> addToLocalSongs(Collection<SongInfo> songInfos) {
+        allLocalSongs.addAll(songInfos);
+        LocalSongModel.insertOrReplaceInTx(songInfos);
         return allLocalSongs;
     }
 
@@ -138,13 +138,9 @@ public class LocalSong {
      * @return the play list playSongs
      */
     public List<SongInfo> getPlayListSongs() {
-        List<SongInfo> playListSongs = new ArrayList<>();
-        for (SongInfo song : this.allLocalSongs) {
-            if (song.getIsChecked()) {
-                playListSongs.add(song);
-            }
-        }
-        return playListSongs;
+        return allLocalSongs.stream()
+                .filter(SongInfo::getIsChecked)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -162,11 +158,9 @@ public class LocalSong {
      * @return the all song id in file
      */
     public Set<Integer> getAllSongIdInFile() {
-        Set<Integer> songIdInFile = new HashSet<>(allLocalSongs.size());
-        for (SongInfo allLocalSong : allLocalSongs) {
-            songIdInFile.add(allLocalSong.getSongIdInFile());
-        }
-        return songIdInFile;
+        return allLocalSongs.stream()
+                .map(SongInfo::getSongIdInFile)
+                .collect(Collectors.toSet());
     }
 
     private void removeInvalidSong() {
