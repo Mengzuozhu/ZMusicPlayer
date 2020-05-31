@@ -40,7 +40,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     }
 
     /**
-     * Gets single instance.单例
+     * 获取单例
      *
      * @return the single instance
      */
@@ -203,6 +203,12 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     @Override
     public void onCompletion(MediaPlayer mp) {
         playNext();
+    }
+
+    public void notifySongNameChanged(SongInfo song) {
+        if (song == getPlayingSong()) {
+            forEachObservers(observer -> observer.onSongNameChanged(song));
+        }
     }
 
     private boolean startNewSong(SongInfo playingSong) {

@@ -4,9 +4,6 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
@@ -16,9 +13,14 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.mzz.zandroidcommon.common.TimeHelper;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.common.util.SongUtil;
 import com.mzz.zmusicplayer.config.AppSetting;
 import com.mzz.zmusicplayer.enums.PlayedMode;
 import com.mzz.zmusicplayer.manage.ListenerManager;
@@ -213,6 +215,11 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     }
 
     @Override
+    public void onSongNameChanged(@Nullable SongInfo songInfo) {
+        updateSongName(songInfo);
+    }
+
+    @Override
     public void resetAllState() {
         //重置所有状态
         String undefined = this.getString(R.string.undefined);
@@ -229,7 +236,7 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         if (song == null) {
             return;
         }
-        tvSongName.setText(String.format("%s-%s", song.getSongName(), song.getArtist()));
+        updateSongName(song);
         int duration = song.getDuration();
         tvDuration.setText(TimeHelper.formatDurationToTime(duration));
         seekBarService.onSongUpdated(duration);
@@ -239,6 +246,10 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     @Override
     public void updatePlayToggle(boolean isPlaying) {
         ivPlayOrPause.setImageResource(isPlaying ? R.drawable.pause : R.drawable.play);
+    }
+
+    private void updateSongName(SongInfo song) {
+        tvSongName.setText(SongUtil.joinSongShowedName(song));
     }
 
     private void init() {

@@ -24,5 +24,7 @@ public interface PlayObserver {
 
     void onSwitchPlayMode(PlayedMode playedMode);
 
+    void onSongNameChanged(@Nullable SongInfo songInfo);
+
     void resetAllState();
 }

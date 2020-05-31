@@ -11,11 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.common.MusicConstant;
 import com.mzz.zmusicplayer.common.SongColorHandler;
 import com.mzz.zmusicplayer.common.util.SongUtil;
 import com.mzz.zmusicplayer.manage.AdapterManager;
 import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.play.PlayList;
+import com.mzz.zmusicplayer.play.Player;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import org.greenrobot.eventbus.EventBus;
@@ -138,14 +140,15 @@ public class PlayListAdapter extends SongInfoAdapter {
         tvDetailFilePath.setText(songInfo.getPath());
 
         AlertDialog alertDialog = new AlertDialog.Builder(context)
-                .setTitle("歌曲信息")
-                .setPositiveButton("保存", (dialog, which) -> {
+                .setTitle(MusicConstant.SONG_DETAIL_TITLE)
+                .setPositiveButton(MusicConstant.SAVE_NAME, (dialog, which) -> {
                     updateSongName(songInfo, name, etSongName);
                     updateArtist(songInfo, artist, etArtistName);
                     AdapterManager.notifyDataSetChanged();
+                    Player.getInstance().notifySongNameChanged(songInfo);
                     dialog.dismiss();
                 })
-                .setNegativeButton("取消", (dialog, which) -> dialog.dismiss())
+                .setNegativeButton(MusicConstant.CANCEL_NAME, (dialog, which) -> dialog.dismiss())
                 .setView(songDetailView)
                 .create();
         alertDialog.show();

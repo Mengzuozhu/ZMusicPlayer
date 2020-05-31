@@ -10,14 +10,16 @@ import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 import android.util.SparseArray;
 import android.widget.RemoteViews;
+
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 import com.mzz.zmusicplayer.MusicApplication;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.NotificationHandler;
+import com.mzz.zmusicplayer.common.util.SongUtil;
 import com.mzz.zmusicplayer.enums.PlayedMode;
 import com.mzz.zmusicplayer.play.PlayObserver;
 import com.mzz.zmusicplayer.play.Player;
@@ -40,6 +42,7 @@ public class PlaybackService extends Service implements PlayObserver {
     private static final String ACTION_STOP_SERVICE = "com.mzz.zmusicplayer.ACTION.STOP_SERVICE";
     private static final String ACTION_PLAY_MODE = "com.mzz.zmusicplayer.ACTION.PLAY_MODE";
     private static final int NOTIFICATION_ID = 1;
+    private static final int SDK_26 = 26;
     private final Binder mBinder = new LocalBinder();
     private BroadcastReceiver lockScreenReceiver;
     private NotificationHandler notificationHandler;
@@ -148,6 +151,11 @@ public class PlaybackService extends Service implements PlayObserver {
     }
 
     @Override
+    public void onSongNameChanged(SongInfo songInfo) {
+        showNotification();
+    }
+
+    @Override
     public void resetAllState() {
         showNotification();
     }
@@ -204,7 +212,7 @@ public class PlaybackService extends Service implements PlayObserver {
         if (notificationHandler == null) {
             notificationHandler = new NotificationHandler(this);
         }
-        if (Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= SDK_26) {
             Notification.Builder builder = notificationHandler.getChannelNotificationBuilder();
             //不使用自定义大视图，否则会折叠通知栏
             builder.setCustomContentView(getSmallContentView())
@@ -257,16 +265,14 @@ public class PlaybackService extends Service implements PlayObserver {
     private void updateRemoteViews(RemoteViews remoteView) {
         SongInfo currentSong = mPlayer.getPlayingSong();
         if (currentSong != null) {
-            remoteView.setTextViewText(R.id.tv_song_name, String.format("%s-%s",
-                    currentSong.getSongName(), currentSong.getArtist()));
+            remoteView.setTextViewText(R.id.tv_song_name, SongUtil.joinSongShowedName(currentSong));
             remoteView.setImageViewResource(R.id.iv_favorite, currentSong.getIsFavorite()
                     ? R.drawable.favorite : R.drawable.favorite_white);
         } else {
             String undefined = this.getString(R.string.undefined);
             remoteView.setTextViewText(R.id.tv_song_name, undefined);
         }
-        remoteView.setImageViewResource(R.id.iv_play_pause, isPlaying()
-                ? R.drawable.pause : R.drawable.play);
+        remoteView.setImageViewResource(R.id.iv_play_pause, isPlaying() ? R.drawable.pause : R.drawable.play);
         PlayedMode playMode = mPlayer.getPlayList().getPlayMode();
         remoteView.setImageViewResource(R.id.iv_play_mode, playMode.getIcon());
     }
@@ -275,18 +281,18 @@ public class PlaybackService extends Service implements PlayObserver {
         return PendingIntent.getService(this, 0, new Intent(action), 0);
     }
 
-    public class LocalBinder extends Binder {
-        public PlaybackService getService() {
-            return PlaybackService.this;
-        }
-    }
-
     @AllArgsConstructor
-    class DrawableAndAction {
+    static class DrawableAndAction {
         @Getter
         Integer drawable;
         @Getter
         String action;
+    }
+
+    public class LocalBinder extends Binder {
+        public PlaybackService getService() {
+            return PlaybackService.this;
+        }
     }
 
 }
