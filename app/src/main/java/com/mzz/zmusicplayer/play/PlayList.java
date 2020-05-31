@@ -93,13 +93,6 @@ public class PlayList implements Parcelable {
         return songIndex;
     }
 
-    private void init() {
-        this.localSongs = LocalSong.getInstance();
-        this.playMode = AppSetting.getPlayMode();
-        initPlayListSongs();
-        updatePlayingIndexBySettingId();
-    }
-
     /**
      * Update play list songs.
      *
@@ -131,20 +124,6 @@ public class PlayList implements Parcelable {
      */
     public void addSongs(Collection<SongInfo> c) {
         playSongs.addAll(c);
-        notifySongCountOrModeChange();
-    }
-
-    private void initPlayListSongs() {
-        this.playSongs = localSongs.getPlayListSongs();
-    }
-
-    /**
-     * Add song.
-     *
-     * @param song the song
-     */
-    void addSong(SongInfo song) {
-        playSongs.add(song);
         notifySongCountOrModeChange();
     }
 
@@ -184,16 +163,6 @@ public class PlayList implements Parcelable {
     }
 
     /**
-     * Update recent playSongs.
-     *
-     * @param song the song
-     */
-    public void updateRecentSongs(SongInfo song) {
-        updatePlaySongBackgroundColor(song);
-        localSongs.updateRecentSong(song);
-    }
-
-    /**
      * Gets playing song.
      *
      * @return the playing song
@@ -209,6 +178,45 @@ public class PlayList implements Parcelable {
         }
 
         return playSongs.get(playingIndex);
+    }
+
+    public void notifySongCountOrModeChange() {
+        if (playListObserver != null) {
+            playListObserver.onSongCountOrModeChange();
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(this.playSongs);
+        dest.writeInt(this.playingIndex);
+        dest.writeInt(this.playMode == null ? -1 : this.playMode.ordinal());
+        dest.writeInt(this.songListType == null ? -1 : this.songListType.ordinal());
+    }
+
+    /**
+     * Update recent playSongs.
+     *
+     * @param song the song
+     */
+    void updateRecentSongs(SongInfo song) {
+        updatePlaySongBackgroundColor(song);
+        localSongs.updateRecentSong(song);
+    }
+
+    /**
+     * Add song.
+     *
+     * @param song the song
+     */
+    void addSong(SongInfo song) {
+        playSongs.add(song);
+        notifySongCountOrModeChange();
     }
 
     /**
@@ -252,14 +260,26 @@ public class PlayList implements Parcelable {
             //循环当前歌曲
             case SINGLE:
                 break;
-            case ORDER:
-                playingIndex = getNextIndex();
-                break;
             case RANDOM:
                 playingIndex = getRandomPlayIndex();
                 break;
+            case ORDER:
+            default:
+                playingIndex = getNextIndex();
+                break;
         }
         return getPlayingSong();
+    }
+
+    private void init() {
+        this.localSongs = LocalSong.getInstance();
+        this.playMode = AppSetting.getPlayMode();
+        initPlayListSongs();
+        updatePlayingIndexBySettingId();
+    }
+
+    private void initPlayListSongs() {
+        this.playSongs = localSongs.getPlayListSongs();
     }
 
     private int getPreIndex() {
@@ -291,29 +311,10 @@ public class PlayList implements Parcelable {
         return randomIndex;
     }
 
-    public void notifySongCountOrModeChange() {
-        if (playListObserver != null) {
-            playListObserver.onSongCountOrModeChange();
-        }
-    }
-
     private void updatePlaySongBackgroundColor(SongInfo song) {
         if (playListObserver != null) {
             playListObserver.updatePlaySongBackgroundColor(song);
         }
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeTypedList(this.playSongs);
-        dest.writeInt(this.playingIndex);
-        dest.writeInt(this.playMode == null ? -1 : this.playMode.ordinal());
-        dest.writeInt(this.songListType == null ? -1 : this.songListType.ordinal());
     }
 
     public interface PlayListObserver {

@@ -1,7 +1,7 @@
 package com.mzz.zmusicplayer.common;
 
 /**
- * TODO
+ * 常量
  *
  * @author zuozhu.meng
  * @date 2020/5/31

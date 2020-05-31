@@ -141,7 +141,9 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
 
     @Override
     public void seekTo(int progressMilli) {
-        if (playList.isEmpty()) return;
+        if (playList.isEmpty()) {
+            return;
+        }
 
         SongInfo currentSong = playList.getPlayingSong();
         if (currentSong != null) {
