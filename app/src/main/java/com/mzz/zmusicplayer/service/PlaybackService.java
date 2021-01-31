@@ -240,19 +240,12 @@ public class PlaybackService extends Service implements PlayObserver {
 
     private void setUpRemoteView(RemoteViews remoteView) {
         SparseArray<DrawableAndAction> idAndDrawables = new SparseArray<>();
-        idAndDrawables.put(R.id.iv_notify_close,
-                new DrawableAndAction(android.R.drawable.ic_menu_close_clear_cancel,
-                        ACTION_STOP_SERVICE));
-        idAndDrawables.put(R.id.iv_favorite, new DrawableAndAction(R.drawable.favorite_white,
-                ACTION_SWITCH_FAVORITE));
-        idAndDrawables.put(R.id.iv_play_pre, new DrawableAndAction(R.drawable.previous,
-                ACTION_PLAY_PRE));
-        idAndDrawables.put(R.id.iv_play_pause, new DrawableAndAction(R.drawable.play,
-                ACTION_PLAY_TOGGLE));
-        idAndDrawables.put(R.id.iv_play_next, new DrawableAndAction(R.drawable.next,
-                ACTION_PLAY_NEXT));
-        idAndDrawables.put(R.id.iv_play_mode, new DrawableAndAction(R.drawable.order,
-                ACTION_PLAY_MODE));
+        idAndDrawables.put(R.id.iv_notify_close, new DrawableAndAction(R.drawable.delete, ACTION_STOP_SERVICE));
+        idAndDrawables.put(R.id.iv_favorite, new DrawableAndAction(R.drawable.favorite_white, ACTION_SWITCH_FAVORITE));
+        idAndDrawables.put(R.id.iv_play_pre, new DrawableAndAction(R.drawable.previous, ACTION_PLAY_PRE));
+        idAndDrawables.put(R.id.iv_play_pause, new DrawableAndAction(R.drawable.play, ACTION_PLAY_TOGGLE));
+        idAndDrawables.put(R.id.iv_play_next, new DrawableAndAction(R.drawable.next, ACTION_PLAY_NEXT));
+        idAndDrawables.put(R.id.iv_play_mode, new DrawableAndAction(R.drawable.order, ACTION_PLAY_MODE));
 
         for (int i = 0; i < idAndDrawables.size(); i++) {
             int id = idAndDrawables.keyAt(i);
