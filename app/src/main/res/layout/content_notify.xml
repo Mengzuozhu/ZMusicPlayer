@@ -14,7 +14,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="2dp"
         android:layout_marginEnd="2dp"
-        app:srcCompat="@drawable/delete" />
+        app:srcCompat="@drawable/close" />
 
     <include layout="@layout/layout_song_control" />
 

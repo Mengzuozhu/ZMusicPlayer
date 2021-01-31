@@ -240,7 +240,7 @@ public class PlaybackService extends Service implements PlayObserver {
 
     private void setUpRemoteView(RemoteViews remoteView) {
         SparseArray<DrawableAndAction> idAndDrawables = new SparseArray<>();
-        idAndDrawables.put(R.id.iv_notify_close, new DrawableAndAction(R.drawable.delete, ACTION_STOP_SERVICE));
+        idAndDrawables.put(R.id.iv_notify_close, new DrawableAndAction(R.drawable.close, ACTION_STOP_SERVICE));
         idAndDrawables.put(R.id.iv_favorite, new DrawableAndAction(R.drawable.favorite_white, ACTION_SWITCH_FAVORITE));
         idAndDrawables.put(R.id.iv_play_pre, new DrawableAndAction(R.drawable.previous, ACTION_PLAY_PRE));
         idAndDrawables.put(R.id.iv_play_pause, new DrawableAndAction(R.drawable.play, ACTION_PLAY_TOGGLE));
