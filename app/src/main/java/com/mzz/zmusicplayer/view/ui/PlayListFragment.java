@@ -104,6 +104,7 @@ public class PlayListFragment extends Fragment implements PlayListContract.View 
         getListener();
         playListPresenter = new PlayListPresenter(this, playListListener);
         playListPresenter.setScrollFirstShowInNeed(fabSongScrollFirst);
+        locateToSelectedSongOnClick();
     }
 
     private void getListener() {

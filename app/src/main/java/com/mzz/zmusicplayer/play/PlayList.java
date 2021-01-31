@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +26,8 @@ import lombok.Setter;
  * date : 2019 2019/5/29 11:17
  * description :
  */
+@Getter
+@Setter
 public class PlayList implements Parcelable {
 
     public static final Creator<PlayList> CREATOR = new Creator<PlayList>() {
@@ -38,21 +41,12 @@ public class PlayList implements Parcelable {
             return new PlayList[size];
         }
     };
-    @Getter
+    @Setter(value = AccessLevel.PACKAGE)
     private LocalSong localSongs;
-    @Getter
-    @Setter
     private List<SongInfo> playSongs;
-    @Getter
-    @Setter
     private int playingIndex = 0;
-    @Getter
-    @Setter
     private PlayedMode playMode;
-    @Setter
     private PlayListObserver playListObserver;
-    @Getter
-    @Setter
     private SongListType songListType = SongListType.PLAYLIST;
 
     public PlayList() {
