@@ -2,4 +2,4 @@
 
 本地音乐播放器  
 
-![image](https://github.com/Mengzuozhu/ZMusicPlayer/demo/demo.jpg)
+![image](https://github.com/Mengzuozhu/ZMusicPlayer/blob/master/demo/demo.jpg)
