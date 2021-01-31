@@ -18,7 +18,7 @@
         android:id="@+id/fab_scroll_first_song"
         style="@style/StyleFab"
         android:src="@drawable/up_arrow"
-        app:backgroundTint="@color/colorWhite"
+        app:backgroundTint="@color/colorDark"
         app:fabSize="mini"
         app:layout_constraintBottom_toTopOf="@+id/fab_song_locate"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -28,7 +28,7 @@
         style="@style/StyleFab"
         android:layout_marginBottom="30dp"
         android:src="@drawable/song_location"
-        app:backgroundTint="@color/colorWhite"
+        app:backgroundTint="@color/colorDark"
         app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
