@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.common.collect.ImmutableMap;
 import com.mzz.zandroidcommon.common.EventBusHelper;
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zandroidcommon.view.ViewerHelper;
@@ -29,6 +30,7 @@ import com.mzz.zmusicplayer.view.ui.PlayListFragment;
 import com.mzz.zmusicplayer.view.ui.PlayListFragment.PlayListListener;
 import com.mzz.zmusicplayer.view.ui.RecentFragment;
 import com.mzz.zmusicplayer.view.ui.SongEditActivity;
+import com.mzz.zmusicplayer.view.ui.SongFragment;
 import com.mzz.zmusicplayer.view.ui.SongPickerActivity;
 import com.viewpagerindicator.TabPageIndicator;
 
@@ -36,6 +38,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import butterknife.ButterKnife;
@@ -52,6 +55,7 @@ public class MainActivity extends BaseActivity implements PlayListListener {
     private MusicControlFragment musicControlFragment;
     private FavoriteFragment favoriteFragment;
     private HeadsetReceiver headsetReceiver;
+    private Map<SongListType, SongFragment> fragmentMap;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -94,22 +98,16 @@ public class MainActivity extends BaseActivity implements PlayListListener {
     @Subscribe
     public void removeSong(RemovedSongInfo removedSongInfo) {
         SongInfo removedSong = removedSongInfo.getSongInfo();
-        switch (removedSongInfo.getSongListType()) {
-            case PLAYLIST:
-                playListFragment.remove(removedSong);
-                break;
-            case RECENT:
-                recentFragment.removeSong(removedSong);
-                break;
-            case LOCAL:
-                localSongFragment.removeSong(removedSong);
-                break;
-            case FAVORITE:
-                favoriteFragment.removeSong(removedSong);
-                break;
-            default:
-                break;
+        SongFragment songFragment = fragmentMap.get(removedSongInfo.getSongListType());
+        if (songFragment != null) {
+            songFragment.removeSong(removedSong);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        //返回键，不退出程序
+        moveTaskToBack(true);
     }
 
     @Override
@@ -161,28 +159,21 @@ public class MainActivity extends BaseActivity implements PlayListListener {
             return;
         }
         if (resultCode == SongPickerActivity.CODE_ADD_SONG) {
-            ArrayList<SongInfo> newSongInfos =
-                    data.getParcelableArrayListExtra(SongPickerActivity.EXTRA_ADD_SONG);
+            List<SongInfo> newSongInfos = data.getParcelableArrayListExtra(SongPickerActivity.EXTRA_ADD_SONG);
             localSongFragment.addToLocalSongs(newSongInfos);
-        } else if (resultCode == SongListType.PLAYLIST.getCode()) {
-            List<Long> deleteIds = getDeleteIds(data);
-            playListFragment.remove(deleteIds);
-        } else if (resultCode == SongListType.RECENT.getCode()) {
-            List<Long> deleteIds = getDeleteIds(data);
-            recentFragment.remove(deleteIds);
-        } else if (resultCode == SongListType.LOCAL.getCode()) {
-            List<Long> deleteIds = getDeleteIds(data);
-            localSongFragment.remove(deleteIds);
-        } else if (resultCode == SongListType.FAVORITE.getCode()) {
-            List<Long> deleteIds = getDeleteIds(data);
-            favoriteFragment.remove(deleteIds);
+        } else {
+            removeSongByIds(resultCode, data);
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        //返回键，不退出程序
-        moveTaskToBack(true);
+    private void removeSongByIds(int resultCode, Intent data) {
+        SongFragment fragment = fragmentMap.entrySet()
+                .stream()
+                .collect(Collectors.toMap(e -> e.getKey().getCode(), Map.Entry::getValue))
+                .get(resultCode);
+        if (fragment != null) {
+            fragment.remove(getDeleteIds(data));
+        }
     }
 
     private void init() {
@@ -206,11 +197,16 @@ public class MainActivity extends BaseActivity implements PlayListListener {
         playListFragment = PlayListFragment.newInstance();
         favoriteFragment = FavoriteFragment.newInstance();
         localSongFragment = LocalSongFragment.newInstance();
-        List<MusicPage> fragments = new ArrayList<>();
-        fragments.add(new MusicPage(playListFragment, SongListType.PLAYLIST.getDesc()));
-        fragments.add(new MusicPage(recentFragment, SongListType.RECENT.getDesc()));
-        fragments.add(new MusicPage(localSongFragment, SongListType.LOCAL.getDesc()));
-        fragments.add(new MusicPage(favoriteFragment, SongListType.FAVORITE.getDesc()));
+        fragmentMap = ImmutableMap.<SongListType, SongFragment>builder()
+                .put(SongListType.PLAYLIST, playListFragment)
+                .put(SongListType.RECENT, recentFragment)
+                .put(SongListType.LOCAL, localSongFragment)
+                .put(SongListType.FAVORITE, favoriteFragment)
+                .build();
+        List<MusicPage> fragments = fragmentMap.entrySet()
+                .stream()
+                .map(entry -> new MusicPage(entry.getValue(), entry.getKey().getDesc()))
+                .collect(Collectors.toList());
         FragmentPagerAdapter adapter = new MusicPagerAdapter(getSupportFragmentManager(), fragments);
 
         ViewPager pager = findViewById(R.id.pager);

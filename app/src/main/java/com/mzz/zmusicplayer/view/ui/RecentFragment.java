@@ -13,7 +13,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.enums.SongListType;
 import com.mzz.zmusicplayer.play.PlayList;
-import com.mzz.zmusicplayer.song.ISongChangeListener;
 import com.mzz.zmusicplayer.song.RecentSong;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.view.adapter.SongListAdapter;
@@ -34,7 +33,7 @@ import lombok.NoArgsConstructor;
  * create an instance of this fragment.
  */
 @NoArgsConstructor
-public class RecentFragment extends Fragment implements ISongChangeListener {
+public class RecentFragment extends SongFragment {
 
     @BindView(R.id.rv_song)
     RecyclerView rvRecentSong;
@@ -87,6 +86,7 @@ public class RecentFragment extends Fragment implements ISongChangeListener {
      *
      * @param keys the keys
      */
+    @Override
     public void remove(List<Long> keys) {
         songListAdapter.updateData(recentSong.remove(keys));
     }
@@ -96,6 +96,7 @@ public class RecentFragment extends Fragment implements ISongChangeListener {
      *
      * @param song the song
      */
+    @Override
     public void removeSong(SongInfo song) {
         if (song == null) {
             return;

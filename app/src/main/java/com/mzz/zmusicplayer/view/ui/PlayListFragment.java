@@ -31,7 +31,7 @@ import lombok.NoArgsConstructor;
  * create an instance of this fragment.
  */
 @NoArgsConstructor
-public class PlayListFragment extends Fragment implements PlayListContract.View {
+public class PlayListFragment extends SongFragment implements PlayListContract.View {
 
     @BindView(R.id.rv_song)
     RecyclerView rvSong;
@@ -77,11 +77,13 @@ public class PlayListFragment extends Fragment implements PlayListContract.View 
      *
      * @param keys the keys
      */
+    @Override
     public void remove(List<Long> keys) {
         playListPresenter.remove(keys);
     }
 
-    public void remove(SongInfo song) {
+    @Override
+    public void removeSong(SongInfo song) {
         playListPresenter.remove(song);
     }
 
@@ -98,6 +100,11 @@ public class PlayListFragment extends Fragment implements PlayListContract.View 
     @OnClick(R.id.fab_song_locate)
     public void locateToSelectedSongOnClick() {
         playListPresenter.locateToSelectedSong();
+    }
+
+    @Override
+    public void updatePlaySongBackgroundColor(SongInfo song) {
+
     }
 
     private void init() {

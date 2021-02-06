@@ -14,7 +14,6 @@ import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.enums.SongListType;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.FavoriteSong;
-import com.mzz.zmusicplayer.song.ISongChangeListener;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.view.adapter.SongListAdapter;
 
@@ -30,8 +29,7 @@ import lombok.NoArgsConstructor;
  * A simple {@link Fragment} subclass.
  */
 @NoArgsConstructor
-public class FavoriteFragment extends Fragment implements ISongChangeListener,
-        FavoriteSong.IFavoriteSongObserver {
+public class FavoriteFragment extends SongFragment implements FavoriteSong.IFavoriteSongObserver {
 
     @BindView(R.id.rv_song)
     RecyclerView rvFavoriteSong;
@@ -83,6 +81,7 @@ public class FavoriteFragment extends Fragment implements ISongChangeListener,
      *
      * @param keys the keys
      */
+    @Override
     public void remove(List<Long> keys) {
         songListAdapter.updateData(favoriteSong.remove(keys));
     }
@@ -92,6 +91,7 @@ public class FavoriteFragment extends Fragment implements ISongChangeListener,
      *
      * @param song the song
      */
+    @Override
     public void removeSong(SongInfo song) {
         if (song == null) {
             return;
