@@ -67,7 +67,7 @@ public class LocalSong {
      * @param songInfos the song infos
      */
     public static void sortByPlayCount(List<SongInfo> songInfos) {
-        songInfos.sort(Comparator.comparing(SongInfo::getPlayCount));
+        songInfos.sort(Comparator.comparing(SongInfo::getPlayCount).reversed());
     }
 
     /**
