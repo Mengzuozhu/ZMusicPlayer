@@ -230,8 +230,9 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
             recordPlayingSong(playingSong);
         } catch (IOException e) {
             Log.e(TAG, "startNewSong fail: ", e);
-            ViewerHelper.showToast(MusicApplication.getContext(), String.format("歌曲(%s)播放失败！", name));
-            return playNext();
+            ViewerHelper.showToast(MusicApplication.getContext(), String.format("歌曲(%s)播放失败", name));
+            pause();
+            return false;
         }
         return true;
     }
