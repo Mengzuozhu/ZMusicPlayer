@@ -1,14 +1,15 @@
 package com.mzz.zmusicplayer.view.adapter;
 
 import android.content.Context;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mzz.zandroidcommon.view.ViewerHelper;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.song.LocalSong;
@@ -29,8 +30,8 @@ public class SongInfoAdapter extends BaseQuickAdapter<SongInfo, BaseViewHolder> 
 
     @Getter
     protected RecyclerView recyclerView;
+    protected List<SongInfo> songInfos;
     private LinearLayoutManager layoutManager;
-    private List<SongInfo> songInfos;
 
     /**
      * Instantiates a new Song info adapter.
@@ -48,30 +49,6 @@ public class SongInfoAdapter extends BaseQuickAdapter<SongInfo, BaseViewHolder> 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(this);
         setEmptyDummyHeader(context);
-    }
-
-    @Override
-    protected void convert(BaseViewHolder helper, SongInfo songInfo) {
-        helper.setText(R.id.tv_item_song_artist, songInfo.getArtist());
-        helper.setText(R.id.tv_item_song_num, String.valueOf(helper.getAdapterPosition()));
-    }
-
-    private void setEmptyDummyHeader(Context context) {
-        //为使得头部一致，设置一个空头部
-        View header = LayoutInflater.from(context).inflate(R.layout.content_empty,
-                recyclerView, false);
-        setHeaderView(header);
-    }
-
-    /**
-     * Scroll to position.
-     *
-     * @param position the position
-     */
-    void scrollToPosition(int position) {
-        if (position < getItemCount()) {
-            recyclerView.scrollToPosition(position);
-        }
     }
 
     /**
@@ -114,6 +91,30 @@ public class SongInfoAdapter extends BaseQuickAdapter<SongInfo, BaseViewHolder> 
     public void sortByPlayCount() {
         LocalSong.sortByPlayCount(songInfos);
         setNewData(songInfos);
+    }
+
+    @Override
+    protected void convert(BaseViewHolder helper, SongInfo songInfo) {
+        helper.setText(R.id.tv_item_song_artist, songInfo.getArtist());
+        helper.setText(R.id.tv_item_song_num, String.valueOf(helper.getAdapterPosition()));
+    }
+
+    /**
+     * Scroll to position.
+     *
+     * @param position the position
+     */
+    void scrollToPosition(int position) {
+        if (position < getItemCount()) {
+            recyclerView.scrollToPosition(position);
+        }
+    }
+
+    private void setEmptyDummyHeader(Context context) {
+        //为使得头部一致，设置一个空头部
+        View header = LayoutInflater.from(context).inflate(R.layout.content_empty,
+                recyclerView, false);
+        setHeaderView(header);
     }
 
 }

@@ -99,6 +99,7 @@ public class PlayListAdapter extends SongInfoAdapter {
     }
 
     void updatePlaySongs(List<SongInfo> songs) {
+        songInfos = songs;
         playList.setPlaySongs(songs);
         setNewData(songs);
     }
