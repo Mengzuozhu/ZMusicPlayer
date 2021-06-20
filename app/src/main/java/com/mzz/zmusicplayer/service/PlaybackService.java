@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
@@ -43,6 +44,7 @@ public class PlaybackService extends Service implements PlayObserver {
     private static final String ACTION_PLAY_MODE = "com.mzz.zmusicplayer.ACTION.PLAY_MODE";
     private static final int NOTIFICATION_ID = 1;
     private static final int SDK_26 = 26;
+    private static final int V30 = 30;
     private final Binder mBinder = new LocalBinder();
     private BroadcastReceiver lockScreenReceiver;
     private NotificationHandler notificationHandler;
@@ -264,6 +266,10 @@ public class PlaybackService extends Service implements PlayObserver {
         } else {
             String undefined = this.getString(R.string.undefined);
             remoteView.setTextViewText(R.id.tv_song_name, undefined);
+        }
+        if (Build.VERSION.SDK_INT >= V30) {
+            // android 11 background color is white
+            mContentViewSmall.setTextColor(R.id.tv_song_name, Color.BLACK);
         }
         remoteView.setImageViewResource(R.id.iv_play_pause, isPlaying() ? R.drawable.pause : R.drawable.play);
         PlayedMode playMode = mPlayer.getPlayList().getPlayMode();
