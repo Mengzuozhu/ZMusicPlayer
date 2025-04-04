@@ -30,6 +30,7 @@ import com.mzz.zmusicplayer.view.ui.PlayListFragment;
 import com.mzz.zmusicplayer.view.ui.PlayListFragment.PlayListListener;
 import com.mzz.zmusicplayer.view.ui.RecentFragment;
 import com.mzz.zmusicplayer.view.ui.SongEditActivity;
+import com.mzz.zmusicplayer.view.ui.SongFavoriteActivity;
 import com.mzz.zmusicplayer.view.ui.SongFragment;
 import com.mzz.zmusicplayer.view.ui.SongPickerActivity;
 import com.viewpagerindicator.TabPageIndicator;
@@ -127,6 +128,8 @@ public class MainActivity extends BaseActivity implements PlayListListener {
         if (itemId == R.id.action_song_add) {
             startActivityForResult(new Intent(this, SongPickerActivity.class),
                     SongPickerActivity.CODE_ADD_SONG);
+        } else if (itemId == R.id.action_song_favorite) {
+            openActivity(SongFavoriteActivity.class);
         } else if (itemId == R.id.action_app_setting) {
             openActivity(AppSettingActivity.class);
         }

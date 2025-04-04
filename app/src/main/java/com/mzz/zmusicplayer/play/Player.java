@@ -119,8 +119,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         if (playingSong == null) {
             return;
         }
-        boolean isFavorite = FavoriteSong.getInstance().switchFavorite(playingSong);
-        notifyFavoriteChanged(isFavorite);
+        boolean isFavorite = FavoriteSong.getInstance().switchFavoriteAndNotify(playingSong);
     }
 
     @Override

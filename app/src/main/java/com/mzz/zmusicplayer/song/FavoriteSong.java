@@ -56,6 +56,14 @@ public class FavoriteSong {
         return isFavorite;
     }
 
+    public boolean switchFavoriteAndNotify(SongInfo songInfo) {
+        boolean isFavorite = switchFavorite(songInfo);
+        if (songInfo.isPlayListSelected()) {
+            Player.getInstance().notifyFavoriteChanged(isFavorite);
+        }
+        return isFavorite;
+    }
+
     private void updateFavoriteSong(SongInfo song) {
         if (song.getIsFavorite()) {
             favoriteSongs.add(song);

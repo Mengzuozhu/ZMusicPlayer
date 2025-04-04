@@ -20,5 +20,6 @@
     <string name="file_path">文件路径</string>
 
     <string name="menu_song_favorite">收藏</string>
+    <string name="menu_song_favorite_batch">批量收藏</string>
 
 </resources>

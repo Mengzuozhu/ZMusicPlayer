@@ -44,6 +44,9 @@
                 android:name=".view.ui.SongPickerActivity"
                 android:label="添加歌曲" />
         <activity
+                android:name=".view.ui.SongFavoriteActivity"
+                android:label="收藏歌曲" />
+        <activity
                 android:name=".view.ui.SongEditActivity"
                 android:label="编辑歌曲" />
 

@@ -132,11 +132,8 @@ public class PlayListAdapter extends SongInfoAdapter {
                     return true;
                 }
 
-                boolean isFavorite = FavoriteSong.getInstance().switchFavorite(songInfo);
+                boolean isFavorite = FavoriteSong.getInstance().switchFavoriteAndNotify(songInfo);
                 setMenuFavoriteTitle(menuActionSongFavorite, isFavorite);
-                if (songInfo.isPlayListSelected()) {
-                    Player.getInstance().notifyFavoriteChanged(isFavorite);
-                }
             }
             return false;
         });
