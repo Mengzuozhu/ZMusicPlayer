@@ -171,6 +171,8 @@ public class PlayListAdapter extends SongInfoAdapter {
         etArtistName.setText(artist);
         TextView tvDetailFilePath = songDetailView.findViewById(R.id.tv_detail_file_path);
         tvDetailFilePath.setText(songInfo.getPath());
+        TextView tvDetailFilePlayCount = songDetailView.findViewById(R.id.tv_detail_file_play_count);
+        tvDetailFilePlayCount.setText(String.valueOf(songInfo.getPlayCount()));
 
         AlertDialog alertDialog = new AlertDialog.Builder(context)
                 .setTitle(MusicConstant.SONG_DETAIL_TITLE)

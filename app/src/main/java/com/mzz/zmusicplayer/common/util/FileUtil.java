@@ -16,7 +16,6 @@ public class FileUtil {
         try {
             return new File(path).exists();
         } catch (Exception e) {
-            e.printStackTrace();
             Log.e("FileUtil", "isFileExists: ", e);
             return false;
         }

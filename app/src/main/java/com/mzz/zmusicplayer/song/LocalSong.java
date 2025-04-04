@@ -1,7 +1,10 @@
 package com.mzz.zmusicplayer.song;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.mzz.zmusicplayer.common.util.FileUtil;
 import com.mzz.zmusicplayer.model.LocalSongModel;
+import com.mzz.zmusicplayer.util.StorageUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -161,6 +164,12 @@ public class LocalSong {
         return allLocalSongs.stream()
                 .map(SongInfo::getSongIdInFile)
                 .collect(Collectors.toSet());
+    }
+
+    public String exportConfig(){
+        String jsonString = JSONObject.toJSONString(allLocalSongs, SerializerFeature.PrettyFormat);
+        String fileName = "zmusicplayer_song_config.json";
+        return StorageUtil.writeToFileExternalStorage(fileName, jsonString);
     }
 
     private void removeInvalidSong() {

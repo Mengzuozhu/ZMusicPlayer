@@ -77,5 +77,6 @@ dependencies {
     implementation 'com.tencent.bugly:nativecrashreport:3.7.1'
     implementation 'org.slf4j:slf4j-api:1.7.36'  // SLF4J API
     // 添加日志实现依赖（如 logback）
-    implementation 'ch.qos.logback:logback-classic:1.2.7'  // 实现 SLF4J API 的日志库
+    implementation 'ch.qos.logback:logback-classic:1.2.7'
+    implementation 'com.alibaba:fastjson:1.2.78'
 }

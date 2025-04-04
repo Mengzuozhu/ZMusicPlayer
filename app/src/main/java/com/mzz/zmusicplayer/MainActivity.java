@@ -18,6 +18,7 @@ import com.mzz.zmusicplayer.enums.SongListType;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
 import com.mzz.zmusicplayer.song.ISongChangeListener;
+import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.view.adapter.MusicPage;
 import com.mzz.zmusicplayer.view.adapter.MusicPagerAdapter;
@@ -132,6 +133,9 @@ public class MainActivity extends BaseActivity implements PlayListListener {
             openActivity(SongFavoriteActivity.class);
         } else if (itemId == R.id.action_app_setting) {
             openActivity(AppSettingActivity.class);
+        } else if (itemId == R.id.action_song_config_export) {
+            String path = LocalSong.getInstance().exportConfig();
+            ViewerHelper.showToast(getContext(), path);
         }
         return super.onOptionsItemSelected(item);
     }
