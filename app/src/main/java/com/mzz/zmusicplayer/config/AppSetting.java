@@ -78,8 +78,10 @@ public class AppSetting {
      *
      * @param playSongId the play song index
      */
-    public static void setLastPlaySongId(long playSongId) {
-        getEdit().putLong(LAST_PLAY_SONG_ID, playSongId).apply();
+    public static void setLastPlaySongId(Long playSongId) {
+        if (playSongId != null) {
+            getEdit().putLong(LAST_PLAY_SONG_ID, playSongId).apply();
+        }
     }
 
     /**

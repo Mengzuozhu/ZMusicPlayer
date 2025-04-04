@@ -19,4 +19,6 @@
     <string name="song_artist">歌手</string>
     <string name="file_path">文件路径</string>
 
+    <string name="menu_song_favorite">收藏</string>
+
 </resources>

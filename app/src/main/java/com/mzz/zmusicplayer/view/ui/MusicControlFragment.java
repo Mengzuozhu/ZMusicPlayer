@@ -33,6 +33,8 @@ import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.view.contract.MusicControlContract;
 import com.mzz.zmusicplayer.view.presenter.MusicControlPresenter;
 
+import java.util.Optional;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -103,7 +105,9 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
             mTelephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
         }
         mPlayer.unregisterCallback(this);
-        AppSetting.setLastPlaySongId(mPlayer.getPlayingSong().getId());
+        Optional.ofNullable(mPlayer.getPlayingSong())
+                .map(SongInfo::getId)
+                .ifPresent(AppSetting::setLastPlaySongId);
         mPlayer.releasePlayer();
         musicPresenter.unsubscribe();
     }

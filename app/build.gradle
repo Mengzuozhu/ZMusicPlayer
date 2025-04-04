@@ -16,7 +16,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 29
         versionCode 6
-        versionName "1.6.11"
+        versionName "1.7.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -65,8 +65,8 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.10'
 //    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.greenrobot:eventbus:3.1.1'
-    compileOnly 'org.projectlombok:lombok:1.18.8'
-    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
     implementation(name: 'ZAndroidCommon', ext: 'aar')
     implementation 'tyrantgit:explosionfield:1.0.1'
     implementation 'com.github.promeg:tinypinyin:2.0.3'
@@ -75,4 +75,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.9'
     implementation 'com.tencent.bugly:crashreport:3.1.0'
     implementation 'com.tencent.bugly:nativecrashreport:3.7.1'
+    implementation 'org.slf4j:slf4j-api:1.7.36'  // SLF4J API
+    // 添加日志实现依赖（如 logback）
+    implementation 'ch.qos.logback:logback-classic:1.2.7'  // 实现 SLF4J API 的日志库
 }

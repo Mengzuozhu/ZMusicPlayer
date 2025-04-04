@@ -18,13 +18,17 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author : Mzz
  * date : 2019 2019/5/28 18:52
  * description :
  */
+@Slf4j
 public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
+    public static final String LOG_PREFIX = Player.class.getName();
+
     private static final String TAG = "Player";
     private static Player sInstance = new Player();
     private MediaPlayer mPlayer;
@@ -60,18 +64,23 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
 
     @Override
     public boolean play() {
-        if (isPaused) {
-            mPlayer.start();
-            notifyPlayStatusChanged(true);
-            isPaused = false;
-            return true;
-        }
-        SongInfo playingSong = getPlayingSong();
-        if (playingSong != null) {
-            return startNewSong(playingSong);
-        } else {
-            mPlayer.reset();
-            notifyResetAllState();
+        try {
+            if (isPaused) {
+                mPlayer.start();
+                notifyPlayStatusChanged(true);
+                isPaused = false;
+                return true;
+            }
+            SongInfo playingSong = getPlayingSong();
+            if (playingSong != null) {
+                return startNewSong(playingSong);
+            } else {
+                mPlayer.reset();
+                notifyResetAllState();
+            }
+        } catch (IllegalStateException e) {
+            log.error("[{}_play_error],", LOG_PREFIX, e);
+            throw new RuntimeException(e);
         }
         return false;
     }
@@ -250,7 +259,8 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         forEachObservers(observer -> observer.onPlayStatusChanged(isPlaying));
     }
 
-    private void notifyFavoriteChanged(boolean isFavorite) {
+    @Override
+    public void notifyFavoriteChanged(boolean isFavorite) {
         forEachObservers(observer -> observer.onSwitchFavorite(isFavorite));
     }
 

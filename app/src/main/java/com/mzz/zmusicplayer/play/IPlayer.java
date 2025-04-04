@@ -45,4 +45,5 @@ public interface IPlayer {
 
     void unregisterCallback(PlayObserver playObserver);
 
+    void notifyFavoriteChanged(boolean isFavorite);
 }

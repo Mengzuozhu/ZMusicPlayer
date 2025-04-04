@@ -20,7 +20,7 @@ import lombok.Getter;
  * description :
  */
 public class LocalSong {
-    private static LocalSong localSong = new LocalSong();
+    private static final LocalSong localSong = new LocalSong();
     @Getter
     private List<SongInfo> allLocalSongs;
 
