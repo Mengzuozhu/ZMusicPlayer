@@ -7,9 +7,10 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.common.collect.ImmutableMap;
 import com.mzz.zandroidcommon.common.EventBusHelper;
 import com.mzz.zandroidcommon.view.BaseActivity;
@@ -21,7 +22,7 @@ import com.mzz.zmusicplayer.song.ISongChangeListener;
 import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.view.adapter.MusicPage;
-import com.mzz.zmusicplayer.view.adapter.MusicPagerAdapter;
+import com.mzz.zmusicplayer.view.adapter.MusicPager2Adapter;
 import com.mzz.zmusicplayer.view.edit.RemovedSongInfo;
 import com.mzz.zmusicplayer.view.ui.AppSettingActivity;
 import com.mzz.zmusicplayer.view.ui.FavoriteFragment;
@@ -34,7 +35,6 @@ import com.mzz.zmusicplayer.view.ui.SongEditActivity;
 import com.mzz.zmusicplayer.view.ui.SongFavoriteActivity;
 import com.mzz.zmusicplayer.view.ui.SongFragment;
 import com.mzz.zmusicplayer.view.ui.SongPickerActivity;
-import com.viewpagerindicator.TabPageIndicator;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -214,14 +214,20 @@ public class MainActivity extends BaseActivity implements PlayListListener {
                 .stream()
                 .map(entry -> new MusicPage(entry.getValue(), entry.getKey().getDesc()))
                 .collect(Collectors.toList());
-        FragmentPagerAdapter adapter = new MusicPagerAdapter(getSupportFragmentManager(), fragments);
+        
+        // 使用ViewPager2适配器
+        MusicPager2Adapter adapter = new MusicPager2Adapter(this, fragments);
 
-        ViewPager pager = findViewById(R.id.pager);
+        ViewPager2 pager = findViewById(R.id.pager);
         pager.setAdapter(adapter);
         //保证播放界面不被销毁
         pager.setOffscreenPageLimit(4);
-        TabPageIndicator indicator = findViewById(R.id.indicator);
-        indicator.setViewPager(pager);
+        
+        // 使用TabLayout和TabLayoutMediator
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        new TabLayoutMediator(tabLayout, pager, (tab, position) -> {
+            tab.setText(adapter.getPageTitle(position));
+        }).attach();
     }
 
     private List<Long> getDeleteIds(Intent data) {
