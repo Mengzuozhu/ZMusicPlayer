@@ -10,6 +10,12 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
+    
+    <!-- 通知相关权限 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
             android:name=".MusicApplication"
@@ -52,7 +58,8 @@
 
         <service
                 android:name=".service.PlaybackService"
-                android:exported="false">
+                android:exported="false"
+                android:foregroundServiceType="mediaPlayback">
             <intent-filter>
                 <action android:name="com.mzz.zmusicplayer.ACTION.PLAY_TOGGLE" />
                 <action android:name="com.mzz.zmusicplayer.ACTION.FAVORITE" />

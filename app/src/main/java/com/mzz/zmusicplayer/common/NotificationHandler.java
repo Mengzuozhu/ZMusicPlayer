@@ -29,11 +29,25 @@ public class NotificationHandler extends ContextWrapper {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void createNotificationChannel() {
-        // 将通知重要性提升为HIGH，确保通知直接显示而不是折叠到更多通知中
+        // 使用重要性，确保通知始终显示且不被折叠
         NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME,
                 NotificationManager.IMPORTANCE_HIGH);
-        // 设置锁屏可见性
+        
+        // 设置锁屏可见性 - 完全可见
         channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        
+        // 启用锁屏通知
+        channel.enableLights(true);
+
+        // 禁用振动，避免干扰
+        channel.enableVibration(false);
+        
+        // 设置绕过免打扰模式
+        channel.setBypassDnd(true);
+
+        // 设置声音为null，避免重复播放
+        channel.setSound(null, null);
+
         getManager().createNotificationChannel(channel);
     }
 
@@ -49,10 +63,14 @@ public class NotificationHandler extends ContextWrapper {
         createNotificationChannel();
         return new Notification.Builder(getApplicationContext(), CHANNEL_ID)
                 .setContentIntent(getPendingIntent())
-                // 设置锁屏可见性
+                // 设置锁屏可见性 - 完全可见
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
                 // 确保通知展开显示
-                .setShowWhen(false);
+                .setShowWhen(false)
+                // 设置通知类别为媒体播放
+                .setCategory(Notification.CATEGORY_TRANSPORT)
+                // 设置最高优先级，避免被折叠
+                .setPriority(Notification.PRIORITY_MAX);
     }
 
     private PendingIntent getPendingIntent() {
@@ -63,10 +81,12 @@ public class NotificationHandler extends ContextWrapper {
     public NotificationCompat.Builder getNotification25Builder() {
         return new NotificationCompat.Builder(getApplicationContext())
                 .setContentIntent(getPendingIntent())
-                // 设置锁屏可见性
+                // 设置锁屏可见性 - 完全可见
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                // 提高通知优先级，避免被折叠
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
+                // 设置最高优先级，避免被折叠
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                // 设置通知类别为媒体播放
+                .setCategory(NotificationCompat.CATEGORY_TRANSPORT);
     }
 
 }
