@@ -97,12 +97,12 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
             playList.setPlayMode(currentPlayList.getPlayMode());
         }
         playList.updatePlayingIndexBySettingId();
-        if (mPlayer.isPlaying()) {
-            mPlayer.play(playList);
-        } else {
-            mPlayer.setPlayList(playList);
-        }
+        mPlayer.setPlayList(playList);
         onSongUpdated(playList.getPlayingSong());
+        updatePlayToggle(mPlayer.isPlaying());
+        if (mPlayer.isPlaying() && seekBarService != null) {
+            seekBarService.updateProgressBar();
+        }
     }
 
     public void updatePlayingIndex(int playingIndex) {
@@ -225,11 +225,12 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     private void init() {
         mPlayer = Player.getInstance();
         mPlayer.registerCallback(this);
-        mPlayer.setPlayList(mPlayer.getPlayList());
         SeekBar seekBarProgress = binding.controlProgress.progressSong;
         TextView tvProgress = binding.controlProgress.tvProgress;
         seekBarService = new SeekBarService(seekBarProgress, tvProgress, mPlayer, this);
-        onSongUpdated(mPlayer.getPlayingSong());
+        // 必须使用 Player 单例中的 PlayList，不可从 Bundle 反序列化（会产生新实例并误重置 isPaused）
+        updateControlPlayList(mPlayer.getPlayList());
+
         musicPresenter = new MusicControlPresenter(getActivity(), this);
         musicPresenter.subscribe();
         PlayedMode playMode = mPlayer.getPlayList().getPlayMode();

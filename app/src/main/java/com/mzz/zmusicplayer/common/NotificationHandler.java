@@ -55,7 +55,7 @@ public class NotificationHandler extends ContextWrapper {
                                                PendingIntent previousIntent,
                                                PendingIntent playPauseIntent,
                                                PendingIntent nextIntent,
-                                               PendingIntent stopIntent,
+                                               PendingIntent dismissIntent,
                                                MediaSessionCompat.Token sessionToken) {
         createNotificationChannel();
 
@@ -74,19 +74,18 @@ public class NotificationHandler extends ContextWrapper {
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setCategory(NotificationCompat.CATEGORY_TRANSPORT)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
-                .setOngoing(true)
+                // 播放/暂停均可滑除，滑除后由 deleteIntent 先暂停再退出
+                .setOngoing(false)
+                .setDeleteIntent(dismissIntent)
                 .setShowWhen(false)
                 .setOnlyAlertOnce(true)
                 .addAction(R.drawable.previous, getString(R.string.notify_action_previous), previousIntent)
                 .addAction(isPlaying ? R.drawable.pause : R.drawable.play,
                         getString(R.string.notify_action_play_pause), playPauseIntent)
                 .addAction(R.drawable.next, getString(R.string.notify_action_next), nextIntent)
-                .addAction(R.drawable.close, getString(R.string.notify_action_stop), stopIntent)
                 .setStyle(new MediaStyle()
                         .setShowActionsInCompactView(0, 1, 2)
-                        .setMediaSession(sessionToken)
-                        .setShowCancelButton(true)
-                        .setCancelButtonIntent(stopIntent));
+                        .setMediaSession(sessionToken));
 
         return builder.build();
     }

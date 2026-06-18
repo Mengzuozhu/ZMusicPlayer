@@ -23,6 +23,10 @@ public class MusicControlPresenter implements MusicControlContract.Presenter {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             mPlaybackService = ((PlaybackService.LocalBinder) service).getService();
+            if (mView != null) {
+                mView.onSongUpdated(mPlaybackService.getPlayingSong());
+                mView.updatePlayToggle(mPlaybackService.isPlaying());
+            }
         }
 
         @Override

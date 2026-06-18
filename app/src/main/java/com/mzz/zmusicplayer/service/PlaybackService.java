@@ -10,7 +10,10 @@ import android.content.IntentFilter;
 import android.content.pm.ServiceInfo;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -38,11 +41,25 @@ public class PlaybackService extends Service implements PlayObserver {
     private static final String ACTION_STOP_SERVICE = "com.mzz.zmusicplayer.ACTION.STOP_SERVICE";
     private static final String ACTION_PLAY_MODE = "com.mzz.zmusicplayer.ACTION.PLAY_MODE";
     private static final int NOTIFICATION_ID = 1;
+    private static final long UPDATE_POSITION_INTERVAL_MS = 1000L;
     private final Binder mBinder = new LocalBinder();
+    private final Handler positionHandler = new Handler(Looper.getMainLooper());
+    private final Runnable positionUpdateRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (stopping || mediaSession == null || !isPlaying()) {
+                return;
+            }
+            updateMediaSessionState();
+            positionHandler.postDelayed(this, UPDATE_POSITION_INTERVAL_MS);
+        }
+    };
     private BroadcastReceiver lockScreenReceiver;
     private NotificationHandler notificationHandler;
     private MediaSessionCompat mediaSession;
     private Player mPlayer;
+    private boolean stopping;
+    private boolean mediaSessionReady;
 
     @Override
     public void onCreate() {
@@ -52,6 +69,7 @@ public class PlaybackService extends Service implements PlayObserver {
         initMediaSession();
         registerLockScreenReceiver();
         showNotification();
+        positionHandler.post(() -> mediaSessionReady = true);
     }
 
     @Override
@@ -81,11 +99,7 @@ public class PlaybackService extends Service implements PlayObserver {
                 playNext();
                 break;
             case ACTION_STOP_SERVICE:
-                if (isPlaying()) {
-                    pause();
-                }
-                stopSelf();
-                MusicApplication.exitApp();
+                stopAndExitApp();
                 break;
             case ACTION_PLAY_MODE:
                 changePlayMode();
@@ -98,6 +112,7 @@ public class PlaybackService extends Service implements PlayObserver {
 
     @Override
     public void onDestroy() {
+        stopPositionUpdates();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             stopForeground(STOP_FOREGROUND_REMOVE);
         } else {
@@ -191,6 +206,9 @@ public class PlaybackService extends Service implements PlayObserver {
         mediaSession.setCallback(new MediaSessionCompat.Callback() {
             @Override
             public void onPlay() {
+                if (!mediaSessionReady) {
+                    return;
+                }
                 play();
             }
 
@@ -211,11 +229,13 @@ public class PlaybackService extends Service implements PlayObserver {
 
             @Override
             public void onStop() {
-                if (isPlaying()) {
-                    pause();
-                }
-                stopSelf();
-                MusicApplication.exitApp();
+                stopAndExitApp();
+            }
+
+            @Override
+            public void onSeekTo(long pos) {
+                mPlayer.seekTo((int) pos);
+                updateMediaSessionState();
             }
         });
         mediaSession.setActive(true);
@@ -230,16 +250,24 @@ public class PlaybackService extends Service implements PlayObserver {
                 | PlaybackStateCompat.ACTION_PAUSE
                 | PlaybackStateCompat.ACTION_SKIP_TO_NEXT
                 | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
-                | PlaybackStateCompat.ACTION_STOP;
+                | PlaybackStateCompat.ACTION_STOP
+                | PlaybackStateCompat.ACTION_SEEK_TO;
 
-        int state = isPlaying()
+        boolean playing = isPlaying();
+        int state = playing
                 ? PlaybackStateCompat.STATE_PLAYING
                 : PlaybackStateCompat.STATE_PAUSED;
+        long position = mPlayer.getPlaybackPositionMs();
+        float speed = playing ? 1.0f : 0.0f;
 
-        mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
-                .setActions(actions)
-                .setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f)
-                .build());
+        PlaybackStateCompat.Builder stateBuilder = new PlaybackStateCompat.Builder()
+                .setActions(actions);
+        if (playing) {
+            stateBuilder.setState(state, position, speed, SystemClock.elapsedRealtime());
+        } else {
+            stateBuilder.setState(state, position, speed);
+        }
+        mediaSession.setPlaybackState(stateBuilder.build());
 
         SongInfo currentSong = mPlayer.getPlayingSong();
         MediaMetadataCompat.Builder metadataBuilder = new MediaMetadataCompat.Builder();
@@ -255,16 +283,21 @@ public class PlaybackService extends Service implements PlayObserver {
 
     /**
      * Show a notification while this service is running.
+     * 播放/暂停时通知均可滑除，滑除后先暂停再退出应用。
      */
     private void showNotification() {
+        if (stopping) {
+            return;
+        }
         if (notificationHandler == null) {
             notificationHandler = new NotificationHandler(this);
         }
         updateMediaSessionState();
 
+        boolean playing = isPlaying();
         Notification notification = notificationHandler.buildMediaNotification(
                 getPlayingSong(),
-                isPlaying(),
+                playing,
                 getPendingIntent(ACTION_PLAY_PRE),
                 getPendingIntent(ACTION_PLAY_TOGGLE),
                 getPendingIntent(ACTION_PLAY_NEXT),
@@ -275,6 +308,35 @@ public class PlaybackService extends Service implements PlayObserver {
         } else {
             startForeground(NOTIFICATION_ID, notification);
         }
+        if (playing) {
+            schedulePositionUpdates();
+        } else {
+            stopPositionUpdates();
+        }
+    }
+
+    private void stopAndExitApp() {
+        if (stopping) {
+            return;
+        }
+        stopping = true;
+        stopPositionUpdates();
+        if (isPlaying()) {
+            pause();
+        }
+        stopSelf();
+        MusicApplication.exitApp();
+    }
+
+    private void schedulePositionUpdates() {
+        stopPositionUpdates();
+        if (isPlaying()) {
+            positionHandler.postDelayed(positionUpdateRunnable, UPDATE_POSITION_INTERVAL_MS);
+        }
+    }
+
+    private void stopPositionUpdates() {
+        positionHandler.removeCallbacks(positionUpdateRunnable);
     }
 
     private void play() {

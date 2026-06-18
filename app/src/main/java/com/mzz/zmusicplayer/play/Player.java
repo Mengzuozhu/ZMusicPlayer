@@ -34,7 +34,8 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
     private static final String TAG = "Player";
     private static Player sInstance = new Player();
     private MediaPlayer mPlayer;
-    private boolean isPaused;
+    private boolean isPaused = true;
+    private boolean mediaPrepared;
     @Getter
     private PlayList playList;
     private List<PlayObserver> playObservers = new ArrayList<>(2);
@@ -59,15 +60,25 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         if (list == null) {
             list = new PlayList();
         }
-        playList = list;
-        //保证更新播放列表后，可以重新开始播放新歌
-        isPaused = false;
+        if (this.playList != list) {
+            playList = list;
+            // 仅切换播放列表时重置暂停标记，避免打开 APP 同步列表时误触发重新播放
+            isPaused = false;
+        }
     }
 
     @Override
     public boolean play() {
         try {
             if (isPaused) {
+                SongInfo playingSong = getPlayingSong();
+                if (playingSong == null) {
+                    return false;
+                }
+                if (!mediaPrepared) {
+                    isPaused = false;
+                    return startNewSong(playingSong);
+                }
                 mPlayer.start();
                 notifyPlayStatusChanged(true);
                 isPaused = false;
@@ -78,6 +89,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
                 return startNewSong(playingSong);
             } else {
                 mPlayer.reset();
+                mediaPrepared = false;
                 notifyResetAllState();
             }
         } catch (IllegalStateException e) {
@@ -179,6 +191,20 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         return position;
     }
 
+    /**
+     * 供 MediaSession / 通知栏使用的真实进度，未 prepare 时返回 0。
+     */
+    public int getPlaybackPositionMs() {
+        if (!mediaPrepared) {
+            return 0;
+        }
+        try {
+            return mPlayer.getCurrentPosition();
+        } catch (IllegalStateException e) {
+            return 0;
+        }
+    }
+
     @Override
     public SongInfo getPlayingSong() {
         return playList.getPlayingSong();
@@ -214,6 +240,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         }
         playObservers.clear();
         mPlayer.reset();
+        mediaPrepared = false;
         mPlayer.release();
     }
 
@@ -248,12 +275,14 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         }
         try {
             mPlayer.reset();
+            mediaPrepared = false;
             if (songPath.startsWith("content://")) {
                 mPlayer.setDataSource(MusicApplication.getContext(), Uri.parse(songPath));
             } else {
                 mPlayer.setDataSource(songPath);
             }
             mPlayer.prepare();
+            mediaPrepared = true;
             mPlayer.start();
             notifyPlayStatusChanged(true);
             recordPlayingSong(playingSong);
