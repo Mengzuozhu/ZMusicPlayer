@@ -2,9 +2,8 @@ package com.mzz.zmusicplayer.view.ui;
 
 import android.Manifest;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +14,9 @@ import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zmusicplayer.R;
@@ -38,6 +40,8 @@ import butterknife.OnClick;
 public class SongPickerActivity extends BaseActivity {
 
     public static final int CODE_ADD_SONG = 5;
+    private static final int SDK_ANDROID_13 = 33;
+    private static final String PERMISSION_READ_MEDIA_AUDIO = "android.permission.READ_MEDIA_AUDIO";
     public static final String EXTRA_ADD_SONG = "com.mzz.zmusicplayer.EXTRA_ADD_SONG";
 
     @BindView(R.id.rv_song_file)
@@ -67,11 +71,14 @@ public class SongPickerActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         RxPermissions rxPermissions = new RxPermissions(this);
-        rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE).subscribe(granted -> {
+        String permission = Build.VERSION.SDK_INT >= SDK_ANDROID_13
+                ? PERMISSION_READ_MEDIA_AUDIO
+                : Manifest.permission.READ_EXTERNAL_STORAGE;
+        rxPermissions.request(permission).subscribe(granted -> {
             if (granted) {
                 initAdapter();
             } else {
-                showToast("无权限访问");
+                showToast("无权限访问本地音乐");
             }
         });
     }

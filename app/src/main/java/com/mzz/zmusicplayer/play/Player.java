@@ -1,6 +1,7 @@
 package com.mzz.zmusicplayer.play;
 
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.util.Log;
 
 import com.mzz.zandroidcommon.view.ViewerHelper;
@@ -247,7 +248,11 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         }
         try {
             mPlayer.reset();
-            mPlayer.setDataSource(songPath);
+            if (songPath.startsWith("content://")) {
+                mPlayer.setDataSource(MusicApplication.getContext(), Uri.parse(songPath));
+            } else {
+                mPlayer.setDataSource(songPath);
+            }
             mPlayer.prepare();
             mPlayer.start();
             notifyPlayStatusChanged(true);
