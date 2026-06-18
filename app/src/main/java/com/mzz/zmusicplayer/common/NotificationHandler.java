@@ -97,11 +97,7 @@ public class NotificationHandler extends ContextWrapper {
     }
 
     public static int getPendingIntentFlags() {
-        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
-        if (Build.VERSION.SDK_INT >= 31) {
-            flags |= PendingIntent.FLAG_IMMUTABLE;
-        }
-        return flags;
+        return PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
     }
 
 

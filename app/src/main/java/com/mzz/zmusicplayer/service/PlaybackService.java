@@ -7,7 +7,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ServiceInfo;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -96,7 +98,11 @@ public class PlaybackService extends Service implements PlayObserver {
 
     @Override
     public void onDestroy() {
-        stopForeground(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            stopForeground(STOP_FOREGROUND_REMOVE);
+        } else {
+            stopForeground(true);
+        }
         unregisterCallback(this);
         if (lockScreenReceiver != null) {
             unregisterReceiver(lockScreenReceiver);
@@ -171,7 +177,11 @@ public class PlaybackService extends Service implements PlayObserver {
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_OFF);
-        registerReceiver(lockScreenReceiver, filter);
+        if (Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(lockScreenReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(lockScreenReceiver, filter);
+        }
     }
 
     private void initMediaSession() {
@@ -260,7 +270,11 @@ public class PlaybackService extends Service implements PlayObserver {
                 getPendingIntent(ACTION_PLAY_NEXT),
                 getPendingIntent(ACTION_STOP_SERVICE),
                 mediaSession.getSessionToken());
-        startForeground(NOTIFICATION_ID, notification);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
+        } else {
+            startForeground(NOTIFICATION_ID, notification);
+        }
     }
 
     private void play() {
@@ -292,7 +306,9 @@ public class PlaybackService extends Service implements PlayObserver {
     }
 
     private PendingIntent getPendingIntent(String action) {
-        return PendingIntent.getService(this, action.hashCode(), new Intent(action),
+        Intent intent = new Intent(this, PlaybackService.class);
+        intent.setAction(action);
+        return PendingIntent.getService(this, action.hashCode(), intent,
                 NotificationHandler.getPendingIntentFlags());
     }
 

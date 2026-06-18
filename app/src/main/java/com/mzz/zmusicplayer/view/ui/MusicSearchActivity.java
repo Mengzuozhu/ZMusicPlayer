@@ -6,33 +6,23 @@ import android.view.Menu;
 import android.widget.SearchView;
 
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.databinding.ActivitySearchBinding;
 import com.mzz.zmusicplayer.manage.AdapterManager;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.view.adapter.MusicSearchAdapter;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class MusicSearchActivity extends BaseActivity {
 
     private static final String SEARCH = "搜索";
     private static final String EXTRA_PLAY_LIST = "com.mzz.zmusicplayer.EXTRA_PLAY_LIST";
-    @BindView(R.id.rv_search)
-    RecyclerView rvSearch;
+    private ActivitySearchBinding binding;
     private MusicSearchAdapter musicSearchAdapter;
     private PlayList playList;
 
-    /**
-     * Start for result.
-     *
-     * @param activity the activity
-     * @param value    the value
-     */
     public static void startForResult(FragmentActivity activity, PlayList value) {
         activity.startActivity(new Intent(activity, MusicSearchActivity.class)
                 .putExtra(EXTRA_PLAY_LIST, value));
@@ -57,13 +47,14 @@ public class MusicSearchActivity extends BaseActivity {
         if (musicSearchAdapter != null) {
             AdapterManager.unregister(musicSearchAdapter);
         }
+        binding = null;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
-        ButterKnife.bind(this);
+        binding = ActivitySearchBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         init();
     }
@@ -78,7 +69,7 @@ public class MusicSearchActivity extends BaseActivity {
         if (playingSong != null) {
             playingSong.setPlayListSelected(false);
         }
-        musicSearchAdapter = new MusicSearchAdapter(playList, rvSearch);
+        musicSearchAdapter = new MusicSearchAdapter(playList, binding.rvSearch);
         AdapterManager.register(musicSearchAdapter);
     }
 }

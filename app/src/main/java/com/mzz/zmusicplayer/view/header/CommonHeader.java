@@ -86,25 +86,22 @@ class CommonHeader {
         popupMenu.inflate(R.menu.menu_sort_by_name);
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             int itemId = menuItem.getItemId();
-            switch (itemId) {
-                case R.id.action_sort_ascend_by_name:
-                    playListAdapter.sortByName(true);
-                    AppSetting.setSongOrderMode(SongOrderMode.ORDER_ASCEND_BY_NAME);
-                    return true;
-                case R.id.action_sort_descend_by_name:
-                    playListAdapter.sortByName(false);
-                    AppSetting.setSongOrderMode(SongOrderMode.ORDER_DESCEND_BY_NAME);
-                    return true;
-                case R.id.action_sort_by_add_time:
-                    playListAdapter.sortById();
-                    AppSetting.setSongOrderMode(SongOrderMode.ORDER_ASCEND_BY_ADD_TIME);
-                    return true;
-                case R.id.action_sort_by_play_count:
-                    playListAdapter.sortByPlayCount();
-                    AppSetting.setSongOrderMode(SongOrderMode.ORDER_DESCEND_BY_PLAY_COUNT);
-                    return true;
-                default:
-                    break;
+            if (itemId == R.id.action_sort_ascend_by_name) {
+                playListAdapter.sortByName(true);
+                AppSetting.setSongOrderMode(SongOrderMode.ORDER_ASCEND_BY_NAME);
+                return true;
+            } else if (itemId == R.id.action_sort_descend_by_name) {
+                playListAdapter.sortByName(false);
+                AppSetting.setSongOrderMode(SongOrderMode.ORDER_DESCEND_BY_NAME);
+                return true;
+            } else if (itemId == R.id.action_sort_by_add_time) {
+                playListAdapter.sortById();
+                AppSetting.setSongOrderMode(SongOrderMode.ORDER_ASCEND_BY_ADD_TIME);
+                return true;
+            } else if (itemId == R.id.action_sort_by_play_count) {
+                playListAdapter.sortByPlayCount();
+                AppSetting.setSongOrderMode(SongOrderMode.ORDER_DESCEND_BY_PLAY_COUNT);
+                return true;
             }
             return false;
         });

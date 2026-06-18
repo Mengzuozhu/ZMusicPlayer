@@ -7,10 +7,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.databinding.FragmentSongListBinding;
 import com.mzz.zmusicplayer.enums.SongListType;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.song.FavoriteSong;
@@ -19,32 +17,16 @@ import com.mzz.zmusicplayer.view.adapter.SongListAdapter;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
 import lombok.NoArgsConstructor;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 @NoArgsConstructor
 public class FavoriteFragment extends SongFragment implements FavoriteSong.IFavoriteSongObserver {
 
-    @BindView(R.id.rv_song)
-    RecyclerView rvFavoriteSong;
-    @BindView(R.id.fab_scroll_first_song)
-    FloatingActionButton fabSongScrollFirst;
-    private Unbinder unbinder;
+    private FragmentSongListBinding binding;
     private FavoriteSong favoriteSong;
     private SongListAdapter songListAdapter;
     private boolean isVisibleToUser;
 
-    /**
-     * New instance favorite fragment.
-     *
-     * @return the favorite fragment
-     */
     public static FavoriteFragment newInstance() {
         return new FavoriteFragment();
     }
@@ -52,12 +34,13 @@ public class FavoriteFragment extends SongFragment implements FavoriteSong.IFavo
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_song_list, container, false);
-        unbinder = ButterKnife.bind(this, view);
+        binding = FragmentSongListBinding.inflate(inflater, container, false);
         favoriteSong = FavoriteSong.getInstance();
         favoriteSong.setFavoriteSongObserver(this);
+        binding.fabScrollFirstSong.setOnClickListener(v -> songListAdapter.scrollToFirst());
+        binding.fabSongLocate.setOnClickListener(v -> songListAdapter.locateToSelectedSong());
         initOrUpdate();
-        return view;
+        return binding.getRoot();
     }
 
     @Override
@@ -72,31 +55,20 @@ public class FavoriteFragment extends SongFragment implements FavoriteSong.IFavo
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        binding = null;
         isVisibleToUser = false;
     }
 
-    /**
-     * Remove.
-     *
-     * @param keys the keys
-     */
     @Override
     public void remove(List<Long> keys) {
         songListAdapter.updateData(favoriteSong.remove(keys));
     }
 
-    /**
-     * Remove song.
-     *
-     * @param song the song
-     */
     @Override
     public void removeSong(SongInfo song) {
         if (song == null) {
             return;
         }
-        //获取喜欢列表中的对应歌曲，保证删除的是指定对象
         int songIndexById = PlayList.getSongIndexById(songListAdapter.getData(), song.getId());
         favoriteSong.remove(songListAdapter.getItem(songIndexById));
     }
@@ -114,16 +86,6 @@ public class FavoriteFragment extends SongFragment implements FavoriteSong.IFavo
         initOrUpdate();
     }
 
-    @OnClick(R.id.fab_scroll_first_song)
-    public void scrollToFirstSongOnClick() {
-        songListAdapter.scrollToFirst();
-    }
-
-    @OnClick(R.id.fab_song_locate)
-    public void locateToSelectedSongOnClick() {
-        songListAdapter.locateToSelectedSong();
-    }
-
     private void initOrUpdate() {
         if (songListAdapter == null) {
             initAdapter();
@@ -134,17 +96,17 @@ public class FavoriteFragment extends SongFragment implements FavoriteSong.IFavo
     }
 
     private void initAdapter() {
-        if (rvFavoriteSong == null) {
+        if (binding == null) {
             return;
         }
-        songListAdapter = new SongListAdapter(new PlayList(SongListType.FAVORITE), rvFavoriteSong
+        songListAdapter = new SongListAdapter(new PlayList(SongListType.FAVORITE), binding.rvSong
                 , getActivity()) {
             @Override
             public void removeSongAt(int position) {
                 favoriteSong.remove(getItem(position));
             }
         };
-        songListAdapter.setScrollFirstShowInNeed(fabSongScrollFirst);
+        songListAdapter.setScrollFirstShowInNeed(binding.fabScrollFirstSong);
     }
 
 }

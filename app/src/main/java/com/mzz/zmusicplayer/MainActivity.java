@@ -1,7 +1,10 @@
 package com.mzz.zmusicplayer;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -42,8 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import butterknife.ButterKnife;
 
 /**
  * @author Mengzz
@@ -116,10 +117,10 @@ public class MainActivity extends BaseActivity implements PlayListListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
         ViewerHelper.displayHomeAsUpOrNot(this.getSupportActionBar(), false);
 
         init();
+        requestRuntimePermissions();
         EventBusHelper.register(this);
     }
 
@@ -189,7 +190,33 @@ public class MainActivity extends BaseActivity implements PlayListListener {
         headsetReceiver = new HeadsetReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_HEADSET_PLUG);
-        registerReceiver(headsetReceiver, intentFilter);
+        if (Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(headsetReceiver, intentFilter, RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(headsetReceiver, intentFilter);
+        }
+    }
+
+    private void requestRuntimePermissions() {
+        requestNotificationPermission();
+        requestPhoneStatePermission();
+    }
+
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT < 33) {
+            return;
+        }
+        if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 0);
+    }
+
+    private void requestPhoneStatePermission() {
+        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, 0);
     }
 
     private void initSongChangeListeners() {

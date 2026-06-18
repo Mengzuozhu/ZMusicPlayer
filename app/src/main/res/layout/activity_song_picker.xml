@@ -7,7 +7,9 @@
     android:background="@color/colorGrey"
     tools:context=".view.ui.SongPickerActivity">
 
-    <include layout="@layout/content_song_picker" />
+    <include
+        android:id="@+id/content_song_picker"
+        layout="@layout/content_song_picker" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_song_file_scroll_first"

@@ -11,15 +11,12 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.SearchView;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.databinding.ActivitySongPickerBinding;
 import com.mzz.zmusicplayer.manage.FileManager;
 import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.SongInfo;
@@ -30,13 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
-/**
- *
- */
 public class SongPickerActivity extends BaseActivity {
 
     public static final int CODE_ADD_SONG = 5;
@@ -44,12 +34,7 @@ public class SongPickerActivity extends BaseActivity {
     private static final String PERMISSION_READ_MEDIA_AUDIO = "android.permission.READ_MEDIA_AUDIO";
     public static final String EXTRA_ADD_SONG = "com.mzz.zmusicplayer.EXTRA_ADD_SONG";
 
-    @BindView(R.id.rv_song_file)
-    RecyclerView rvSongFile;
-    @BindView(R.id.sv_song_file)
-    SearchView svSongFile;
-    @BindView(R.id.fab_song_file_scroll_first)
-    FloatingActionButton fabSongScrollFirst;
+    private ActivitySongPickerBinding binding;
     private SongPickerAdapter songPickerAdapter;
     private List<SongInfo> songInfos;
 
@@ -59,16 +44,13 @@ public class SongPickerActivity extends BaseActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    @OnClick(R.id.fab_song_file_scroll_first)
-    public void scrollToFirstSongOnClick(View view) {
-        songPickerAdapter.scrollToFirst();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_song_picker);
-        ButterKnife.bind(this);
+        binding = ActivitySongPickerBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        binding.fabSongFileScrollFirst.setOnClickListener(v -> songPickerAdapter.scrollToFirst());
 
         RxPermissions rxPermissions = new RxPermissions(this);
         String permission = Build.VERSION.SDK_INT >= SDK_ANDROID_13
@@ -94,18 +76,24 @@ public class SongPickerActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
+    }
+
     private void initAdapter() {
         Set<Integer> allSongIdInFile = LocalSong.getInstance().getAllSongIdInFile();
         songInfos = FileManager.getInstance().getAllSongInfos(allSongIdInFile);
-        songPickerAdapter = new SongPickerAdapter(songInfos, rvSongFile);
-        songPickerAdapter.setQueryTextListener(svSongFile);
-        songPickerAdapter.setScrollFirstShowInNeed(fabSongScrollFirst);
+        songPickerAdapter = new SongPickerAdapter(songInfos, binding.contentSongPicker.rvSongFile);
+        songPickerAdapter.setQueryTextListener(binding.contentSongPicker.svSongFile);
+        songPickerAdapter.setScrollFirstShowInNeed(binding.fabSongFileScrollFirst);
         initHeader();
     }
 
     private void initHeader() {
         View header = LayoutInflater.from(this).inflate(R.layout.content_song_picker_header,
-                rvSongFile, false);
+                binding.contentSongPicker.rvSongFile, false);
         TextView tvCount = header.findViewById(R.id.tv_picker_header_count);
         tvCount.setText(StringHelper.getLocalFormat("%d首", songInfos.size()));
 
@@ -122,15 +110,12 @@ public class SongPickerActivity extends BaseActivity {
         popupMenu.inflate(R.menu.menu_sort_by_name);
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             int itemId = menuItem.getItemId();
-            switch (itemId) {
-                case R.id.action_sort_ascend_by_name:
-                    songPickerAdapter.sortByName(true);
-                    return true;
-                case R.id.action_sort_descend_by_name:
-                    songPickerAdapter.sortByName(false);
-                    return true;
-                default:
-                    break;
+            if (itemId == R.id.action_sort_ascend_by_name) {
+                songPickerAdapter.sortByName(true);
+                return true;
+            } else if (itemId == R.id.action_sort_descend_by_name) {
+                songPickerAdapter.sortByName(false);
+                return true;
             }
             return false;
         });
