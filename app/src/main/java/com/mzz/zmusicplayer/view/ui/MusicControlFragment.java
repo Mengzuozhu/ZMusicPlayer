@@ -115,7 +115,10 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         if (playList == null) {
             playList = new PlayList();
         }
-
+        PlayList currentPlayList = mPlayer.getPlayList();
+        if (currentPlayList != null && currentPlayList != playList) {
+            playList.setPlayMode(currentPlayList.getPlayMode());
+        }
         playList.updatePlayingIndexBySettingId();
         if (mPlayer.isPlaying()) {
             mPlayer.play(playList);
@@ -256,19 +259,15 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     }
 
     private void init() {
-        Bundle bundle = getArguments();
-        PlayList mPlayList = new PlayList();
-        if (bundle != null) {
-            mPlayList = bundle.getParcelable(ARGUMENT_PLAY_LIST);
-        }
         mPlayer = Player.getInstance();
         mPlayer.registerCallback(this);
-        mPlayer.setPlayList(mPlayList);
+        mPlayer.setPlayList(mPlayer.getPlayList());
         seekBarService = new SeekBarService(seekBarProgress, tvProgress, mPlayer, this);
         onSongUpdated(mPlayer.getPlayingSong());
         musicPresenter = new MusicControlPresenter(getActivity(), this);
         musicPresenter.subscribe();
-        ivPlayMode.setImageResource(AppSetting.getPlayMode().getIcon());
+        PlayedMode playMode = mPlayer.getPlayList().getPlayMode();
+        ivPlayMode.setImageResource(playMode.getIcon());
         listenPhoneState();
         initOnAudioFocusChangeListener();
     }

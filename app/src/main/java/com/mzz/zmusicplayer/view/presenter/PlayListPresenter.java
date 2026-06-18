@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mzz.zmusicplayer.manage.AdapterManager;
 import com.mzz.zmusicplayer.play.PlayList;
+import com.mzz.zmusicplayer.play.Player;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.view.adapter.PlayListAdapter;
 import com.mzz.zmusicplayer.view.contract.PlayListContract;
@@ -33,7 +34,7 @@ public class PlayListPresenter implements PlayListContract.Presenter, PlayList.P
         activity = mView.getActivity();
         recyclerView = mView.getRecyclerView();
         this.playListListener = playListListener;
-        playList = new PlayList();
+        playList = Player.getInstance().getPlayList();
         playList.setPlayListObserver(this);
         updatePlayList();
         intiAdapter();

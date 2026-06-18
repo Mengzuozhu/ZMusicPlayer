@@ -188,6 +188,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         PlayedMode playMode = playList.getPlayMode();
         playMode = playMode.getNextMode();
         playList.setPlayMode(playMode);
+        AppSetting.setPlayMode(playMode);
         notifyPlayModeChanged(playMode);
     }
 
@@ -254,8 +255,8 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         } catch (IOException e) {
             Log.e(TAG, "startNewSong fail: ", e);
             ViewerHelper.showToast(MusicApplication.getContext(), String.format("歌曲(%s)播放失败", name));
-            pause();
-            return false;
+            playList.remove(playingSong);
+            return playNext();
         }
         return true;
     }

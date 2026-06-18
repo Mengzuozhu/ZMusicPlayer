@@ -248,6 +248,7 @@ public class PlayList implements Parcelable {
         switch (playMode) {
             //循环当前歌曲
             case SINGLE:
+                syncPlayingIndexWithLastPlaySong();
                 break;
             case ORDER:
                 playingIndex = getPreIndex();
@@ -270,6 +271,7 @@ public class PlayList implements Parcelable {
         switch (playMode) {
             //循环当前歌曲
             case SINGLE:
+                syncPlayingIndexWithLastPlaySong();
                 break;
             case RANDOM:
                 playingIndex = getRandomPlayIndex();
@@ -314,12 +316,26 @@ public class PlayList implements Parcelable {
         if (size == 0) {
             return -1;
         }
+        if (size == 1) {
+            return 0;
+        }
         int randomIndex = new Random().nextInt(size);
         // 非单曲循环模式下，确保不会连续播放同一首歌曲
-        if (playMode != PlayedMode.SINGLE && size > 1 && randomIndex == playingIndex) {
-            playingIndex = getNextIndex();
+        if (playMode != PlayedMode.SINGLE && randomIndex == playingIndex) {
+            return getNextIndex();
         }
         return randomIndex;
+    }
+
+    private void syncPlayingIndexWithLastPlaySong() {
+        long lastPlaySongId = AppSetting.getLastPlaySongId();
+        if (lastPlaySongId == 0 || playSongs.isEmpty()) {
+            return;
+        }
+        int index = getSongIndexById(playSongs, lastPlaySongId);
+        if (index != -1) {
+            playingIndex = index;
+        }
     }
 
     private void updatePlaySongBackgroundColor(SongInfo song) {
