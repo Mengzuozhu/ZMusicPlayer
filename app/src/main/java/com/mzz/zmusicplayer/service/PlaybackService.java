@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ServiceInfo;
+import android.media.AudioManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import androidx.annotation.Nullable;
 
 import com.mzz.zmusicplayer.MusicApplication;
+import com.mzz.zmusicplayer.MainActivity;
 import com.mzz.zmusicplayer.common.NotificationHandler;
 import com.mzz.zmusicplayer.enums.PlayedMode;
 import com.mzz.zmusicplayer.play.PlayObserver;
@@ -185,6 +187,10 @@ public class PlaybackService extends Service implements PlayObserver {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) {
+                    if (mediaSession != null && !mediaSession.isActive()) {
+                        mediaSession.setActive(true);
+                    }
+                    updateMediaSessionState();
                     showNotification();
                 }
             }
@@ -203,6 +209,11 @@ public class PlaybackService extends Service implements PlayObserver {
         mediaSession = new MediaSessionCompat(this, "ZMusicPlayer");
         mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS
                 | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        Intent sessionIntent = new Intent(this, MainActivity.class);
+        PendingIntent sessionActivity = PendingIntent.getActivity(this, 0, sessionIntent,
+                NotificationHandler.getPendingIntentFlags());
+        mediaSession.setSessionActivity(sessionActivity);
+        mediaSession.setPlaybackToLocal(AudioManager.STREAM_MUSIC);
         mediaSession.setCallback(new MediaSessionCompat.Callback() {
             @Override
             public void onPlay() {
@@ -274,6 +285,8 @@ public class PlaybackService extends Service implements PlayObserver {
         if (currentSong != null) {
             metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, currentSong.getName());
             metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, currentSong.getArtist());
+            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, currentSong.getName());
+            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, currentSong.getArtist());
             if (currentSong.getDuration() > 0) {
                 metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, currentSong.getDuration());
             }
