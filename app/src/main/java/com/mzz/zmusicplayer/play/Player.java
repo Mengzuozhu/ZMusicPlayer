@@ -13,6 +13,7 @@ import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -188,6 +189,20 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         playMode = playMode.getNextMode();
         playList.setPlayMode(playMode);
         notifyPlayModeChanged(playMode);
+    }
+
+    @Override
+    public void removeSongsFromPlayList(Collection<Long> songIds) {
+        if (songIds == null || songIds.isEmpty()) {
+            return;
+        }
+        SongInfo current = getPlayingSong();
+        boolean currentDeleted = current != null && songIds.contains(current.getId());
+        playList.remove(new ArrayList<>(songIds));
+        if (currentDeleted) {
+            isPaused = false;
+            play();
+        }
     }
 
     @Override

@@ -13,11 +13,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.enums.SongListType;
 import com.mzz.zmusicplayer.play.PlayList;
+import com.mzz.zmusicplayer.play.Player;
 import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.view.adapter.SongListAdapter;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -94,7 +97,12 @@ public class LocalSongFragment extends SongFragment {
      */
     @Override
     public void remove(List<Long> keys) {
-        songListAdapter.updateData(localSongs.remove(keys));
+        if (keys == null || keys.isEmpty()) {
+            return;
+        }
+        List<Long> deleteIds = new ArrayList<>(keys);
+        songListAdapter.updateData(localSongs.remove(deleteIds));
+        Player.getInstance().removeSongsFromPlayList(deleteIds);
     }
 
     /**
@@ -109,6 +117,7 @@ public class LocalSongFragment extends SongFragment {
         }
         localSongs.remove(song);
         songListAdapter.removeSong(song);
+        Player.getInstance().removeSongsFromPlayList(Collections.singletonList(song.getId()));
     }
 
     @Override
@@ -145,8 +154,12 @@ public class LocalSongFragment extends SongFragment {
         songListAdapter = new SongListAdapter(new PlayList(SongListType.LOCAL), rvSong, getActivity()) {
             @Override
             public void removeSongAt(int position) {
-                localSongs.remove(getItem(position));
+                SongInfo song = getItem(position);
+                localSongs.remove(song);
                 super.removeSongAt(position);
+                if (song != null) {
+                    Player.getInstance().removeSongsFromPlayList(Collections.singletonList(song.getId()));
+                }
             }
         };
         songListAdapter.setScrollFirstShowInNeed(fabSongScrollFirst);

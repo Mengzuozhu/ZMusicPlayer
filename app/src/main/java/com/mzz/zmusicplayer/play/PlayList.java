@@ -149,11 +149,28 @@ public class PlayList implements Parcelable {
      * @param song the song
      */
     public void remove(SongInfo song) {
-        if (song != null) {
+        if (song == null) {
+            return;
+        }
+        int index = getSongIndexById(playSongs, song.getId());
+        if (index == -1) {
             song.setIsChecked(false);
             LocalSongModel.update(song);
             notifySongCountOrModeChange();
+            return;
         }
+        song.setIsChecked(false);
+        playSongs.remove(index);
+        if (index < playingIndex) {
+            playingIndex--;
+        } else if (index == playingIndex && playingIndex >= playSongs.size() && !playSongs.isEmpty()) {
+            playingIndex = Math.min(playingIndex, playSongs.size() - 1);
+        }
+        if (playSongs.isEmpty()) {
+            playingIndex = 0;
+        }
+        LocalSongModel.update(song);
+        notifySongCountOrModeChange();
     }
 
     /**

@@ -108,7 +108,6 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         Optional.ofNullable(mPlayer.getPlayingSong())
                 .map(SongInfo::getId)
                 .ifPresent(AppSetting::setLastPlaySongId);
-        mPlayer.releasePlayer();
         musicPresenter.unsubscribe();
     }
 

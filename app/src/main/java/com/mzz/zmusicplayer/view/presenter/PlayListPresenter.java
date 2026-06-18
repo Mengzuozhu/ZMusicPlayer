@@ -121,5 +121,8 @@ public class PlayListPresenter implements PlayListContract.Presenter, PlayList.P
     @Override
     public void onSongCountOrModeChange() {
         updateSongCountAndMode();
+        if (playListAdapter != null) {
+            playListAdapter.setNewData(playList.getPlaySongs());
+        }
     }
 }
