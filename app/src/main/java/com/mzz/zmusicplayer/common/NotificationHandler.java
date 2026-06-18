@@ -8,85 +8,108 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.os.Build;
-import androidx.annotation.RequiresApi;
+
 import androidx.core.app.NotificationCompat;
+import androidx.media.app.NotificationCompat.MediaStyle;
+import android.support.v4.media.session.MediaSessionCompat;
 
 import com.mzz.zmusicplayer.MainActivity;
+import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.song.SongInfo;
 
 /**
+ * 媒体播放通知构建器，使用 MediaStyle 以兼容小米 HyperOS 锁屏与通知栏展示。
+ *
  * @author : Mzz
  * date : 2019 2019/5/30 21:57
- * description :
  */
 public class NotificationHandler extends ContextWrapper {
-    public static final String CHANNEL_ID = "channel_1";
-    public static final String CHANNEL_NAME = "channel_name_1";
+
+    public static final String CHANNEL_ID = "channel_media_playback";
+    private static final String LEGACY_CHANNEL_ID = "channel_1";
+    private static final String CHANNEL_NAME = "音乐播放";
     private NotificationManager manager;
 
     public NotificationHandler(Context base) {
         super(base);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void createNotificationChannel() {
-        // 使用重要性，确保通知始终显示且不被折叠
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            return;
+        }
+        NotificationManager notificationManager = getManager();
+        notificationManager.deleteNotificationChannel(LEGACY_CHANNEL_ID);
+
         NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_HIGH);
-        
-        // 设置锁屏可见性 - 完全可见
+                NotificationManager.IMPORTANCE_LOW);
+        channel.setDescription("音乐播放控制");
         channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-        
-        // 启用锁屏通知
-        channel.enableLights(true);
-
-        // 禁用振动，避免干扰
+        channel.setShowBadge(false);
         channel.enableVibration(false);
-        
-        // 设置绕过免打扰模式
-        channel.setBypassDnd(true);
-
-        // 设置声音为null，避免重复播放
         channel.setSound(null, null);
-
-        getManager().createNotificationChannel(channel);
+        notificationManager.createNotificationChannel(channel);
     }
+
+    public Notification buildMediaNotification(SongInfo song, boolean isPlaying,
+                                               PendingIntent previousIntent,
+                                               PendingIntent playPauseIntent,
+                                               PendingIntent nextIntent,
+                                               PendingIntent stopIntent,
+                                               MediaSessionCompat.Token sessionToken) {
+        createNotificationChannel();
+
+        String title = getString(R.string.undefined);
+        String artist = "";
+        if (song != null) {
+            title = song.getName();
+            artist = song.getArtist();
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                .setSmallIcon(R.drawable.music)
+                .setContentTitle(title)
+                .setContentText(artist)
+                .setContentIntent(getContentPendingIntent())
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setCategory(NotificationCompat.CATEGORY_TRANSPORT)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setOngoing(true)
+                .setShowWhen(false)
+                .setOnlyAlertOnce(true)
+                .addAction(R.drawable.previous, getString(R.string.notify_action_previous), previousIntent)
+                .addAction(isPlaying ? R.drawable.pause : R.drawable.play,
+                        getString(R.string.notify_action_play_pause), playPauseIntent)
+                .addAction(R.drawable.next, getString(R.string.notify_action_next), nextIntent)
+                .addAction(R.drawable.close, getString(R.string.notify_action_stop), stopIntent)
+                .setStyle(new MediaStyle()
+                        .setShowActionsInCompactView(0, 1, 2)
+                        .setMediaSession(sessionToken)
+                        .setShowCancelButton(true)
+                        .setCancelButtonIntent(stopIntent));
+
+        return builder.build();
+    }
+
+    private PendingIntent getContentPendingIntent() {
+        Intent intent = new Intent(this, MainActivity.class);
+        return PendingIntent.getActivity(this, 0, intent, getPendingIntentFlags());
+    }
+
+    public static int getPendingIntentFlags() {
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= 31) {
+            flags |= PendingIntent.FLAG_IMMUTABLE;
+        }
+        return flags;
+    }
+
 
     private NotificationManager getManager() {
         if (manager == null) {
             manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         }
         return manager;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public Notification.Builder getChannelNotificationBuilder() {
-        createNotificationChannel();
-        return new Notification.Builder(getApplicationContext(), CHANNEL_ID)
-                .setContentIntent(getPendingIntent())
-                // 设置锁屏可见性 - 完全可见
-                .setVisibility(Notification.VISIBILITY_PUBLIC)
-                // 确保通知展开显示
-                .setShowWhen(false)
-                // 设置通知类别为媒体播放
-                .setCategory(Notification.CATEGORY_TRANSPORT)
-                // 设置最高优先级，避免被折叠
-                .setPriority(Notification.PRIORITY_MAX);
-    }
-
-    private PendingIntent getPendingIntent() {
-        return PendingIntent.getActivity(this, 0, new Intent(this,
-                MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    public NotificationCompat.Builder getNotification25Builder() {
-        return new NotificationCompat.Builder(getApplicationContext())
-                .setContentIntent(getPendingIntent())
-                // 设置锁屏可见性 - 完全可见
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                // 设置最高优先级，避免被折叠
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                // 设置通知类别为媒体播放
-                .setCategory(NotificationCompat.CATEGORY_TRANSPORT);
     }
 
 }

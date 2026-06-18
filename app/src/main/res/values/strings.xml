@@ -26,4 +26,9 @@
     <string name="menu_song_config_export">导出配置</string>
     <string name="menu_song_config_import">导入配置</string>
 
+    <string name="notify_action_previous">上一曲</string>
+    <string name="notify_action_play_pause">播放/暂停</string>
+    <string name="notify_action_next">下一曲</string>
+    <string name="notify_action_stop">关闭</string>
+
 </resources>

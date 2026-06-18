@@ -7,27 +7,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Binder;
-import android.os.Build;
 import android.os.IBinder;
-import android.util.SparseArray;
-import android.widget.RemoteViews;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 
 import com.mzz.zmusicplayer.MusicApplication;
-import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.common.NotificationHandler;
-import com.mzz.zmusicplayer.common.util.SongUtil;
 import com.mzz.zmusicplayer.enums.PlayedMode;
 import com.mzz.zmusicplayer.play.PlayObserver;
 import com.mzz.zmusicplayer.play.Player;
 import com.mzz.zmusicplayer.song.SongInfo;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 /**
  * 后台服务
@@ -43,12 +36,10 @@ public class PlaybackService extends Service implements PlayObserver {
     private static final String ACTION_STOP_SERVICE = "com.mzz.zmusicplayer.ACTION.STOP_SERVICE";
     private static final String ACTION_PLAY_MODE = "com.mzz.zmusicplayer.ACTION.PLAY_MODE";
     private static final int NOTIFICATION_ID = 1;
-    private static final int SDK_26 = 26;
-    private static final int V30 = 30;
     private final Binder mBinder = new LocalBinder();
     private BroadcastReceiver lockScreenReceiver;
     private NotificationHandler notificationHandler;
-    private RemoteViews mContentViewSmall;
+    private MediaSessionCompat mediaSession;
     private Player mPlayer;
 
     @Override
@@ -56,6 +47,7 @@ public class PlaybackService extends Service implements PlayObserver {
         super.onCreate();
         mPlayer = Player.getInstance();
         mPlayer.registerCallback(this);
+        initMediaSession();
         registerLockScreenReceiver();
         showNotification();
     }
@@ -108,6 +100,11 @@ public class PlaybackService extends Service implements PlayObserver {
         unregisterCallback(this);
         if (lockScreenReceiver != null) {
             unregisterReceiver(lockScreenReceiver);
+        }
+        if (mediaSession != null) {
+            mediaSession.setActive(false);
+            mediaSession.release();
+            mediaSession = null;
         }
         mPlayer.releasePlayer();
         super.onDestroy();
@@ -167,7 +164,6 @@ public class PlaybackService extends Service implements PlayObserver {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) {
-                    //锁屏后，显示播放工具栏
                     showNotification();
                 }
             }
@@ -176,6 +172,95 @@ public class PlaybackService extends Service implements PlayObserver {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(lockScreenReceiver, filter);
+    }
+
+    private void initMediaSession() {
+        mediaSession = new MediaSessionCompat(this, "ZMusicPlayer");
+        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS
+                | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        mediaSession.setCallback(new MediaSessionCompat.Callback() {
+            @Override
+            public void onPlay() {
+                play();
+            }
+
+            @Override
+            public void onPause() {
+                pause();
+            }
+
+            @Override
+            public void onSkipToNext() {
+                playNext();
+            }
+
+            @Override
+            public void onSkipToPrevious() {
+                playPrevious();
+            }
+
+            @Override
+            public void onStop() {
+                if (isPlaying()) {
+                    pause();
+                }
+                stopSelf();
+                MusicApplication.exitApp();
+            }
+        });
+        mediaSession.setActive(true);
+    }
+
+    private void updateMediaSessionState() {
+        if (mediaSession == null) {
+            return;
+        }
+
+        long actions = PlaybackStateCompat.ACTION_PLAY
+                | PlaybackStateCompat.ACTION_PAUSE
+                | PlaybackStateCompat.ACTION_SKIP_TO_NEXT
+                | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
+                | PlaybackStateCompat.ACTION_STOP;
+
+        int state = isPlaying()
+                ? PlaybackStateCompat.STATE_PLAYING
+                : PlaybackStateCompat.STATE_PAUSED;
+
+        mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
+                .setActions(actions)
+                .setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f)
+                .build());
+
+        SongInfo currentSong = mPlayer.getPlayingSong();
+        MediaMetadataCompat.Builder metadataBuilder = new MediaMetadataCompat.Builder();
+        if (currentSong != null) {
+            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, currentSong.getName());
+            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, currentSong.getArtist());
+            if (currentSong.getDuration() > 0) {
+                metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, currentSong.getDuration());
+            }
+        }
+        mediaSession.setMetadata(metadataBuilder.build());
+    }
+
+    /**
+     * Show a notification while this service is running.
+     */
+    private void showNotification() {
+        if (notificationHandler == null) {
+            notificationHandler = new NotificationHandler(this);
+        }
+        updateMediaSessionState();
+
+        Notification notification = notificationHandler.buildMediaNotification(
+                getPlayingSong(),
+                isPlaying(),
+                getPendingIntent(ACTION_PLAY_PRE),
+                getPendingIntent(ACTION_PLAY_TOGGLE),
+                getPendingIntent(ACTION_PLAY_NEXT),
+                getPendingIntent(ACTION_STOP_SERVICE),
+                mediaSession.getSessionToken());
+        startForeground(NOTIFICATION_ID, notification);
     }
 
     private void play() {
@@ -206,86 +291,9 @@ public class PlaybackService extends Service implements PlayObserver {
         mPlayer.unregisterCallback(callback);
     }
 
-    /**
-     * Show a notification while this service is running.
-     */
-    private void showNotification() {
-        Notification notification;
-        if (notificationHandler == null) {
-            notificationHandler = new NotificationHandler(this);
-        }
-        if (Build.VERSION.SDK_INT >= SDK_26) {
-            Notification.Builder builder = notificationHandler.getChannelNotificationBuilder();
-            //不使用自定义大视图，否则会折叠通知栏
-            builder.setCustomContentView(getSmallContentView())
-                    .setSmallIcon(R.drawable.music)
-                    .setOngoing(true);
-            notification = builder.build();
-        } else {
-            NotificationCompat.Builder builder = notificationHandler.getNotification25Builder();
-            builder.setCustomContentView(getSmallContentView())
-                    .setSmallIcon(R.drawable.music)
-                    .setOngoing(true);
-            notification = builder.build();
-        }
-        startForeground(NOTIFICATION_ID, notification);
-    }
-
-    private RemoteViews getSmallContentView() {
-        if (mContentViewSmall == null) {
-            mContentViewSmall = new RemoteViews(getPackageName(), R.layout.content_notify);
-            setUpRemoteView(mContentViewSmall);
-        }
-        updateRemoteViews(mContentViewSmall);
-        return mContentViewSmall;
-    }
-
-    private void setUpRemoteView(RemoteViews remoteView) {
-        SparseArray<DrawableAndAction> idAndDrawables = new SparseArray<>();
-        idAndDrawables.put(R.id.iv_notify_close, new DrawableAndAction(R.drawable.close, ACTION_STOP_SERVICE));
-        idAndDrawables.put(R.id.iv_favorite, new DrawableAndAction(R.drawable.favorite_white, ACTION_SWITCH_FAVORITE));
-        idAndDrawables.put(R.id.iv_play_pre, new DrawableAndAction(R.drawable.previous, ACTION_PLAY_PRE));
-        idAndDrawables.put(R.id.iv_play_pause, new DrawableAndAction(R.drawable.play, ACTION_PLAY_TOGGLE));
-        idAndDrawables.put(R.id.iv_play_next, new DrawableAndAction(R.drawable.next, ACTION_PLAY_NEXT));
-        idAndDrawables.put(R.id.iv_play_mode, new DrawableAndAction(R.drawable.order, ACTION_PLAY_MODE));
-
-        for (int i = 0; i < idAndDrawables.size(); i++) {
-            int id = idAndDrawables.keyAt(i);
-            DrawableAndAction drawableAndAction = idAndDrawables.valueAt(i);
-            remoteView.setImageViewResource(id, drawableAndAction.drawable);
-            remoteView.setOnClickPendingIntent(id, getPendingIntent(drawableAndAction.action));
-        }
-    }
-
-    private void updateRemoteViews(RemoteViews remoteView) {
-        SongInfo currentSong = mPlayer.getPlayingSong();
-        if (currentSong != null) {
-            remoteView.setTextViewText(R.id.tv_song_name, SongUtil.joinSongShowedName(currentSong));
-            remoteView.setImageViewResource(R.id.iv_favorite, currentSong.getIsFavorite()
-                    ? R.drawable.favorite : R.drawable.favorite_white);
-        } else {
-            String undefined = this.getString(R.string.undefined);
-            remoteView.setTextViewText(R.id.tv_song_name, undefined);
-        }
-        if (Build.VERSION.SDK_INT >= V30) {
-            // android 11 background color is white
-            mContentViewSmall.setTextColor(R.id.tv_song_name, Color.BLACK);
-        }
-        remoteView.setImageViewResource(R.id.iv_play_pause, isPlaying() ? R.drawable.pause : R.drawable.play);
-        PlayedMode playMode = mPlayer.getPlayList().getPlayMode();
-        remoteView.setImageViewResource(R.id.iv_play_mode, playMode.getIcon());
-    }
-
     private PendingIntent getPendingIntent(String action) {
-        return PendingIntent.getService(this, 0, new Intent(action), 0);
-    }
-
-    @AllArgsConstructor
-    static class DrawableAndAction {
-        @Getter
-        Integer drawable;
-        @Getter
-        String action;
+        return PendingIntent.getService(this, action.hashCode(), new Intent(action),
+                NotificationHandler.getPendingIntentFlags());
     }
 
     public class LocalBinder extends Binder {
