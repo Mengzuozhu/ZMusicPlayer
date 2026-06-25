@@ -17,7 +17,7 @@
 | 批量编辑 | 长按列表进入 `SongEditActivity`，支持多选删除 |
 | 应用配置 | 歌曲排序方式、最近播放数量上限、播放模式持久化 |
 | 配置导出 | 将本地歌曲库导出为 JSON 文件 |
-| 系统联动 | 耳机拔出自动暂停、来电暂停、音频焦点管理 |
+| 系统联动 | 耳机拔出自动暂停、来电暂停；`ListenerManager` 统一管理音频焦点，其他 App 播放语音/导航时自动暂停音乐 |
 
 ## 技术栈
 
@@ -46,7 +46,8 @@ app/src/main/java/com/mzz/zmusicplayer/
 ├── model/
 │   └── LocalSongModel.java        # 数据库 CRUD
 ├── manage/
-│   └── FileManager.java           # MediaStore 扫描
+│   ├── FileManager.java           # MediaStore 扫描
+│   └── ListenerManager.java       # 音频焦点、来电状态监听
 ├── service/
 │   ├── PlaybackService.java       # 前台播放服务 + 通知栏
 │   └── SeekBarService.java        # 进度条刷新
@@ -129,7 +130,12 @@ MusicControlPresenter.subscribe()
 
 PlaybackService.onCreate()
   ├── Player.registerCallback(this)
-  └── startForeground() 显示自定义通知 RemoteViews
+  ├── initMediaSession()           # 锁屏/蓝牙媒体键控制
+  └── startForeground()            # MediaStyle 通知（NotificationHandler）
+
+播放状态变化 → ListenerManager.handlePlayStatusChanged()
+  ├── 播放时 requestAudioFocus()
+  └── 失去焦点（其他 App 语音/导航等）→ Player.pause()
 
 通知栏按钮 → Intent Action → onStartCommand()
   ├── PLAY_TOGGLE / PLAY_PRE / PLAY_NEXT
@@ -170,4 +176,4 @@ PlaybackService.onCreate()
 ./gradlew assembleRelease
 ```
 
-输出 APK：`梦音乐-v{versionName}.apk`（当前 v1.8.0，minSdk 24，targetSdk 29）。
+输出 APK：`梦音乐-v{versionName}.apk` 。

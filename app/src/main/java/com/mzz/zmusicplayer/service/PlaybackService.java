@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import com.mzz.zmusicplayer.MusicApplication;
 import com.mzz.zmusicplayer.MainActivity;
 import com.mzz.zmusicplayer.common.NotificationHandler;
+import com.mzz.zmusicplayer.manage.ListenerManager;
 import com.mzz.zmusicplayer.enums.PlayedMode;
 import com.mzz.zmusicplayer.play.PlayObserver;
 import com.mzz.zmusicplayer.play.Player;
@@ -71,6 +72,9 @@ public class PlaybackService extends Service implements PlayObserver {
         initMediaSession();
         registerLockScreenReceiver();
         showNotification();
+        if (mPlayer.isPlaying()) {
+            ListenerManager.handlePlayStatusChanged(true);
+        }
         positionHandler.post(() -> mediaSessionReady = true);
     }
 
@@ -115,6 +119,7 @@ public class PlaybackService extends Service implements PlayObserver {
     @Override
     public void onDestroy() {
         stopPositionUpdates();
+        ListenerManager.handlePlayStatusChanged(false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             stopForeground(STOP_FOREGROUND_REMOVE);
         } else {
@@ -149,6 +154,7 @@ public class PlaybackService extends Service implements PlayObserver {
 
     @Override
     public void onPlayStatusChanged(boolean isPlaying) {
+        ListenerManager.handlePlayStatusChanged(isPlaying);
         showNotification();
     }
 

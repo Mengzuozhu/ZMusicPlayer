@@ -2,6 +2,8 @@ package com.mzz.zmusicplayer.manage;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.os.Build;
@@ -24,16 +26,81 @@ public class ListenerManager {
 
     private static final String PERMISSION_READ_PHONE_STATE = android.Manifest.permission.READ_PHONE_STATE;
 
+    private static final OnAudioFocusChangeListener AUDIO_FOCUS_CHANGE_LISTENER = focusChange -> {
+        switch (focusChange) {
+            case AudioManager.AUDIOFOCUS_LOSS:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                hasAudioFocus = false;
+                pause();
+                break;
+            case AudioManager.AUDIOFOCUS_GAIN:
+                hasAudioFocus = true;
+                break;
+            default:
+                break;
+        }
+    };
+
+    private static AudioFocusRequest audioFocusRequest;
+    private static boolean hasAudioFocus;
+
     public static Object getSystemService(String name) {
         return MusicApplication.getContext().getSystemService(name);
     }
 
     public static OnAudioFocusChangeListener getOnAudioFocusChangeListener() {
-        return focusChange -> {
-            if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                pause();
-            }
-        };
+        return AUDIO_FOCUS_CHANGE_LISTENER;
+    }
+
+    /**
+     * 播放状态变化时请求或释放音频焦点，确保其他 App 播放语音时能收到焦点丢失回调。
+     */
+    public static void handlePlayStatusChanged(boolean isPlaying) {
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager == null) {
+            return;
+        }
+        if (isPlaying) {
+            requestAudioFocus(audioManager);
+        } else {
+            abandonAudioFocus(audioManager);
+        }
+    }
+
+    private static void requestAudioFocus(AudioManager audioManager) {
+        if (hasAudioFocus) {
+            return;
+        }
+        int result;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            AudioAttributes attributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build();
+            audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                    .setAudioAttributes(attributes)
+                    .setOnAudioFocusChangeListener(AUDIO_FOCUS_CHANGE_LISTENER)
+                    .build();
+            result = audioManager.requestAudioFocus(audioFocusRequest);
+        } else {
+            result = audioManager.requestAudioFocus(AUDIO_FOCUS_CHANGE_LISTENER,
+                    AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        }
+        hasAudioFocus = result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
+    }
+
+    private static void abandonAudioFocus(AudioManager audioManager) {
+        if (!hasAudioFocus) {
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && audioFocusRequest != null) {
+            audioManager.abandonAudioFocusRequest(audioFocusRequest);
+            audioFocusRequest = null;
+        } else {
+            audioManager.abandonAudioFocus(AUDIO_FOCUS_CHANGE_LISTENER);
+        }
+        hasAudioFocus = false;
     }
 
     /**

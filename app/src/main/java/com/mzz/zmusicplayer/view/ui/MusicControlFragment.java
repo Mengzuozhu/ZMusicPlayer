@@ -3,8 +3,6 @@ package com.mzz.zmusicplayer.view.ui;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.media.AudioManager;
-import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
@@ -44,8 +42,6 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     private MusicControlContract.Presenter musicPresenter;
     private TelephonyManager mTelephonyManager;
     private final CallStateRegistration callStateRegistration = new CallStateRegistration();
-    private OnAudioFocusChangeListener onAudioFocusChangeListener;
-    private AudioManager audioManager;
     private SeekBarService seekBarService;
 
     public static MusicControlFragment newInstance(PlayList playList) {
@@ -119,11 +115,8 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
     public void onPlayStatusChanged(boolean isPlaying) {
         if (isPlaying) {
             seekBarService.updateProgressBar();
-            audioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.STREAM_MUSIC,
-                    AudioManager.AUDIOFOCUS_GAIN);
         } else {
             seekBarService.removeProgressCallback();
-            audioManager.abandonAudioFocus(onAudioFocusChangeListener);
         }
         updatePlayToggle(isPlaying);
     }
@@ -235,12 +228,6 @@ public class MusicControlFragment extends Fragment implements MusicControlContra
         musicPresenter.subscribe();
         PlayedMode playMode = mPlayer.getPlayList().getPlayMode();
         binding.controlSong.ivPlayMode.setImageResource(playMode.getIcon());
-        initOnAudioFocusChangeListener();
-    }
-
-    private void initOnAudioFocusChangeListener() {
-        audioManager = (AudioManager) ListenerManager.getSystemService(Context.AUDIO_SERVICE);
-        onAudioFocusChangeListener = ListenerManager.getOnAudioFocusChangeListener();
     }
 
     private void listenPhoneState() {
