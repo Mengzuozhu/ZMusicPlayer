@@ -2,6 +2,8 @@ package com.mzz.zmusicplayer.play;
 
 import com.mzz.zmusicplayer.song.SongInfo;
 
+import java.util.Collection;
+
 /**
  * @author : Mzz
  * date : 2019 2019/5/29 16:08
@@ -39,10 +41,13 @@ public interface IPlayer {
 
     void changePlayMode();
 
+    void removeSongsFromPlayList(Collection<Long> songIds);
+
     void releasePlayer();
 
     void registerCallback(PlayObserver playObserver);
 
     void unregisterCallback(PlayObserver playObserver);
 
+    void notifyFavoriteChanged(boolean isFavorite);
 }

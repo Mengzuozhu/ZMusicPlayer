@@ -1,15 +1,18 @@
 package com.mzz.zmusicplayer.manage;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.mzz.zmusicplayer.MusicApplication;
 import com.mzz.zmusicplayer.common.util.SongUtil;
 import com.mzz.zmusicplayer.song.SongInfo;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -55,16 +58,11 @@ public class FileManager {
                 return songs;
             }
             while (cursor.moveToNext()) {
-                int isMusic = cursor.getInt(4);
-                if (isMusic == 0) {
-                    continue;
-                }
-
                 int songIdInFile = cursor.getInt(5);
-                String songPath = cursor.getString(0);
+                String songPath = resolveSongPath(songIdInFile, cursor.getString(0));
                 boolean hasAddThisSong =
                         allSongIdInFile != null && allSongIdInFile.contains(songIdInFile);
-                if (hasAddThisSong || isFileNotExit(songPath)) {
+                if (hasAddThisSong || TextUtils.isEmpty(songPath)) {
                     continue;
                 }
 
@@ -101,12 +99,26 @@ public class FileManager {
         return songs;
     }
 
-    private boolean isFileNotExit(String path) {
-        return !new File(path).exists();
+    private String resolveSongPath(int songIdInFile, String dataPath) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Uri contentUri = ContentUris.withAppendedId(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songIdInFile);
+            return contentUri.toString();
+        }
+        if (!TextUtils.isEmpty(dataPath)) {
+            return dataPath;
+        }
+        Uri contentUri = ContentUris.withAppendedId(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songIdInFile);
+        return contentUri.toString();
     }
 
     private String extractName(String name, String artist) {
         name = name.replace(artist + MINUS, "").replace(MP3, "");
+        int dotIndex = name.lastIndexOf('.');
+        if (dotIndex > 0) {
+            name = name.substring(0, dotIndex);
+        }
         int bracketIndex = name.lastIndexOf('[');
         if (bracketIndex > 0) {
             name = name.substring(0, bracketIndex);

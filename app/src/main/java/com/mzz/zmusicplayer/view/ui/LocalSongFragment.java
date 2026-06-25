@@ -7,47 +7,30 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.databinding.FragmentSongListBinding;
 import com.mzz.zmusicplayer.enums.SongListType;
 import com.mzz.zmusicplayer.play.PlayList;
+import com.mzz.zmusicplayer.play.Player;
 import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.view.adapter.SongListAdapter;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
 import lombok.NoArgsConstructor;
 
-/**
- * A simple {@link Fragment} subclass.
- *
- * @author Mengzz
- */
 @NoArgsConstructor
 public class LocalSongFragment extends SongFragment {
 
-    @BindView(R.id.rv_song)
-    RecyclerView rvSong;
-    @BindView(R.id.fab_scroll_first_song)
-    FloatingActionButton fabSongScrollFirst;
-    private Unbinder unbinder;
+    private FragmentSongListBinding binding;
     private SongListAdapter songListAdapter;
     private LocalSong localSongs;
     private boolean isVisibleToUser;
 
-    /**
-     * New instance favorite fragment.
-     *
-     * @return the favorite fragment
-     */
     public static LocalSongFragment newInstance() {
         return new LocalSongFragment();
     }
@@ -55,11 +38,12 @@ public class LocalSongFragment extends SongFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_song_list, container, false);
-        unbinder = ButterKnife.bind(this, view);
+        binding = FragmentSongListBinding.inflate(inflater, container, false);
         localSongs = LocalSong.getInstance();
+        binding.fabScrollFirstSong.setOnClickListener(v -> songListAdapter.scrollToFirst());
+        binding.fabSongLocate.setOnClickListener(v -> songListAdapter.locateToSelectedSong());
         init();
-        return view;
+        return binding.getRoot();
     }
 
     @Override
@@ -74,34 +58,24 @@ public class LocalSongFragment extends SongFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        binding = null;
         isVisibleToUser = false;
     }
 
-    /**
-     * Add to local.
-     *
-     * @param songs the songs
-     */
     public void addToLocalSongs(Collection<SongInfo> songs) {
         songListAdapter.updateData(localSongs.addToLocalSongs(songs));
     }
 
-    /**
-     * Remove.
-     *
-     * @param keys the keys
-     */
     @Override
     public void remove(List<Long> keys) {
-        songListAdapter.updateData(localSongs.remove(keys));
+        if (keys == null || keys.isEmpty()) {
+            return;
+        }
+        List<Long> deleteIds = new ArrayList<>(keys);
+        songListAdapter.updateData(localSongs.remove(deleteIds));
+        Player.getInstance().removeSongsFromPlayList(deleteIds);
     }
 
-    /**
-     * Remove song.
-     *
-     * @param song the song
-     */
     @Override
     public void removeSong(SongInfo song) {
         if (song == null) {
@@ -109,6 +83,7 @@ public class LocalSongFragment extends SongFragment {
         }
         localSongs.remove(song);
         songListAdapter.removeSong(song);
+        Player.getInstance().removeSongsFromPlayList(Collections.singletonList(song.getId()));
     }
 
     @Override
@@ -117,16 +92,6 @@ public class LocalSongFragment extends SongFragment {
             return;
         }
         songListAdapter.updatePlaySongBackgroundColor(song);
-    }
-
-    @OnClick(R.id.fab_scroll_first_song)
-    public void scrollToFirstSongOnClick() {
-        songListAdapter.scrollToFirst();
-    }
-
-    @OnClick(R.id.fab_song_locate)
-    public void locateToSelectedSongOnClick() {
-        songListAdapter.locateToSelectedSong();
     }
 
     private void init() {
@@ -139,17 +104,21 @@ public class LocalSongFragment extends SongFragment {
     }
 
     private void initAdapter() {
-        if (rvSong == null) {
+        if (binding == null) {
             return;
         }
-        songListAdapter = new SongListAdapter(new PlayList(SongListType.LOCAL), rvSong, getActivity()) {
+        songListAdapter = new SongListAdapter(new PlayList(SongListType.LOCAL), binding.rvSong, getActivity()) {
             @Override
             public void removeSongAt(int position) {
-                localSongs.remove(getItem(position));
+                SongInfo song = getItem(position);
+                localSongs.remove(song);
                 super.removeSongAt(position);
+                if (song != null) {
+                    Player.getInstance().removeSongsFromPlayList(Collections.singletonList(song.getId()));
+                }
             }
         };
-        songListAdapter.setScrollFirstShowInNeed(fabSongScrollFirst);
+        songListAdapter.setScrollFirstShowInNeed(binding.fabScrollFirstSong);
     }
 
 }

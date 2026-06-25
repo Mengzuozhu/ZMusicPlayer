@@ -8,14 +8,18 @@
     android:orientation="vertical"
     tools:context=".view.ui.MusicControlFragment">
 
-    <include layout="@layout/layout_progress" />
+    <include
+        android:id="@+id/control_progress"
+        layout="@layout/layout_progress" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <include layout="@layout/layout_song_control" />
+        <include
+            android:id="@+id/control_song"
+            layout="@layout/layout_song_control" />
     </RelativeLayout>
 
 </LinearLayout>

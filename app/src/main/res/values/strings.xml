@@ -18,5 +18,17 @@
     <string name="song_name">歌名</string>
     <string name="song_artist">歌手</string>
     <string name="file_path">文件路径</string>
+    <string name="file_play_count">播放量</string>
+
+    <string name="menu_song_favorite">收藏</string>
+    <string name="menu_song_favorite_batch">批量收藏</string>
+
+    <string name="menu_song_config_export">导出配置</string>
+    <string name="menu_song_config_import">导入配置</string>
+
+    <string name="notify_action_previous">上一曲</string>
+    <string name="notify_action_play_pause">播放/暂停</string>
+    <string name="notify_action_next">下一曲</string>
+    <string name="notify_action_stop">关闭</string>
 
 </resources>

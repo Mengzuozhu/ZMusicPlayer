@@ -7,9 +7,22 @@
         android:orderInCategory="1"
         android:title="@string/menu_song_add"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_song_favorite"
+        android:orderInCategory="2"
+        android:title="@string/menu_song_favorite_batch"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_song_config_export"
+        android:orderInCategory="3"
+        android:title="@string/menu_song_config_export"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_app_setting"
-        android:orderInCategory="2"
+        android:orderInCategory="10"
         android:title="配置"
         app:showAsAction="never" />
 

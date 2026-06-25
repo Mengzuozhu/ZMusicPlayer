@@ -4,23 +4,19 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mzz.zandroidcommon.view.BaseActivity;
-import com.mzz.zmusicplayer.R;
+import com.mzz.zmusicplayer.databinding.ActivityAppSettingBinding;
 import com.mzz.zmusicplayer.view.contract.AppSettingContract;
 import com.mzz.zmusicplayer.view.presenter.AppSettingPresenter;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class AppSettingActivity extends BaseActivity implements AppSettingContract.View {
 
-    @BindView(R.id.rv_app_setting)
-    RecyclerView rvAppSetting;
+    private ActivityAppSettingBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_app_setting);
-        ButterKnife.bind(this);
+        binding = ActivityAppSettingBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         AppSettingContract.Presenter presenter = new AppSettingPresenter(this);
         presenter.initSetting();
@@ -28,7 +24,13 @@ public class AppSettingActivity extends BaseActivity implements AppSettingContra
 
     @Override
     public RecyclerView getRecyclerView() {
-        return rvAppSetting;
+        return binding.rvAppSetting;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 
 }

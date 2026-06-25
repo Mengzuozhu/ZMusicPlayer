@@ -5,6 +5,7 @@ import com.mzz.zmusicplayer.model.LocalSongModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -126,7 +127,7 @@ public class RecentSong {
 
     private void initMinHeap() {
         minHeap = new PriorityQueue<>(recentSongMaxCount,
-                (o1, o2) -> Long.compare(o1.getLastPlayTime(), o2.getLastPlayTime()));
+                Comparator.comparingLong(SongInfo::getLastPlayTime));
     }
 
     private void buildMinHeap() {

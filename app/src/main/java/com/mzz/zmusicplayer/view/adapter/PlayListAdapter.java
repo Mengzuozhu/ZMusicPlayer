@@ -2,6 +2,7 @@ package com.mzz.zmusicplayer.view.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.PopupMenu;
@@ -18,6 +19,7 @@ import com.mzz.zmusicplayer.manage.AdapterManager;
 import com.mzz.zmusicplayer.model.LocalSongModel;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.play.Player;
+import com.mzz.zmusicplayer.song.FavoriteSong;
 import com.mzz.zmusicplayer.song.SongInfo;
 
 import org.greenrobot.eventbus.EventBus;
@@ -111,6 +113,8 @@ public class PlayListAdapter extends SongInfoAdapter {
     private void showSongMoreMenu(View view, int position) {
         PopupMenu popupMenu = new PopupMenu(context, view);
         popupMenu.inflate(R.menu.menu_song_more);
+        MenuItem menuActionSongFavorite = initMenuFavoriteTitle(position, popupMenu);
+
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             int itemId = menuItem.getItemId();
             if (itemId == R.id.action_song_delete) {
@@ -122,10 +126,38 @@ public class PlayListAdapter extends SongInfoAdapter {
                     return true;
                 }
                 showSongDetail(songInfo);
+            } else if (itemId == R.id.menu_action_song_favorite) {
+                SongInfo songInfo = PlayListAdapter.this.getItem(position);
+                if (songInfo == null) {
+                    return true;
+                }
+
+                boolean isFavorite = FavoriteSong.getInstance().switchFavoriteAndNotify(songInfo);
+                setMenuFavoriteTitle(menuActionSongFavorite, isFavorite);
             }
             return false;
         });
         popupMenu.show();
+    }
+
+    private MenuItem initMenuFavoriteTitle(int position, PopupMenu popupMenu) {
+        MenuItem menuActionSongFavorite = popupMenu.getMenu().findItem(R.id.menu_action_song_favorite);
+        if (menuActionSongFavorite != null) {
+            SongInfo songInfo = PlayListAdapter.this.getItem(position);
+            if (songInfo != null) {
+                boolean isFavorite = songInfo.getIsFavorite();
+                setMenuFavoriteTitle(menuActionSongFavorite, isFavorite);
+            }
+        }
+        return menuActionSongFavorite;
+    }
+
+    private void setMenuFavoriteTitle(MenuItem menuActionSongFavorite, boolean isFavorite) {
+        if (menuActionSongFavorite == null) {
+            return;
+        }
+
+        menuActionSongFavorite.setTitle(isFavorite ? "取消收藏" : "收藏");
     }
 
     private void showSongDetail(SongInfo songInfo) {
@@ -139,6 +171,8 @@ public class PlayListAdapter extends SongInfoAdapter {
         etArtistName.setText(artist);
         TextView tvDetailFilePath = songDetailView.findViewById(R.id.tv_detail_file_path);
         tvDetailFilePath.setText(songInfo.getPath());
+        TextView tvDetailFilePlayCount = songDetailView.findViewById(R.id.tv_detail_file_play_count);
+        tvDetailFilePlayCount.setText(String.valueOf(songInfo.getPlayCount()));
 
         AlertDialog alertDialog = new AlertDialog.Builder(context)
                 .setTitle(MusicConstant.SONG_DETAIL_TITLE)

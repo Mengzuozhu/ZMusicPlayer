@@ -149,11 +149,28 @@ public class PlayList implements Parcelable {
      * @param song the song
      */
     public void remove(SongInfo song) {
-        if (song != null) {
+        if (song == null) {
+            return;
+        }
+        int index = getSongIndexById(playSongs, song.getId());
+        if (index == -1) {
             song.setIsChecked(false);
             LocalSongModel.update(song);
             notifySongCountOrModeChange();
+            return;
         }
+        song.setIsChecked(false);
+        playSongs.remove(index);
+        if (index < playingIndex) {
+            playingIndex--;
+        } else if (index == playingIndex && playingIndex >= playSongs.size() && !playSongs.isEmpty()) {
+            playingIndex = Math.min(playingIndex, playSongs.size() - 1);
+        }
+        if (playSongs.isEmpty()) {
+            playingIndex = 0;
+        }
+        LocalSongModel.update(song);
+        notifySongCountOrModeChange();
     }
 
     /**
@@ -231,6 +248,7 @@ public class PlayList implements Parcelable {
         switch (playMode) {
             //循环当前歌曲
             case SINGLE:
+                syncPlayingIndexWithLastPlaySong();
                 break;
             case ORDER:
                 playingIndex = getPreIndex();
@@ -253,6 +271,7 @@ public class PlayList implements Parcelable {
         switch (playMode) {
             //循环当前歌曲
             case SINGLE:
+                syncPlayingIndexWithLastPlaySong();
                 break;
             case RANDOM:
                 playingIndex = getRandomPlayIndex();
@@ -297,12 +316,26 @@ public class PlayList implements Parcelable {
         if (size == 0) {
             return -1;
         }
+        if (size == 1) {
+            return 0;
+        }
         int randomIndex = new Random().nextInt(size);
         // 非单曲循环模式下，确保不会连续播放同一首歌曲
-        if (playMode != PlayedMode.SINGLE && size > 1 && randomIndex == playingIndex) {
-            playingIndex = getNextIndex();
+        if (playMode != PlayedMode.SINGLE && randomIndex == playingIndex) {
+            return getNextIndex();
         }
         return randomIndex;
+    }
+
+    private void syncPlayingIndexWithLastPlaySong() {
+        long lastPlaySongId = AppSetting.getLastPlaySongId();
+        if (lastPlaySongId == 0 || playSongs.isEmpty()) {
+            return;
+        }
+        int index = getSongIndexById(playSongs, lastPlaySongId);
+        if (index != -1) {
+            playingIndex = index;
+        }
     }
 
     private void updatePlaySongBackgroundColor(SongInfo song) {

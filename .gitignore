@@ -14,5 +14,5 @@
 .externalNativeBuild
 .idea/codeStyles/
 .idea/inspectionProfiles/
-.idea/vcs.xml
+.idea/
 app/release/

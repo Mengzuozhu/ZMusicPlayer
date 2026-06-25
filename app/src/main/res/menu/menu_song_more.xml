@@ -14,4 +14,9 @@
             android:title="@string/menu_song_detail"
             app:showAsAction="never" />
 
+    <item
+            android:id="@+id/menu_action_song_favorite"
+            android:orderInCategory="3"
+            android:title="@string/menu_song_favorite"
+            app:showAsAction="never" />
 </menu>

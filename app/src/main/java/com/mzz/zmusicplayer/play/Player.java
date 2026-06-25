@@ -1,6 +1,7 @@
 package com.mzz.zmusicplayer.play;
 
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.util.Log;
 
 import com.mzz.zandroidcommon.view.ViewerHelper;
@@ -13,22 +14,28 @@ import com.mzz.zmusicplayer.song.SongInfo;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author : Mzz
  * date : 2019 2019/5/28 18:52
  * description :
  */
+@Slf4j
 public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
+    public static final String LOG_PREFIX = Player.class.getName();
+
     private static final String TAG = "Player";
     private static Player sInstance = new Player();
     private MediaPlayer mPlayer;
-    private boolean isPaused;
+    private boolean isPaused = true;
+    private boolean mediaPrepared;
     @Getter
     private PlayList playList;
     private List<PlayObserver> playObservers = new ArrayList<>(2);
@@ -53,25 +60,41 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         if (list == null) {
             list = new PlayList();
         }
-        playList = list;
-        //保证更新播放列表后，可以重新开始播放新歌
-        isPaused = false;
+        if (this.playList != list) {
+            playList = list;
+            // 仅切换播放列表时重置暂停标记，避免打开 APP 同步列表时误触发重新播放
+            isPaused = false;
+        }
     }
 
     @Override
     public boolean play() {
-        if (isPaused) {
-            mPlayer.start();
-            notifyPlayStatusChanged(true);
-            isPaused = false;
-            return true;
-        }
-        SongInfo playingSong = getPlayingSong();
-        if (playingSong != null) {
-            return startNewSong(playingSong);
-        } else {
-            mPlayer.reset();
-            notifyResetAllState();
+        try {
+            if (isPaused) {
+                SongInfo playingSong = getPlayingSong();
+                if (playingSong == null) {
+                    return false;
+                }
+                if (!mediaPrepared) {
+                    isPaused = false;
+                    return startNewSong(playingSong);
+                }
+                mPlayer.start();
+                notifyPlayStatusChanged(true);
+                isPaused = false;
+                return true;
+            }
+            SongInfo playingSong = getPlayingSong();
+            if (playingSong != null) {
+                return startNewSong(playingSong);
+            } else {
+                mPlayer.reset();
+                mediaPrepared = false;
+                notifyResetAllState();
+            }
+        } catch (IllegalStateException e) {
+            log.error("[{}_play_error],", LOG_PREFIX, e);
+            throw new RuntimeException(e);
         }
         return false;
     }
@@ -110,8 +133,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         if (playingSong == null) {
             return;
         }
-        boolean isFavorite = FavoriteSong.getInstance().switchFavorite(playingSong);
-        notifyFavoriteChanged(isFavorite);
+        boolean isFavorite = FavoriteSong.getInstance().switchFavoriteAndNotify(playingSong);
     }
 
     @Override
@@ -169,6 +191,20 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         return position;
     }
 
+    /**
+     * 供 MediaSession / 通知栏使用的真实进度，未 prepare 时返回 0。
+     */
+    public int getPlaybackPositionMs() {
+        if (!mediaPrepared) {
+            return 0;
+        }
+        try {
+            return mPlayer.getCurrentPosition();
+        } catch (IllegalStateException e) {
+            return 0;
+        }
+    }
+
     @Override
     public SongInfo getPlayingSong() {
         return playList.getPlayingSong();
@@ -179,7 +215,22 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         PlayedMode playMode = playList.getPlayMode();
         playMode = playMode.getNextMode();
         playList.setPlayMode(playMode);
+        AppSetting.setPlayMode(playMode);
         notifyPlayModeChanged(playMode);
+    }
+
+    @Override
+    public void removeSongsFromPlayList(Collection<Long> songIds) {
+        if (songIds == null || songIds.isEmpty()) {
+            return;
+        }
+        SongInfo current = getPlayingSong();
+        boolean currentDeleted = current != null && songIds.contains(current.getId());
+        playList.remove(new ArrayList<>(songIds));
+        if (currentDeleted) {
+            isPaused = false;
+            play();
+        }
     }
 
     @Override
@@ -189,6 +240,7 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         }
         playObservers.clear();
         mPlayer.reset();
+        mediaPrepared = false;
         mPlayer.release();
     }
 
@@ -223,16 +275,22 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         }
         try {
             mPlayer.reset();
-            mPlayer.setDataSource(songPath);
+            mediaPrepared = false;
+            if (songPath.startsWith("content://")) {
+                mPlayer.setDataSource(MusicApplication.getContext(), Uri.parse(songPath));
+            } else {
+                mPlayer.setDataSource(songPath);
+            }
             mPlayer.prepare();
+            mediaPrepared = true;
             mPlayer.start();
             notifyPlayStatusChanged(true);
             recordPlayingSong(playingSong);
         } catch (IOException e) {
             Log.e(TAG, "startNewSong fail: ", e);
             ViewerHelper.showToast(MusicApplication.getContext(), String.format("歌曲(%s)播放失败", name));
-            pause();
-            return false;
+            playList.remove(playingSong);
+            return playNext();
         }
         return true;
     }
@@ -250,7 +308,8 @@ public class Player implements IPlayer, MediaPlayer.OnCompletionListener {
         forEachObservers(observer -> observer.onPlayStatusChanged(isPlaying));
     }
 
-    private void notifyFavoriteChanged(boolean isFavorite) {
+    @Override
+    public void notifyFavoriteChanged(boolean isFavorite) {
         forEachObservers(observer -> observer.onSwitchFavorite(isFavorite));
     }
 

@@ -153,7 +153,9 @@ public class SongInfo implements Parcelable, ICheckable, QueryInfo, IEditItem {
     }
 
     public String getArtist() {
-        artist = artist.equals(UNKNOWN) ? UNKNOWN_ARTIST : artist;
+        if (artist == null || artist.equals(UNKNOWN)) {
+            return UNKNOWN_ARTIST;
+        }
         return this.artist;
     }
 

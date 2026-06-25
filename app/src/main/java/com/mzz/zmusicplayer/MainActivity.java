@@ -1,15 +1,19 @@
 package com.mzz.zmusicplayer;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.common.collect.ImmutableMap;
 import com.mzz.zandroidcommon.common.EventBusHelper;
 import com.mzz.zandroidcommon.view.BaseActivity;
@@ -18,9 +22,10 @@ import com.mzz.zmusicplayer.enums.SongListType;
 import com.mzz.zmusicplayer.play.PlayList;
 import com.mzz.zmusicplayer.receiver.HeadsetReceiver;
 import com.mzz.zmusicplayer.song.ISongChangeListener;
+import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.SongInfo;
 import com.mzz.zmusicplayer.view.adapter.MusicPage;
-import com.mzz.zmusicplayer.view.adapter.MusicPagerAdapter;
+import com.mzz.zmusicplayer.view.adapter.MusicPager2Adapter;
 import com.mzz.zmusicplayer.view.edit.RemovedSongInfo;
 import com.mzz.zmusicplayer.view.ui.AppSettingActivity;
 import com.mzz.zmusicplayer.view.ui.FavoriteFragment;
@@ -30,9 +35,9 @@ import com.mzz.zmusicplayer.view.ui.PlayListFragment;
 import com.mzz.zmusicplayer.view.ui.PlayListFragment.PlayListListener;
 import com.mzz.zmusicplayer.view.ui.RecentFragment;
 import com.mzz.zmusicplayer.view.ui.SongEditActivity;
+import com.mzz.zmusicplayer.view.ui.SongFavoriteActivity;
 import com.mzz.zmusicplayer.view.ui.SongFragment;
 import com.mzz.zmusicplayer.view.ui.SongPickerActivity;
-import com.viewpagerindicator.TabPageIndicator;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -40,8 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import butterknife.ButterKnife;
 
 /**
  * @author Mengzz
@@ -114,10 +117,10 @@ public class MainActivity extends BaseActivity implements PlayListListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
         ViewerHelper.displayHomeAsUpOrNot(this.getSupportActionBar(), false);
 
         init();
+        requestRuntimePermissions();
         EventBusHelper.register(this);
     }
 
@@ -127,8 +130,13 @@ public class MainActivity extends BaseActivity implements PlayListListener {
         if (itemId == R.id.action_song_add) {
             startActivityForResult(new Intent(this, SongPickerActivity.class),
                     SongPickerActivity.CODE_ADD_SONG);
+        } else if (itemId == R.id.action_song_favorite) {
+            openActivity(SongFavoriteActivity.class);
         } else if (itemId == R.id.action_app_setting) {
             openActivity(AppSettingActivity.class);
+        } else if (itemId == R.id.action_song_config_export) {
+            String path = LocalSong.getInstance().exportConfig();
+            ViewerHelper.showToast(getContext(), path);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -182,7 +190,33 @@ public class MainActivity extends BaseActivity implements PlayListListener {
         headsetReceiver = new HeadsetReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_HEADSET_PLUG);
-        registerReceiver(headsetReceiver, intentFilter);
+        if (Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(headsetReceiver, intentFilter, RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(headsetReceiver, intentFilter);
+        }
+    }
+
+    private void requestRuntimePermissions() {
+        requestNotificationPermission();
+        requestPhoneStatePermission();
+    }
+
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT < 33) {
+            return;
+        }
+        if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 0);
+    }
+
+    private void requestPhoneStatePermission() {
+        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, 0);
     }
 
     private void initSongChangeListeners() {
@@ -207,14 +241,20 @@ public class MainActivity extends BaseActivity implements PlayListListener {
                 .stream()
                 .map(entry -> new MusicPage(entry.getValue(), entry.getKey().getDesc()))
                 .collect(Collectors.toList());
-        FragmentPagerAdapter adapter = new MusicPagerAdapter(getSupportFragmentManager(), fragments);
+        
+        // 使用ViewPager2适配器
+        MusicPager2Adapter adapter = new MusicPager2Adapter(this, fragments);
 
-        ViewPager pager = findViewById(R.id.pager);
+        ViewPager2 pager = findViewById(R.id.pager);
         pager.setAdapter(adapter);
         //保证播放界面不被销毁
         pager.setOffscreenPageLimit(4);
-        TabPageIndicator indicator = findViewById(R.id.indicator);
-        indicator.setViewPager(pager);
+        
+        // 使用TabLayout和TabLayoutMediator
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        new TabLayoutMediator(tabLayout, pager, (tab, position) -> {
+            tab.setText(adapter.getPageTitle(position));
+        }).attach();
     }
 
     private List<Long> getDeleteIds(Intent data) {

@@ -1,8 +1,5 @@
 package com.mzz.zmusicplayer.view.ui;
 
-import android.Manifest;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,22 +14,20 @@ import com.mzz.zandroidcommon.common.StringHelper;
 import com.mzz.zandroidcommon.view.BaseActivity;
 import com.mzz.zmusicplayer.R;
 import com.mzz.zmusicplayer.databinding.ActivitySongPickerBinding;
-import com.mzz.zmusicplayer.manage.FileManager;
+import com.mzz.zmusicplayer.song.FavoriteSong;
 import com.mzz.zmusicplayer.song.LocalSong;
 import com.mzz.zmusicplayer.song.SongInfo;
+import com.mzz.zmusicplayer.util.StreamUtil;
 import com.mzz.zmusicplayer.view.adapter.SongPickerAdapter;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
-public class SongPickerActivity extends BaseActivity {
+public class SongFavoriteActivity extends BaseActivity {
 
-    public static final int CODE_ADD_SONG = 5;
-    private static final int SDK_ANDROID_13 = 33;
-    private static final String PERMISSION_READ_MEDIA_AUDIO = "android.permission.READ_MEDIA_AUDIO";
-    public static final String EXTRA_ADD_SONG = "com.mzz.zmusicplayer.EXTRA_ADD_SONG";
+    public static final int CODE_FAVORITE_SONG = 6;
+    public static final String EXTRA_FAVORITE_SONG = "com.mzz.zmusicplayer.EXTRA_FAVORITE_SONG";
 
     private ActivitySongPickerBinding binding;
     private SongPickerAdapter songPickerAdapter;
@@ -51,18 +46,7 @@ public class SongPickerActivity extends BaseActivity {
         setContentView(binding.getRoot());
 
         binding.fabSongFileScrollFirst.setOnClickListener(v -> songPickerAdapter.scrollToFirst());
-
-        RxPermissions rxPermissions = new RxPermissions(this);
-        String permission = Build.VERSION.SDK_INT >= SDK_ANDROID_13
-                ? PERMISSION_READ_MEDIA_AUDIO
-                : Manifest.permission.READ_EXTERNAL_STORAGE;
-        rxPermissions.request(permission).subscribe(granted -> {
-            if (granted) {
-                initAdapter();
-            } else {
-                showToast("无权限访问本地音乐");
-            }
-        });
+        initAdapter();
     }
 
     @Override
@@ -83,8 +67,11 @@ public class SongPickerActivity extends BaseActivity {
     }
 
     private void initAdapter() {
-        Set<Integer> allSongIdInFile = LocalSong.getInstance().getAllSongIdInFile();
-        songInfos = FileManager.getInstance().getAllSongInfos(allSongIdInFile);
+        List<SongInfo> allSongs = LocalSong.getInstance().getAllLocalSongs();
+        List<SongInfo> unFavoriteSongs = StreamUtil.streamOrEmpty(allSongs)
+                .filter(songInfo -> !songInfo.getIsFavorite())
+                .collect(Collectors.toList());
+        songInfos = unFavoriteSongs;
         songPickerAdapter = new SongPickerAdapter(songInfos, binding.contentSongPicker.rvSongFile);
         songPickerAdapter.setQueryTextListener(binding.contentSongPicker.svSongFile);
         songPickerAdapter.setScrollFirstShowInNeed(binding.fabSongFileScrollFirst);
@@ -123,9 +110,10 @@ public class SongPickerActivity extends BaseActivity {
     }
 
     private void save() {
-        ArrayList<SongInfo> newSongInfos = getCheckedSongInfos();
-        Intent intent = getIntent().putParcelableArrayListExtra(EXTRA_ADD_SONG, newSongInfos);
-        setResult(CODE_ADD_SONG, intent);
+        List<SongInfo> checkedSongInfos = getCheckedSongInfos();
+        for (SongInfo songInfo : checkedSongInfos) {
+            FavoriteSong.getInstance().switchFavoriteAndNotify(songInfo);
+        }
     }
 
     private ArrayList<SongInfo> getCheckedSongInfos() {
