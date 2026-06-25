@@ -21,8 +21,9 @@
 
 ## 技术栈
 
-- **语言**：Java 8
-- **UI**：Material Design、ViewPager2 + TabLayout、ButterKnife
+- **语言**：Java 17
+- **平台**：Android（minSdk 24，targetSdk 34，compileSdk 35）
+- **UI**：Material Design、ViewPager2 + TabLayout、ViewBinding
 - **架构**：MVP（Presenter / Contract / View）
 - **数据库**：GreenDAO（`SongInfo` 实体）
 - **通信**：EventBus（列表点击 → 播放栏联动）
@@ -176,4 +177,4 @@ PlaybackService.onCreate()
 ./gradlew assembleRelease
 ```
 
-输出 APK：`梦音乐-v{versionName}.apk` 。
+输出 APK：`梦音乐-v{versionName}.apk`（当前 v1.9.2，minSdk 24，targetSdk 34）。
